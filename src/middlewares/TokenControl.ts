@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { StatusCodes, ReasonPhrases } from 'http-status-codes';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import logger from '../config/winston-logger';
+import { IUser } from '../models/interfaces/user';
 import User from '../models/User';
 import Bundle from '../utils/Bundle';
 
@@ -110,7 +111,7 @@ const generateToken = (
 
   const token = jwt.sign(
     {
-      id: user.id,
+      id: user._id,
       role: user.role,
     },
     secretKey,
@@ -134,13 +135,9 @@ const getUserByToken = async (token: string) => {
 
   const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
-  const userId = decoded.id;
-
-  const user = User.findOne({
-    where: {
-      id: userId,
-    },
-  });
+  const user = User.findById({
+    _id: decoded.id,
+  }).select('-password') as unknown as IUser;
 
   return user;
 };

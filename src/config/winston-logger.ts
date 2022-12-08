@@ -7,7 +7,6 @@ import 'winston-mongodb';
 const env = process.env.NODE_ENV || 'development';
 const logDir = 'logs';
 
-// Create the log directory if it does not exist
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
@@ -19,7 +18,7 @@ const options = {
     options: {
       useUnifiedTopology: true,
     },
-    collection: 'logs',
+    collection: 'info_logs',
     format: format.combine(
       format.timestamp({
         format: 'DD-MM-YYYY HH:mm:ss',
@@ -34,7 +33,7 @@ const options = {
     options: {
       useUnifiedTopology: true,
     },
-    collection: 'logs',
+    collection: 'debug_logs',
     format: format.combine(
       format.timestamp({
         format: 'DD-MM-YYYY HH:mm:ss',
@@ -49,7 +48,7 @@ const options = {
     options: {
       useUnifiedTopology: true,
     },
-    collection: 'logs',
+    collection: 'error_logs',
     format: format.combine(
       format.timestamp({
         format: 'DD-MM-YYYY HH:mm:ss',
@@ -84,7 +83,10 @@ const logger = createLogger({
             if (metadata.hasOwnProperty(key)) {
               meta += `${key}: ${metadata[key]} | `;
 
-              if (Object.keys(metadata).indexOf(key) === Object.keys(metadata).length - 1) {
+              if (
+                Object.keys(metadata).indexOf(key) ===
+                Object.keys(metadata).length - 1
+              ) {
                 meta = meta.slice(0, -3);
                 meta += '';
               }
@@ -115,7 +117,10 @@ const logger = createLogger({
             if (metadata.hasOwnProperty(key)) {
               meta += `${key}: ${metadata[key]} | `;
 
-              if (Object.keys(metadata).indexOf(key) === Object.keys(metadata).length - 1) {
+              if (
+                Object.keys(metadata).indexOf(key) ===
+                Object.keys(metadata).length - 1
+              ) {
                 meta = meta.slice(0, -3);
                 meta += '';
               }
@@ -128,6 +133,7 @@ const logger = createLogger({
     }),
 
     new transports.MongoDB(options.console),
+    new transports.MongoDB(options.debug),
     new transports.MongoDB(options.error),
   ],
 });

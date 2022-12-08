@@ -1,0 +1,149 @@
+import logger from '../config/winston-logger';
+import { Router, Request, Response } from 'express';
+import { StatusCodes, ReasonPhrases } from 'http-status-codes';
+import { paginate } from '../middlewares/Pagination';
+import User from '../models/User';
+import joi from 'joi';
+import bcrypt from 'bcrypt';
+import { generateToken } from '../middlewares/TokenControl';
+
+class UserController {
+  public path = '/users';
+  public pathWithIdParam = '/users/:id';
+  public router = Router();
+  private user = User;
+
+  constructor() {
+    this.initializeRoutes();
+  }
+
+  public initializeRoutes() {
+    this.router.get(this.path, this.getAllUsers);
+    this.router.post(this.path, this.createUser);
+
+    logger.info('User routes initialized', {
+      label: 'UserController',
+      path: this.path,
+      methods: ['GET', 'POST'],
+    });
+  }
+
+  // [ ] Create a user
+  createUser = async (req: Request, res: Response) => {
+    const { name, email, password } = req.body;
+    const profile_picture = '/uploads/';
+
+    // Validate the request body with joi
+    const schema = joi.object({
+      email: joi.string().email().required(),
+      password: joi.string().min(6).required(),
+      name: joi.string().required(),
+    });
+
+    const { error } = schema.validate(req.body);
+
+    if (error) {
+      logger.error('Falha ao criar usuário.', {
+        success: false,
+        statusCode: 400,
+        error: error.details[0].message,
+      });
+
+      return res.status(400).json({
+        status: 400,
+        message: error.details[0].message,
+      });
+    }
+
+    const userExists = await this.user.findOne({ where: { email } });
+
+    if (userExists) {
+      logger.error('O usuário já existe, tente outro e-mail.', {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+      });
+
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'O usuário já existe, tente outro e-mail.',
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 13);
+
+    try {
+      if (hashedPassword) {
+        const user = await this.user.create({
+          name,
+          email,
+          password: hashedPassword,
+          profile_picture,
+        });
+
+        const access_secret_key = process.env.ACCESS_TOKEN_SECRET as string;
+        const refresh_secret_key = process.env.REFRESH_TOKEN_SECRET as string;
+        const accessKey_expiry = process.env
+          .ACCESS_TOKEN_EXPIRES_IN as unknown as number;
+        const refreshKey_expiry = process.env
+          .REFRESH_TOKEN_EXPIRES_IN as unknown as number;
+
+        const accessToken = generateToken(
+          user,
+          access_secret_key,
+          accessKey_expiry
+        );
+
+        const refreshToken = generateToken(
+          user,
+          refresh_secret_key,
+          refreshKey_expiry
+        );
+
+        logger.info('Usuário criado com sucesso.', {
+          success: true,
+          statusCode: StatusCodes.CREATED,
+        });
+
+        logger.info('User created', {
+          label: 'UserController',
+          path: this.path,
+          method: 'POST',
+        });
+
+        return res.status(StatusCodes.CREATED).json({
+          success: true,
+          statusCode: StatusCodes.CREATED,
+          message: 'Usuário criado com sucesso.',
+          user,
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+      }
+    } catch (error) {
+      logger.error('Falha ao criar usuário.', {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Falha ao criar usuário.',
+      });
+    }
+  };
+
+  // [ ] Get all users
+  getAllUsers = async (req: Request, res: any) => {
+    paginate(this.user);
+
+    res.json(res.paginatedResult);
+  };
+
+  // [ ] Get a user by id
+// 
+}
+
+export default new UserController();

@@ -1,25 +1,24 @@
 import logger from '@config/winston-logger';
-import { NextFunction, Request } from 'express';
-import { StatusCodes, ReasonPhrases } from 'http-status-codes';
+import { Request } from 'express';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 
-const paginate = (model: any) => {
-  return async (req: Request, res: any, next: NextFunction) => {
-    const page: number = Number(req.query.page) || 1;
-    const limit: number = Number(req.query.limit) || 25;
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
+const paginate = async (model: any, req: Request, res: any) => {
+  const page: number = Number(req.query.page) || 1;
+  const limit: number = Number(req.query.limit) || 25;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
 
-    const result: any = {
-      totalDocuments: 0,
-      totalPages: 0,
-      previous: {},
-      current: {},
-      next: {},
-      data: {},
-    };
+  const result: any = {
+    totalDocuments: 0,
+    totalPages: 0,
+    previous: {},
+    current: {},
+    next: {},
+    data: {},
+  };
 
-   try {
-     try {
+  try {
+    try {
       result.totalDocuments = await model.countDocuments().exec();
     } catch (error) {
       logger.error(error);
@@ -74,24 +73,30 @@ const paginate = (model: any) => {
       logger.error('Nenhum dado encontrado com os parâmetros fornecidos', {
         success: false,
         statusCode: StatusCodes.NOT_FOUND,
-        model: model.collection.collectionName,
-        result
+        result,
       });
 
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: 'Nenhum dado encontrado com os parâmetros fornecidos' });
-    }
-
-    next();
-   } catch (error) {
-      logger.error(error);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: ReasonPhrases.INTERNAL_SERVER_ERROR,
-        body: error,
+      return res.status(StatusCodes.NOT_FOUND).json({
+        message: 'Nenhum dado encontrado com os parâmetros fornecidos',
       });
     }
+
+    logger.debug('Dados encontrados com sucesso.', {
+      success: true,
+      statusCode: StatusCodes.OK,
+      label: model.collection.collectionName,
+      method: 'GET',
+      result,
+    });
+
+    return result;
+  } catch (error) {
+    logger.error(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      body: error,
+    });
   }
-}
+};
 
 export { paginate };
