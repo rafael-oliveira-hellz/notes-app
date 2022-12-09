@@ -21,7 +21,7 @@ const imageStorage = multer.diskStorage({
 
   filename: (_req: Request, file: any, cb: any) => {
     const imageFileName =
-      file.fieldname.substring(0, 6) +
+      file.fieldname.substring(0, 7) +
       '-' +
       Date.now() +
       String(Math.floor(Math.random() * Math.pow(20, 15))) +

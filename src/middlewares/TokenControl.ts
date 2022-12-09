@@ -137,7 +137,7 @@ const getUserByToken = async (token: string) => {
 
   const user = User.findById({
     _id: decoded.id,
-  }).select('-password') as unknown as IUser;
+  }) as unknown as IUser;
 
   return user;
 };

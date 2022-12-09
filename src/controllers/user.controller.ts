@@ -10,19 +10,33 @@ import { isEmailValid } from '../utils/Validations';
 
 class UserController {
   // [TO TEST] Get all users
-  getAllUsers = async (req: Request, res: any) => {
+  getAllUsers = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(User, req, res);
 
-    logger.info('xpto', { response });
+    response.data = response.data.map((user: IUser) => {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        profile_picture: user.profile_picture,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
+      };
+    });
 
-    return res.status(200).json({ response });
+    const allData = Object.assign({}, ...response.data);
+
+    response.data = allData;
+
+    return res.status(StatusCodes.OK).json(response);
   };
 
   // [TO TEST] Verify if the user is logged in, if so, get the user profile info
   getUserProfile = async (req: Request, res: Response) => {
     try {
       const token = getUserToken(req) as string;
-      const user = (await getUserByToken(token)) as IUser;
+      const user = await getUserByToken(token);
 
       if (user) {
         logger.debug('Usuário encontrado com sucesso.', {
@@ -36,7 +50,15 @@ class UserController {
           success: true,
           statusCode: StatusCodes.OK,
           message: 'Usuário encontrado com sucesso.',
-          user,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            profile_picture: user.profile_picture,
+            created_at: user.created_at,
+            updated_at: user.updated_at,
+          },
         });
       }
 
@@ -61,7 +83,7 @@ class UserController {
   };
 
   // [TO TEST] Get a user by field
-  getUserByField = async (req: Request, res: any): Promise<IUser | IUser[]> => {
+  getUserByField = async (req: Request, res: any) => {
     const field = String(req.query.field);
     const value = String(req.query.value);
 
@@ -105,9 +127,11 @@ class UserController {
     }
 
     try {
-      const user = User.findOne({ where: { [field]: value } });
+      const user = await User.find({
+        [field]: { $regex: value, $options: 'i' },
+      }).select('-password');
 
-      if (user !== null && user !== undefined) {
+      if (user) {
         logger.debug('Usuário encontrado com sucesso.', {
           success: true,
           statusCode: StatusCodes.OK,
@@ -149,11 +173,15 @@ class UserController {
     }
   };
 
-  // [TO TEST] Update user's passwordssword
+  // [TO TEST] Update user's password
   updateUserPassword = async (req: Request, res: Response) => {
     try {
       const token = getUserToken(req) as string;
-      const user = (await getUserByToken(token)) as IUser;
+      const user = await getUserByToken(token);
+
+      logger.info('Dados do Usuario', {
+        user,
+      });
 
       if (user) {
         const { oldPassword, newPassword } = req.body;
@@ -204,8 +232,7 @@ class UserController {
 
           const updatedUser = await User.updateOne(
             { password: hashedPassword },
-            // [ ] In case the update method fails, change from user.id to user._id
-            { where: { _id: user.id } }
+            { _id: user.id }
           );
 
           if (updatedUser) {
@@ -365,7 +392,7 @@ class UserController {
   };
 
   // [TO TEST] Delete own user
-  deleteUser = async (req: Request, res: Response) => {
+  deleteProfile = async (req: Request, res: Response) => {
     try {
       const token = getUserToken(req) as string;
       const user = await getUserByToken(token);
@@ -397,6 +424,82 @@ class UserController {
           });
 
           return res.status(StatusCodes.NO_CONTENT).send();
+        }
+
+        logger.error('Falha ao deletar o usuário.', {
+          success: false,
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+        });
+
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Falha ao deletar o usuário.',
+        });
+      }
+    } catch (error) {
+      logger.error('Falha ao deletar o usuário.', {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Falha ao deletar o usuário.',
+      });
+    }
+  };
+
+  // [TO TEST] Delete a user by its Id
+  deleteUser = async (req: Request, res: Response) => {
+    try {
+      const token = getUserToken(req) as string;
+      const user = await getUserByToken(token);
+
+      if (!user) {
+        logger.debug('Usuário não encontrado!', {
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          label: 'UserController',
+          method: 'DELETE',
+        });
+
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Usuário não encontrado!',
+        });
+      }
+
+      if (user) {
+        const { id } = req.params;
+        const deletedUser = await User.findByIdAndDelete({ _id: id });
+
+        if (deletedUser) {
+          logger.debug(`Usuário deletado com sucesso por ${user.name}.`, {
+            success: true,
+            statusCode: StatusCodes.NO_CONTENT,
+            label: 'UserController',
+            method: 'DELETE',
+          });
+
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: `Usuário deletado com sucesso por ${user.name}`,
+            deletedUser: {
+              id: deletedUser.id,
+              name: deletedUser.name,
+              email: deletedUser.email,
+              role: deletedUser.role,
+              profile_picture: deletedUser.profile_picture,
+              created_at: deletedUser.created_at,
+              updated_at: deletedUser.updated_at,
+            },
+          });
         }
 
         logger.error('Falha ao deletar o usuário.', {

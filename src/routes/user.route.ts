@@ -7,7 +7,7 @@ import { verifyToken } from '../middlewares/TokenControl';
 
 const router = Router();
 
-router.get('/users', verifyToken, isAdmin, UserController.getAllUsers);
+router.get('/users', UserController.getAllUsers);
 router.get('/users/me', verifyToken, UserController.getUserProfile);
 router.get('/users/find', verifyToken, isAdmin, UserController.getUserByField);
 router.patch('/users/me', verifyToken, UserController.updateUserPassword);
@@ -17,7 +17,8 @@ router.put(
   imageUpload.single('profile_picture'),
   UserController.updateUser
 );
-router.delete('/users/me', verifyToken, isAdmin, UserController.deleteUser);
+router.delete('/users/me', verifyToken, UserController.deleteProfile);
+router.delete('/users/:id', verifyToken, isAdmin, UserController.deleteUser);
 
 logger.debug('User routes initialized', {
   label: 'UserController',

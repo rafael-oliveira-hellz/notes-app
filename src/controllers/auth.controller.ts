@@ -35,10 +35,9 @@ class AuthController {
         message: error.details[0].message,
       });
     }
+    const userExists = (await User.findOne({ email })) as IUser;
 
-    const userExists = (await User.findOne({ where: { email } })) as IUser;
-
-    if (userExists.email === email) {
+    if (userExists) {
       logger.error('O usuário já existe, tente outro e-mail.', {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
@@ -79,7 +78,15 @@ class AuthController {
           success: true,
           statusCode: StatusCodes.CREATED,
           message: 'Usuário criado com sucesso.',
-          user,
+          user: {
+            id: user?.id,
+            name: user?.name,
+            email: user?.email,
+            role: user?.role,
+            profile_picture: user?.profile_picture,
+            created_at: user?.created_at,
+            updated_at: user?.updated_at,
+          },
           access_token: accessToken,
         });
       }
@@ -93,6 +100,7 @@ class AuthController {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
         message: 'Falha ao criar usuário.',
       });
     }
@@ -115,7 +123,7 @@ class AuthController {
     }
 
     // COMPLETE - Check if user exists
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(StatusCodes.NOT_FOUND).json({
@@ -125,8 +133,8 @@ class AuthController {
 
     // COMPLETE - If the login and password are wrong, return 401
     if (
-      email !== user.email ||
-      !(await comparePassword(password, user.password))
+      email !== user?.email ||
+      !(await comparePassword(password, user?.password))
     ) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         message: 'E-mail ou senha incorretos',
@@ -148,15 +156,31 @@ class AuthController {
     logger.debug('Usuário logado com sucesso.', {
       success: true,
       statusCode: StatusCodes.OK,
-      body: user,
       label: 'AuthController',
       method: 'POST',
+      user: {
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
+        role: user?.role,
+        profile_picture: user?.profile_picture,
+        created_at: user?.created_at,
+        updated_at: user?.updated_at,
+      },
     });
 
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
       message: 'Usuário logado com sucesso',
-      user,
+      user: {
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
+        role: user?.role,
+        profile_picture: user?.profile_picture,
+        created_at: user?.created_at,
+        updated_at: user?.updated_at,
+      },
       access_token: accessToken,
       refresh_token: refreshToken,
     });
@@ -226,8 +250,6 @@ class AuthController {
       user = (await User.findOne({
         where: { _id: decoded.id },
       })) as unknown as IUser;
-
-      user.password = '';
     } else {
       user = null;
 
@@ -240,14 +262,30 @@ class AuthController {
     logger.info('Usuário autenticado com sucesso.', {
       success: true,
       statusCode: StatusCodes.OK,
-      user,
+      user: {
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
+        role: user?.role,
+        profile_picture: user?.profile_picture,
+        created_at: user?.created_at,
+        updated_at: user?.updated_at,
+      },
     });
 
     return res.status(StatusCodes.OK).json({
       success: true,
       statusCode: StatusCodes.OK,
       message: 'Usuário autenticado com sucesso',
-      user,
+      user: {
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
+        role: user?.role,
+        profile_picture: user?.profile_picture,
+        created_at: user?.created_at,
+        updated_at: user?.updated_at,
+      },
     });
   };
 }
