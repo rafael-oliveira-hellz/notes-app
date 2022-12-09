@@ -9,7 +9,7 @@ const router = Router();
 router.get('/notes', verifyToken, isAdmin, NoteController.listAll);
 router.get('/notes/my-notes', verifyToken, NoteController.listAllFromUser);
 router.get('/notes/:id', verifyToken, NoteController.findByid);
-router.get('/notes/find', verifyToken, NoteController.findByField);
+router.get('/notes/search/request', verifyToken, NoteController.findByField);
 router.post('/notes', verifyToken, NoteController.create);
 router.put('/notes/:id', verifyToken, NoteController.update);
 router.delete('/notes/:id', verifyToken, NoteController.delete);

@@ -2,14 +2,14 @@ import { Schema } from 'mongoose';
 import mongoose from '../database/connection';
 import { INote } from './interfaces/note';
 
-const noteSchema = new Schema<INote>({
+const noteSchema = new Schema({
   title: {
     type: String,
     required: true,
   },
   subject: {
     type: String,
-    required: true
+    required: true,
   },
   content: {
     type: String,

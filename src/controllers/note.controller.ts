@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import logger from '../config/winston-logger';
 import { paginate } from '../middlewares/Pagination';
 import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
 import { IUser } from '../models/interfaces/user';
@@ -16,7 +17,7 @@ class NoteController {
   // [ ] Get all notes from the logged in user
   listAllFromUser = async (req: Request, res: Response): Promise<Response> => {
     const token = getUserToken(req) as string;
-    const user = getUserByToken(token) as unknown as IUser;
+    const user = (await getUserByToken(token)) as unknown as IUser;
 
     const userNotes = await Note.find({ assignee: user.id });
 
@@ -61,21 +62,74 @@ class NoteController {
     const field = String(req.query.field);
     const value = String(req.query.value);
 
-    const note = await Note.findOne({ [field]: value });
+    console.log(field);
+    console.log(value);
 
-    if (!note) {
-      return res.status(StatusCodes.NOT_FOUND).json({
+    if (field === null || field === undefined || field === '') {
+      logger.error('Não é possível buscar a anotação.', {
         success: false,
-        statusCode: StatusCodes.NOT_FOUND,
-        message: 'Nenhuma anotação encontrada com este ID.',
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: ReasonPhrases.BAD_REQUEST,
+      });
+
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: ReasonPhrases.BAD_REQUEST,
       });
     }
 
-    return res.status(StatusCodes.OK).json({
-      success: true,
-      statusCode: StatusCodes.OK,
-      note,
-    });
+    if (value === null || value === undefined || value === '') {
+      const result = await paginate(Note, req, res);
+
+      res.status(StatusCodes.OK).json(result);
+    }
+
+    try {
+      const note = await Note.find({
+        [field]: { $regex: value, $options: 'i' },
+      });
+
+      if (note) {
+        logger.debug('Anotação encontrada com sucesso.', {
+          success: true,
+          statusCode: StatusCodes.OK,
+          label: 'NoteController',
+          method: 'GET',
+        });
+
+        return res.status(StatusCodes.OK).json({
+          success: true,
+          statusCode: StatusCodes.OK,
+          message: 'Anotação encontrada com sucesso.',
+          note,
+        });
+      }
+
+      logger.error('Anotação não encontrada.', {
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        error: ReasonPhrases.NOT_FOUND,
+      });
+
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Anotação não encontrada.',
+      });
+    } catch (error) {
+      logger.error('Falha ao buscar anotação.', {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Falha ao buscar anotação.',
+      });
+    }
   };
 
   // [x] Create a note
@@ -125,10 +179,10 @@ class NoteController {
     });
   };
 
-  // [ ] Update a note from the logged in user
+  // [TO TEST] Update a note from the logged in user
   update = async (req: Request, res: Response): Promise<Response> => {
     const token = getUserToken(req) as string;
-    const user = getUserByToken(token) as unknown as IUser;
+    const user = (await getUserByToken(token)) as unknown as IUser;
 
     if (!user) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -150,11 +204,11 @@ class NoteController {
       });
     }
 
-    const userNote = note.assignee
+    const isAuthorized = note.assignee
       ? note.assignee.toString() === user.id
       : false;
 
-    if (!userNote) {
+    if (!isAuthorized) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
         statusCode: StatusCodes.UNAUTHORIZED,
@@ -171,7 +225,7 @@ class NoteController {
     if (content !== null || content !== undefined || content !== '')
       note.content = content;
     if (start_date !== null || start_date !== undefined || start_date !== '')
-      note.start_date = start_date;
+      note.start_date = start_date; // MM DD YYYY
     if (due_date !== null || due_date !== undefined || due_date !== '')
       note.due_date = due_date;
 
@@ -202,7 +256,7 @@ class NoteController {
   // [ ] Delete a note from the logged in user
   delete = async (req: Request, res: Response): Promise<Response> => {
     const token = getUserToken(req) as string;
-    const user = getUserByToken(token) as unknown as IUser;
+    const user = (await getUserByToken(token)) as unknown as IUser;
 
     if (!user) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -214,7 +268,7 @@ class NoteController {
 
     const { id } = req.params;
 
-    const note = await Note.findById(id);
+    const note = await Note.findByIdAndDelete({ _id: id });
 
     if (!note) {
       return res.status(StatusCodes.NOT_FOUND).json({
@@ -224,29 +278,34 @@ class NoteController {
       });
     }
 
-    const userNote = note.assignee
-      ? note.assignee.toString() === user.id
-      : false;
+    logger.info(`Anotação removida com sucesso por ${user.name}`, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: ReasonPhrases.OK,
+      label: 'NoteController',
+      method: 'DELETE',
+      note: {
+        id: note.id,
+        title: note.title,
+        content: note.content,
+        start_date: note.start_date,
+        due_date: note.due_date,
+      },
+    });
 
-    if (!userNote) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        statusCode: StatusCodes.UNAUTHORIZED,
-        message: 'Você não está autorizado a deletar esta anotação.',
-      });
-    }
-
-    const deletedNote = await Note.findByIdAndDelete(id);
-
-    if (!deletedNote) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: 'Não foi possível deletar a anotação.',
-      });
-    }
-
-    return res.status(StatusCodes.NO_CONTENT).send();
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: `Anotação removida com sucesso por ${user.name}`,
+      deletedNote: {
+        id: note.id,
+        title: note.title,
+        content: note.content,
+        assignee: user.id,
+        start_date: note.start_date,
+        due_date: note.due_date,
+      },
+    });
   };
 }
 

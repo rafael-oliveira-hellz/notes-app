@@ -4,7 +4,6 @@ import logger from '../config/winston-logger';
 import { paginate } from '../middlewares/Pagination';
 import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
 import { comparePassword, hashPassword } from '../middlewares/ValidatePassword';
-import { IUser } from '../models/interfaces/user';
 import User from '../models/User';
 import { isEmailValid } from '../utils/Validations';
 
@@ -12,22 +11,6 @@ class UserController {
   // [TO TEST] Get all users
   getAllUsers = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(User, req, res);
-
-    response.data = response.data.map((user: IUser) => {
-      return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        profile_picture: user.profile_picture,
-        created_at: user.created_at,
-        updated_at: user.updated_at,
-      };
-    });
-
-    const allData = Object.assign({}, ...response.data);
-
-    response.data = allData;
 
     return res.status(StatusCodes.OK).json(response);
   };
