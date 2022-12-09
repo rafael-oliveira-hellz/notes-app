@@ -200,11 +200,11 @@ class UserController {
         );
 
         if (isOldPasswordCorrect) {
-          const hashedPassword = hashPassword(newPassword);
+          const hashedPassword = await hashPassword(newPassword);
 
           const updatedUser = await User.updateOne(
             { password: hashedPassword },
-            // [ ] In case the update method fails, change from user.id to user.id
+            // [ ] In case the update method fails, change from user.id to user._id
             { where: { _id: user.id } }
           );
 

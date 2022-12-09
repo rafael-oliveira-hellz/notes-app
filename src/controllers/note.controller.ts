@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { paginate } from '../middlewares/Pagination';
 import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
 import { IUser } from '../models/interfaces/user';
@@ -91,9 +91,9 @@ class NoteController {
       });
     }
 
-    const { title, content, start_date, due_date } = req.body;
+    const { title, subject, content, start_date, due_date } = req.body;
 
-    if (!title || !content || !start_date || !due_date) {
+    if (!title || !subject || !content || !start_date || !due_date) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
@@ -103,6 +103,7 @@ class NoteController {
 
     const note = await Note.create({
       title,
+      subject,
       content,
       start_date,
       due_date,
@@ -161,23 +162,23 @@ class NoteController {
       });
     }
 
-    const { title, content, start_date, due_date } = req.body;
+    const { title, subject, content, start_date, due_date } = req.body;
 
-    if (!title || !content || !start_date || !due_date) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Todos os campos são obrigatórios.',
-      });
-    }
+    if (title !== null || title !== undefined || title !== '')
+      note.title = title;
+    if (subject !== null || subject !== undefined || subject !== '')
+      note.subject = subject;
+    if (content !== null || content !== undefined || content !== '')
+      note.content = content;
+    if (start_date !== null || start_date !== undefined || start_date !== '')
+      note.start_date = start_date;
+    if (due_date !== null || due_date !== undefined || due_date !== '')
+      note.due_date = due_date;
 
     const updatedNote = await Note.findByIdAndUpdate(
-      id,
+      { _id: note.id },
       {
-        title,
-        content,
-        start_date,
-        due_date,
+        $set: note,
       },
       { new: true }
     );
@@ -190,7 +191,12 @@ class NoteController {
       });
     }
 
-    return res.status(StatusCodes.NO_CONTENT).send();
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: ReasonPhrases.OK,
+      note: updatedNote,
+    });
   };
 
   // [ ] Delete a note from the logged in user

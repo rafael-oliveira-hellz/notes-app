@@ -187,7 +187,7 @@ class AuthController {
       });
     }
 
-    const user = await User.findOne({ where: { id: decoded.id } });
+    const user = await User.findOne({ where: { _id: decoded.id } });
 
     if (!user) {
       return res.status(StatusCodes.NOT_FOUND).json({
@@ -224,7 +224,7 @@ class AuthController {
       ) as JwtPayload;
 
       user = (await User.findOne({
-        where: { id: decoded.id },
+        where: { _id: decoded.id },
       })) as unknown as IUser;
 
       user.password = '';
