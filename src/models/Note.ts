@@ -10,7 +10,7 @@ const noteSchema = new Schema<INote>({
   subject: {
     type: string,
     required: true
-  }
+  },
   content: {
     type: String,
     required: true,
