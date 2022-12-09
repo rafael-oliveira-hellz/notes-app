@@ -8,7 +8,7 @@ const noteSchema = new Schema<INote>({
     required: true,
   },
   subject: {
-    type: string,
+    type: String,
     required: true
   },
   content: {
