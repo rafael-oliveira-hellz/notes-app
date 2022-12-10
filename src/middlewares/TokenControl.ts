@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import logger from '../config/winston-logger';
 import { IUser } from '../models/interfaces/user';
 import User from '../models/User';
-import Bundle from '../utils/Bundle';
 
 // Get the user token from somewhere
 const getUserToken = (req: Request) => {
@@ -53,9 +52,9 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
     });
   }
 
-  try {
-    const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
+  const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
 
+  try {
     const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
     if (!decoded) {
@@ -71,27 +70,13 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
       });
     }
 
-    const id = decoded.id;
-
-    const user = User.findOne({
-      where: {
-        id,
-      },
-    });
-
-    Bundle.setBundle(req, user, null);
+    req.user = decoded;
 
     next();
   } catch (error) {
-    logger.error('Token inválido.', {
-      success: false,
-      statusCod: StatusCodes.UNAUTHORIZED,
-    });
-
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      success: false,
-      statusCode: StatusCodes.UNAUTHORIZED,
-      message: ReasonPhrases.UNAUTHORIZED,
+    return res.status(400).json({
+      status: 400,
+      error: 'Token inválido',
     });
   }
 
