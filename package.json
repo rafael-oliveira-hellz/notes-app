@@ -1,12 +1,12 @@
 {
   "name": "notes-app-mvp",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "app/dist/index.js",
   "author": "Rafael de Oliveira (Hellz)",
   "license": "ISC",
   "scripts": {
-    "dev": "tsc && node dist/index.js",
-    "start": "node dist/index.js",
+    "dev": "tsc && node app/dist/index.js",
+    "start": "node app/dist/index.js",
     "postinstall": "tsc",
     "lint:fix": "eslint ./src --ext .ts --fix",
     "style:fix": "prettier --write \"src/**/*.ts\"",
