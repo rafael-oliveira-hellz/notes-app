@@ -2,11 +2,11 @@ import { Request, Response } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import joi from 'joi';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { comparePassword, hashPassword } from 'middlewares/ValidatePassword';
-import User from 'models/User';
 import logger from '../config/winston-logger';
 import { generateToken, getUserToken } from '../middlewares/TokenControl';
+import { comparePassword, hashPassword } from '../middlewares/ValidatePassword';
 import { IUser } from '../models/interfaces/user';
+import User from '../models/User';
 
 class AuthController {
   // [TO TEST] Create a user

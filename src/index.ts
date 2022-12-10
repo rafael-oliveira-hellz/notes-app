@@ -7,12 +7,12 @@ import express, { NextFunction } from 'express';
 import session from 'express-session';
 import helmet from 'helmet';
 import xss from 'xss-clean';
-import { config } from './config';
+import { config } from './config/config';
 
 // Routes
-import { router as AuthRouter } from './src/routes/auth.route';
-import { router as NoteRouter } from './src/routes/note.route';
-import { router as UserRouter } from './src/routes/user.route';
+import { router as AuthRouter } from './routes/auth.route';
+import { router as NoteRouter } from './routes/note.route';
+import { router as UserRouter } from './routes/user.route';
 
 const app = express();
 
