@@ -1,6 +1,6 @@
-import logger from '@config/winston-logger';
 import { Request } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import logger from '../config/winston-logger';
 
 const paginate = async (model: any, req: Request, res: any) => {
   const page: number = Number(req.query.page) || 1;
