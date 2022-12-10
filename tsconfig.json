@@ -3,12 +3,12 @@
     "target": "ES2022",
     "module": "commonjs",
     "allowJs": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "outDir": "dist",
+    "rootDir": "src",
     "strict": true,
     "strictPropertyInitialization": false,
     "moduleResolution": "node",
-    "baseUrl": "./src",
+    "baseUrl": "src",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
@@ -17,24 +17,9 @@
     "noImplicitAny": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "typeRoots": [
-      "../../node_modules/@types",
-      "src/@types"
-    ],
-    "paths": {
-      "@config/*": [
-        "config/*"
-      ],
-      "@modules/*": [
-        "modules/*"
-      ],
-      "@shared/*": [
-        "shared/*"
-      ]
-    }
+    "sourceMap": true,
+    "typeRoots": ["../../node_modules/@types", "src/@types"]
   },
-  "include": [
-    "src",
-    "__tests__"
-  ]
+  "lib": ["ES2022"],
+  "include": ["src", "__tests__"]
 }
