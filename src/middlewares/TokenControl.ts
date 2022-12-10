@@ -84,11 +84,7 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
 };
 
 // Generate user access token
-const generateToken = (
-  user: JwtPayload,
-  secretKey: string,
-  expiry: string
-): string => {
+const generateToken = (user: JwtPayload, secretKey: string): string => {
   logger.info('Gerando token de acesso...', {
     success: true,
     statusCode: StatusCodes.OK,
@@ -101,12 +97,10 @@ const generateToken = (
     },
     secretKey,
     {
-      expiresIn: process.env.NODE_ENV === 'production' ? expiry : '12h',
+      expiresIn: '24h',
       algorithm: 'HS512',
     }
   );
-
-  logger.info('expiry token: ', expiry);
 
   logger.info('Token de acesso gerado com sucesso.', {
     success: true,

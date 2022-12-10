@@ -63,8 +63,7 @@ class AuthController {
 
         const accessToken = generateToken(
           user,
-          process.env.ACCESS_TOKEN_SECRET as string,
-          process.env.ACCESS_TOKEN_EXPIRES_IN as string
+          process.env.ACCESS_TOKEN_SECRET as string
         );
 
         logger.debug('Usuário criado com sucesso.', {
@@ -143,14 +142,12 @@ class AuthController {
 
     const accessToken = generateToken(
       user,
-      process.env.ACCESS_TOKEN_SECRET as string,
-      process.env.ACCESS_TOKEN_EXPIRES_IN as string
+      process.env.ACCESS_TOKEN_SECRET as string
     );
 
     const refreshToken = generateToken(
       user,
-      process.env.REFRESH_TOKEN_SECRET as string,
-      process.env.REFRESH_TOKEN_EXPIRES_IN as string
+      process.env.REFRESH_TOKEN_SECRET as string
     );
 
     logger.debug('Usuário logado com sucesso.', {
@@ -223,8 +220,7 @@ class AuthController {
 
     const accessToken = generateToken(
       user,
-      process.env.ACCESS_TOKEN_SECRET as string,
-      process.env.ACCESS_TOKEN_EXPIRES_IN as string
+      process.env.ACCESS_TOKEN_SECRET as string
     );
 
     return res.status(StatusCodes.OK).json({
