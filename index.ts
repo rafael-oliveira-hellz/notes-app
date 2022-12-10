@@ -67,6 +67,7 @@ app.use((_req, res: any, next: NextFunction) => {
 });
 
 app.use('/api/v1', UserRouter, AuthRouter, NoteRouter);
+app.get('/', (_req, res) => res.send('APP is working!'));
 
 app.listen(config.server.port, () =>
   console.log(`This app is listening on port ${config.server.port}`)
