@@ -11,12 +11,19 @@ router.get('/notes/my-notes', verifyToken, NoteController.listAllFromUser);
 router.get('/notes/:id', verifyToken, NoteController.findByid);
 router.get('/notes/search/request', verifyToken, NoteController.findByField);
 router.post('/notes', verifyToken, NoteController.create);
-router.put('/notes/:id', verifyToken, NoteController.update);
+router.put('/notes/edit/:id', verifyToken, NoteController.update);
 router.delete('/notes/:id', verifyToken, NoteController.delete);
 
 logger.debug('Note routes initialized', {
   label: 'NoteController',
-  paths: ['/notes', '/notes/:id', '/notes/find'],
+  paths: [
+    '/notes',
+    '/notes/:id',
+    '/notes/my-notes',
+    '/notes/find',
+    '/notes/edit/:id',
+    '/notes/search/request',
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 });
 

@@ -10,9 +10,13 @@ const router = Router();
 router.get('/users', UserController.getAllUsers);
 router.get('/users/me', verifyToken, UserController.getUserProfile);
 router.get('/users/find', verifyToken, isAdmin, UserController.getUserByField);
-router.patch('/users/me', verifyToken, UserController.updateUserPassword);
+router.patch(
+  '/users/change-password',
+  verifyToken,
+  UserController.updateUserPassword
+);
 router.put(
-  '/users/me',
+  '/users/edit/profile',
   verifyToken,
   imageUpload.single('profile_picture'),
   UserController.updateUser
@@ -22,7 +26,14 @@ router.delete('/users/:id', verifyToken, isAdmin, UserController.deleteUser);
 
 logger.debug('User routes initialized', {
   label: 'UserController',
-  paths: ['/users', '/users/me', '/users/find'],
+  paths: [
+    '/users',
+    '/users/me',
+    '/users/:id',
+    '/users/find',
+    '/users/change-password',
+    '/users/edit/profile',
+  ],
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
 });
 
