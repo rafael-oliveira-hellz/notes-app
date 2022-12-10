@@ -102,7 +102,7 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
 const generateToken = (
   user: JwtPayload,
   secretKey: string,
-  expiry: number
+  expiry: string
 ): string => {
   logger.info('Gerando token de acesso...', {
     success: true,
@@ -111,7 +111,7 @@ const generateToken = (
 
   const token = jwt.sign(
     {
-      id: user._id,
+      id: user.id,
       role: user.role,
     },
     secretKey,
@@ -120,6 +120,8 @@ const generateToken = (
       algorithm: 'HS512',
     }
   );
+
+  logger.info('expiry token: ', expiry);
 
   logger.info('Token de acesso gerado com sucesso.', {
     success: true,
