@@ -16,8 +16,6 @@ import { router as UserRouter } from './routes/user.route';
 
 const app = express();
 
-const port = process.env.APP_PORT || 4000;
-
 app.use(bodyParser.json());
 app.use(helmet());
 app.use(
