@@ -301,7 +301,9 @@ class AuthController {
         return res.status(StatusCodes.UNAUTHORIZED).json({
           success: false,
           statusCode: StatusCodes.UNAUTHORIZED,
+          reason: ReasonPhrases.UNAUTHORIZED,
           message: 'Falha ao autenticar usuário',
+          error: error.message,
           stack: error.stack,
         });
       }
