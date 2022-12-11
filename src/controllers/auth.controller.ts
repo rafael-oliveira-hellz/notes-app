@@ -236,53 +236,92 @@ class AuthController {
     let user;
 
     if (req.headers['authorization']) {
-      const token = getUserToken(req) as string;
+      try {
+        const token = getUserToken(req) as string;
 
-      const decoded = jwt.verify(
-        token,
-        String(process.env.ACCESS_TOKEN_SECRET)
-      ) as JwtPayload;
+        const decoded = jwt.verify(
+          token,
+          String(process.env.ACCESS_TOKEN_SECRET)
+        ) as JwtPayload;
 
-      user = (await User.findOne({
-        where: { _id: decoded.id },
-      })) as unknown as IUser;
+        user = (await User.findOne({
+          where: { _id: decoded.id },
+        })) as unknown as IUser;
+
+        if (user) {
+          logger.info('Usuário autenticado com sucesso.', {
+            success: true,
+            statusCode: StatusCodes.OK,
+            user: {
+              id: user?.id,
+              name: user?.name,
+              email: user?.email,
+              role: user?.role,
+              profile_picture: user?.profile_picture,
+              created_at: user?.created_at,
+              updated_at: user?.updated_at,
+            },
+          });
+
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Usuário autenticado com sucesso',
+            user: {
+              id: user?.id,
+              name: user?.name,
+              email: user?.email,
+              role: user?.role,
+              profile_picture: user?.profile_picture,
+              created_at: user?.created_at,
+              updated_at: user?.updated_at,
+            },
+          });
+        } else {
+          logger.error('Usuário não encontrado.', {
+            success: false,
+            statusCode: StatusCodes.NOT_FOUND,
+            message: ReasonPhrases.NOT_FOUND,
+          });
+
+          return res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            statusCode: StatusCodes.NOT_FOUND,
+            message: 'Usuário não encontrado',
+          });
+        }
+      } catch (error: any) {
+        logger.error('Falha ao autenticar usuário.', {
+          success: false,
+          statusCode: StatusCodes.UNAUTHORIZED,
+          message: error.message,
+          stack: error.stack,
+        });
+
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+          success: false,
+          statusCode: StatusCodes.UNAUTHORIZED,
+          message: 'Falha ao autenticar usuário',
+          stack: error.stack,
+        });
+      }
     } else {
       user = null;
 
-      logger.error('Falha ao autenticar usuário.', {
+      logger.error(
+        'Token não fornecido. Não foi possível autenticar o usuário!',
+        {
+          success: false,
+          statusCode: StatusCodes.UNAUTHORIZED,
+        }
+      );
+
+      return res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
         statusCode: StatusCodes.UNAUTHORIZED,
+        message: 'Token inválido. Não foi possível autenticar o usuário!',
       });
     }
-
-    logger.info('Usuário autenticado com sucesso.', {
-      success: true,
-      statusCode: StatusCodes.OK,
-      user: {
-        id: user?.id,
-        name: user?.name,
-        email: user?.email,
-        role: user?.role,
-        profile_picture: user?.profile_picture,
-        created_at: user?.created_at,
-        updated_at: user?.updated_at,
-      },
-    });
-
-    return res.status(StatusCodes.OK).json({
-      success: true,
-      statusCode: StatusCodes.OK,
-      message: 'Usuário autenticado com sucesso',
-      user: {
-        id: user?.id,
-        name: user?.name,
-        email: user?.email,
-        role: user?.role,
-        profile_picture: user?.profile_picture,
-        created_at: user?.created_at,
-        updated_at: user?.updated_at,
-      },
-    });
   };
 }
 
