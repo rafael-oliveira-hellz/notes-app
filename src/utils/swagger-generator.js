@@ -88,10 +88,20 @@ const doc = {
       },
       access_token: 'token=123456789',
     },
+    newUser: {
+      name: 'John Doe',
+      email: 'john@doe.com',
+      password: '123456789',
+    },
     OK: {
       success: true,
       statusCode: 200,
       message: 'Requisição realizada com sucesso!',
+    },
+    Conflict: {
+      success: false,
+      statusCode: 409,
+      message: 'Já existe um usuário com este e-mail!',
     },
     Unauthorized: {
       success: false,

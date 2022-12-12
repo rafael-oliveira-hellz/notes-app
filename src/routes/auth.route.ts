@@ -7,39 +7,30 @@ const router = Router();
 router.post('/auth/signup', AuthController.createUser, (_req, _res) => {
   // #swagger.tags = ['Auth']
   // #swagger.description = 'Endpoint para criar um novo usuário.'
-  /*  #swagger.parameters['name'] = {
-      in: 'body',
-      description: 'Nome do usuário a ser cadastrado',
-      type: 'string'
-  }
-      #swagger.parameters['email'] = {
-      in: 'body',
-      description: 'Email do usuário a ser cadastrado',
-      type: 'string'
-  }
-      #swagger.parameters['password'] = {
-      in: 'body',
-      description: 'Senha do usuário a ser cadastrado',
-      type: 'string'
-  }
-
+  /* #swagger.parameters['createUser'] = {
+     in: 'body',
+     description: 'Dados do novo usuário.',
+     required: true,
+     type: 'object',
+     schema: { $ref: "#/definitions/CreateUser" }
+   }*/
   /* #swagger.responses[201] = {
-      description: 'Usuário criado com sucesso.',
-      schema: { $ref: "#/definitions/CreateUser" }
-    }
-      #swagger.responses[400] = {
-      description: 'Requisição inválida.',
-      schema: { $ref: "#/definitions/BadRequest" }
-    }
-      #swagger.responses[409] = {
-      description: 'Usuário já existe.',
-      schema: { $ref: "#/definitions/Conflict" }
-    }
-    #swagger.responses[500] = {
-      description: 'Erro interno do servidor.',
-      schema: { $ref: "#/definitions/InternalServerError" }
-    }
-    */
+    description: 'Usuário criado com sucesso.',
+    schema: { $ref: "#/definitions/CreateUser" }
+  }
+    #swagger.responses[400] = {
+    description: 'Requisição inválida.',
+    schema: { $ref: "#/definitions/BadRequest" }
+  }
+    #swagger.responses[409] = {
+    description: 'Usuário já existe.',
+    schema: { $ref: "#/definitions/Conflict" }
+  }
+  #swagger.responses[500] = {
+    description: 'Erro interno do servidor.',
+    schema: { $ref: "#/definitions/InternalServerError" }
+  }
+  */
 });
 router.post('/auth/signin', AuthController.signIn);
 router.post('/auth/refresh-token', AuthController.refreshToken);

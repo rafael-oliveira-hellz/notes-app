@@ -40,40 +40,12 @@
         "description": "Endpoint para criar um novo usuário.",
         "parameters": [
           {
-            "name": "name",
+            "name": "createUser",
             "in": "body",
+            "description": "Dados do novo usuário.",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                }
-              }
-            },
-            "description": "Nome do usuário a ser cadastrado"
-          },
-          {
-            "name": "email",
-            "in": "body",
-            "description": "Email do usuário a ser cadastrado",
-            "schema": {
-              "type": "object",
-              "properties": {}
-            }
-          },
-          {
-            "name": "password",
-            "in": "body",
-            "description": "Senha do usuário a ser cadastrado",
-            "schema": {
-              "type": "object",
-              "properties": {}
+              "$ref": "#/definitions/CreateUser"
             }
           }
         ],
@@ -713,6 +685,23 @@
         }
       }
     },
+    "newUser": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "john@doe.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456789"
+        }
+      }
+    },
     "OK": {
       "type": "object",
       "properties": {
@@ -727,6 +716,23 @@
         "message": {
           "type": "string",
           "example": "Requisição realizada com sucesso!"
+        }
+      }
+    },
+    "Conflict": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": false
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 409
+        },
+        "message": {
+          "type": "string",
+          "example": "Já existe um usuário com este e-mail!"
         }
       }
     },
