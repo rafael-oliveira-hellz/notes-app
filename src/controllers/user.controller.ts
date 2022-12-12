@@ -65,6 +65,33 @@ class UserController {
     }
   };
 
+  // [ ] Image preview route
+  imagePreview = async (req: Request, res: Response) => {
+    const token = getUserToken(req) as string;
+    const user = await getUserByToken(token);
+
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Usuário não encontrado.',
+      });
+    }
+
+    if (!user.profile_picture) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Imagem não encontrada.',
+      });
+    }
+
+    res.set('Content-Type', 'image/png');
+    res.send(user.profile_picture);
+  };
+
+  // [ ] Image upload route
+
   // [TO TEST] Get a user by field
   getUserByField = async (req: Request, res: any) => {
     const field = String(req.query.field);
