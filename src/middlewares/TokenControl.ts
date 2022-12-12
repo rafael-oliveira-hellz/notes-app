@@ -19,7 +19,7 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
 
   if (!authHeader) {
-    logger.error('Acesso negado. Token não informado!', {
+    logger.error('Acesso negado. Você não está autenticado!', {
       success: false,
       statusCode: StatusCodes.UNAUTHORIZED,
     });
@@ -27,7 +27,7 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
     return res.status(StatusCodes.UNAUTHORIZED).json({
       success: false,
       statusCode: StatusCodes.UNAUTHORIZED,
-      message: 'Acesso negado. Token não informado!',
+      message: 'Acesso negado. Você não está autenticado!',
     });
   }
 
@@ -40,15 +40,19 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
   });
 
   if (!token) {
-    logger.error('Acesso negado!', {
-      success: false,
-      statusCod: StatusCodes.FORBIDDEN,
-    });
+    logger.error(
+      'Acesso negado. Você não tem permissão para acessar este recurso!',
+      {
+        success: false,
+        statusCod: StatusCodes.FORBIDDEN,
+      }
+    );
 
     return res.status(StatusCodes.FORBIDDEN).json({
       success: false,
       statusCode: StatusCodes.FORBIDDEN,
-      message: 'Acesso negado!',
+      message:
+        'Acesso negado. Você não tem permissão para acessar este recurso!',
     });
   }
 
@@ -58,15 +62,19 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
     const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
     if (!decoded) {
-      logger.error('Acesso negado!', {
-        success: false,
-        statusCode: StatusCodes.FORBIDDEN,
-      });
+      logger.error(
+        'Acesso negado. Você não tem permissão para acessar este recurso!',
+        {
+          success: false,
+          statusCode: StatusCodes.FORBIDDEN,
+        }
+      );
 
       return res.status(StatusCodes.FORBIDDEN).json({
         success: false,
         statusCode: StatusCodes.FORBIDDEN,
-        message: 'Acesso negado!',
+        message:
+          'Acesso negado. Você não tem permissão para acessar este recurso!',
       });
     }
 
@@ -74,9 +82,10 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
 
     next();
   } catch (error) {
-    return res.status(400).json({
-      status: 400,
-      error: 'Token inválido',
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      status: StatusCodes.BAD_REQUEST,
+      message: 'Requisição inválida!',
     });
   }
 

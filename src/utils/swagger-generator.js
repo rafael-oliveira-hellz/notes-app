@@ -43,22 +43,32 @@ const doc = {
         father: 'Simon Doe',
         mother: 'Marie Doe',
       },
-      diplomas: [
-        {
-          school: 'XYZ University',
-          year: 2020,
-          completed: true,
-          internship: {
-            hours: 290,
-            location: 'XYZ Company',
-          },
-        },
-      ],
     },
-    AddUser: {
-      $name: 'Jhon Doe',
-      $age: 29,
-      about: '',
+    OK: {
+      success: true,
+      statusCode: 200,
+      message: 'Requisição realizada com sucesso!',
+    },
+    Unauthorized: {
+      success: false,
+      statusCode: 401,
+      message: 'Acesso negado. Você não está autenticado!',
+    },
+    Forbidden: {
+      success: false,
+      statusCode: 403,
+      message:
+        'Acesso negado. Você não tem permissão para acessar este recurso!',
+    },
+    BadRequest: {
+      success: false,
+      statusCode: 400,
+      message: 'Requisição inválida!',
+    },
+
+    UserLogin: {
+      email: 'john@doe.com',
+      password: '123456',
     },
   },
 };

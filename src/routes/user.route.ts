@@ -14,7 +14,28 @@ router.get(
   '/users/active',
   verifyToken,
   isAdmin,
-  UserController.getActiveUsers
+  UserController.getActiveUsers,
+  (_req, _res) => {
+    // #swagger.tags = ['User']
+    // #swagger.description = 'Endpoint para obter todos os usuários ativos.'
+    /* #swagger.responses[200] = {
+      description: 'Listar usuários ativos no sistema.',
+      schema: { $ref: "#/definitions/User" }
+    }
+      #swagger.responses[400] = {
+      description: 'Requisição inválida.',
+      schema: { $ref: "#/definitions/BadRequest" }
+    }
+      #swagger.responses[401] = {
+      description: 'Acesso não autorizado.',
+      schema: { $ref: "#/definitions/Unauthorized" }
+    }
+      #swagger.responses[403] = {
+      description: 'Acesso negado.',
+      schema: { $ref: "#/definitions/Forbidden" }
+    }
+    */
+  }
 );
 router.get(
   '/users/inactive',

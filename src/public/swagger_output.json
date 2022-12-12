@@ -121,11 +121,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/users/me": {
@@ -138,11 +134,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       },
       "delete": {
         "description": "",
@@ -153,11 +145,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/users/find": {
@@ -180,16 +168,15 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/users/active": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para obter todos os usuários ativos.",
         "parameters": [
           {
             "name": "authorization",
@@ -198,8 +185,29 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Listar usuários ativos no sistema.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
           "400": {
-            "description": "Bad Request"
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Acesso não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Acesso negado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
           }
         }
       }
@@ -214,11 +222,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/users/change-password": {
@@ -246,11 +250,7 @@
             }
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/users/edit/profile": {
@@ -284,11 +284,7 @@
             }
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/users/{id}": {
@@ -307,11 +303,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/notes": {
@@ -324,11 +316,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       },
       "post": {
         "description": "",
@@ -339,11 +327,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/notes/my-notes": {
@@ -356,11 +340,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/notes/{id}": {
@@ -379,11 +359,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       },
       "delete": {
         "description": "",
@@ -400,11 +376,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/notes/search/request": {
@@ -427,11 +399,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/notes/pending": {
@@ -444,11 +412,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/notes/completed": {
@@ -461,11 +425,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/notes/overdue": {
@@ -478,11 +438,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
     "/notes/edit/{id}": {
@@ -525,11 +481,7 @@
             }
           }
         ],
-        "responses": {
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     }
   },
@@ -557,62 +509,89 @@
               "example": "Marie Doe"
             }
           }
-        },
-        "diplomas": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "school": {
-                "type": "string",
-                "example": "XYZ University"
-              },
-              "year": {
-                "type": "number",
-                "example": 2020
-              },
-              "completed": {
-                "type": "boolean",
-                "example": true
-              },
-              "internship": {
-                "type": "object",
-                "properties": {
-                  "hours": {
-                    "type": "number",
-                    "example": 290
-                  },
-                  "location": {
-                    "type": "string",
-                    "example": "XYZ Company"
-                  }
-                }
-              }
-            }
-          }
         }
       }
     },
-    "AddUser": {
+    "OK": {
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string",
-          "example": "Jhon Doe"
+        "success": {
+          "type": "boolean",
+          "example": true
         },
-        "age": {
+        "statusCode": {
           "type": "number",
-          "example": 29
+          "example": 200
         },
-        "about": {
+        "message": {
           "type": "string",
-          "example": ""
+          "example": "Requisição realizada com sucesso!"
         }
-      },
-      "required": [
-        "name",
-        "age"
-      ]
+      }
+    },
+    "Unauthorized": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": false
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 401
+        },
+        "message": {
+          "type": "string",
+          "example": "Acesso negado. Você não está autenticado!"
+        }
+      }
+    },
+    "Forbidden": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": false
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 403
+        },
+        "message": {
+          "type": "string",
+          "example": "Acesso negado. Você não tem permissão para acessar este recurso!"
+        }
+      }
+    },
+    "BadRequest": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": false
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 400
+        },
+        "message": {
+          "type": "string",
+          "example": "Requisição inválida!"
+        }
+      }
+    },
+    "UserLogin": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "john@doe.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456"
+        }
+      }
     }
   }
 }
