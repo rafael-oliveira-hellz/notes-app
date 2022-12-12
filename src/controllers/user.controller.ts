@@ -286,7 +286,7 @@ class UserController {
         const { name, email, password, role } = req.body;
 
         if (req.file) {
-          user.profile_picture = req.file.filename;
+          user.profile_picture = `/uploads/images/${req.file.filename}`;
         }
 
         if (name) {

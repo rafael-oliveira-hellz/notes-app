@@ -6,17 +6,17 @@ import path from 'path';
 // Destination to store the images
 const imageStorage = multer.diskStorage({
   destination: (req: Request, file: any, cb: any) => {
-    let folder = '';
+    // let folder = '';
 
-    if (req.baseUrl.includes('users')) {
-      folder = 'users';
-    } else if (req.baseUrl.includes('auth')) {
-      folder = 'auth';
-    } else if (req.baseUrl.includes('notes')) {
-      folder = 'notes';
-    }
+    // if (req.baseUrl.includes('users')) {
+    //   folder = 'users';
+    // } else if (req.baseUrl.includes('auth')) {
+    //   folder = 'auth';
+    // } else if (req.baseUrl.includes('notes')) {
+    //   folder = 'notes';
+    // }
 
-    cb(null, `src/public/uploads/images/${folder}`);
+    cb(null, `src/public/uploads/images`);
   },
 
   filename: (_req: Request, file: any, cb: any) => {
