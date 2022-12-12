@@ -56,7 +56,7 @@ router.put(
 );
 router.delete('/users/me', verifyToken, UserController.deleteProfile);
 router.delete('/users/:id', verifyToken, isAdmin, UserController.deleteUser);
-router.get('/users/preview', verifyToken, UserController.imagePreview);
+
 logger.debug('User routes initialized', {
   label: 'UserController',
   paths: [
