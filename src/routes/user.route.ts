@@ -10,6 +10,18 @@ const router = Router();
 router.get('/users', UserController.getAllUsers);
 router.get('/users/me', verifyToken, UserController.getUserProfile);
 router.get('/users/find', verifyToken, isAdmin, UserController.getUserByField);
+router.get(
+  '/users/active',
+  verifyToken,
+  isAdmin,
+  UserController.getActiveUsers
+);
+router.get(
+  '/users/inactive',
+  verifyToken,
+  isAdmin,
+  UserController.getInactiveUsers
+);
 router.patch(
   '/users/change-password',
   verifyToken,

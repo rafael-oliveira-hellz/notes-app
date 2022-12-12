@@ -156,6 +156,70 @@ class UserController {
     }
   };
 
+  // Find all the active users
+  getActiveUsers = async (req: Request, res: Response) => {
+    try {
+      const users = await User.find({
+        status: 'active',
+      }).select('-password');
+
+      logger.debug('Usuários encontrados com sucesso.', {
+        success: true,
+        statusCode: StatusCodes.OK,
+        label: 'UserController',
+        method: 'GET',
+      });
+
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Usuários encontrados com sucesso.',
+        users,
+      });
+    } catch (error: any) {
+      logger.error('Falha ao buscar usuários.', {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Falha ao buscar usuários.',
+      });
+    }
+  };
+
+  // Find all the inactive users
+  getInactiveUsers = async (req: Request, res: Response) => {
+    try {
+      const users = await User.find({
+        status: 'inactive',
+      }).select('-password');
+
+      logger.debug('Usuários encontrados com sucesso.', {
+        success: true,
+        statusCode: StatusCodes.OK,
+        label: 'UserController',
+        method: 'GET',
+      });
+
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Usuários encontrados com sucesso.',
+        users,
+      });
+    } catch (error: any) {
+      logger.error('Falha ao buscar usuários.', {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+    }
+  };
+
   // [TO TEST] Update user's password
   updateUserPassword = async (req: Request, res: Response) => {
     try {
