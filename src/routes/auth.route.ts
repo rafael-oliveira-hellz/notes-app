@@ -16,7 +16,7 @@ router.post('/auth/signup', AuthController.createUser, (_req, _res) => {
    }*/
   /* #swagger.responses[201] = {
     description: 'Usuário criado com sucesso.',
-    schema: { $ref: "#/definitions/CreateUser" }
+    schema: { $ref: "#/definitions/newUser" }
   }
     #swagger.responses[400] = {
     description: 'Requisição inválida.',
