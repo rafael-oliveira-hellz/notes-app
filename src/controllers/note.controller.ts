@@ -169,7 +169,7 @@ class NoteController {
   };
 
   // [TO TEST] Get notes with status 'pending'
-  getPendingNotes = async (req: Request, res: Response): Promise<Response> => {
+  listPending = async (req: Request, res: Response): Promise<Response> => {
     const token = getUserToken(req) as string;
     const user = (await getUserByToken(token)) as unknown as IUser;
 
@@ -201,10 +201,7 @@ class NoteController {
   };
 
   // [TO TEST] Get notes with status 'completed'
-  getCompletedNotes = async (
-    req: Request,
-    res: Response
-  ): Promise<Response> => {
+  listCompleted = async (req: Request, res: Response): Promise<Response> => {
     const token = getUserToken(req) as string;
     const user = (await getUserByToken(token)) as unknown as IUser;
 
@@ -236,7 +233,7 @@ class NoteController {
   };
 
   // [To Test] Get notes with status 'overdue'
-  getOverdueNotes = async (req: Request, res: Response): Promise<Response> => {
+  listOverdue = async (req: Request, res: Response): Promise<Response> => {
     const token = getUserToken(req) as string;
     const user = (await getUserByToken(token)) as unknown as IUser;
 
