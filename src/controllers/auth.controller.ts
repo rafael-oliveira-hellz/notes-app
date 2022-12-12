@@ -26,12 +26,12 @@ class AuthController {
     if (error) {
       logger.error('Falha ao validar dados para criação de usuário.', {
         success: false,
-        statusCode: 400,
+        statusCode: StatusCodes.BAD_REQUEST,
         error: error.details[0].message,
       });
 
-      return res.status(400).json({
-        status: 400,
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        status: StatusCodes.BAD_REQUEST,
         message: error.details[0].message,
       });
     }
@@ -40,12 +40,12 @@ class AuthController {
     if (userExists) {
       logger.error('O usuário já existe, tente outro e-mail.', {
         success: false,
-        statusCode: StatusCodes.BAD_REQUEST,
+        statusCode: StatusCodes.CONFLICT,
       });
 
-      return res.status(StatusCodes.BAD_REQUEST).json({
+      return res.status(StatusCodes.CONFLICT).json({
         success: false,
-        statusCode: StatusCodes.BAD_REQUEST,
+        statusCode: StatusCodes.CONFLICT,
         message: 'O usuário já existe, tente outro e-mail.',
       });
     }
@@ -107,7 +107,8 @@ class AuthController {
 
   // [TO TEST] Login user
   signIn = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
+    const email = String(req.body.email);
+    const password = String(req.body.password);
 
     if (!email) {
       return res.status(StatusCodes.BAD_REQUEST).json({
@@ -153,10 +154,12 @@ class AuthController {
     if (!user?.lastLoginDate) {
       user.lastLoginDate = new Date();
       user.currentLoginDate = new Date();
+      user.email_verified_at = new Date();
+
       await user?.save();
     }
 
-    if (user?.lastLoginDate) {
+    if (user.lastLoginDate) {
       const currentDate = new Date();
       const lastLoginDate = user?.currentLoginDate;
       user.lastLoginDate = lastLoginDate;
@@ -165,18 +168,21 @@ class AuthController {
       await user?.save();
     }
 
-    const currentDate = user?.currentLoginDate;
-    const lastLoginDate = user?.lastLoginDate;
-    const differenceInDays = Math.floor(
-      (currentDate.getTime() - lastLoginDate.getTime()) / (1000 * 3600 * 24)
-    );
+    const currentDate = user.currentLoginDate;
+    const lastLoginDate = user.lastLoginDate;
 
-    logger.info('differenceInDays', { differenceInDays });
+    if (currentDate !== undefined && lastLoginDate !== undefined) {
+      const differenceInDays = Math.floor(
+        (currentDate.getTime() - lastLoginDate.getTime()) / (1000 * 3600 * 24)
+      );
 
-    if (differenceInDays > 30) {
-      user.status = 'inactive';
+      logger.info('differenceInDays', { differenceInDays });
 
-      await user?.save();
+      if (differenceInDays > 30) {
+        user.status = 'inactive';
+
+        await user?.save();
+      }
     }
 
     if (user?.status === 'inactive') {

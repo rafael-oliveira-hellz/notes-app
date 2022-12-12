@@ -34,7 +34,10 @@
   "paths": {
     "/auth/signup": {
       "post": {
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "description": "Endpoint para criar um novo usuário.",
         "parameters": [
           {
             "name": "body",
@@ -56,8 +59,29 @@
           }
         ],
         "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/CreateUser"
+            }
+          },
           "400": {
-            "description": "Bad Request"
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "409": {
+            "description": "Usuário já existe.",
+            "schema": {
+              "$ref": "#/definitions/Conflict"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
           }
         }
       }
@@ -489,26 +513,187 @@
     "User": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "example": "ab476fh5gd65vc9"
+        },
         "name": {
           "type": "string",
-          "example": "Jhon Doe"
+          "example": "John Doe"
         },
-        "age": {
-          "type": "number",
-          "example": 29
+        "email": {
+          "type": "string",
+          "example": "john@doe.com"
         },
-        "parents": {
+        "password": {
+          "type": "string",
+          "example": "123456789"
+        },
+        "role": {
+          "type": "string",
+          "example": "admin"
+        },
+        "status": {
+          "type": "string",
+          "example": "active"
+        },
+        "profile_picture": {
+          "type": "string",
+          "example": "https://example.com/profile-picture.jpg"
+        },
+        "email_verified_at": {
+          "type": "string",
+          "example": "2022-01-01T00:00:00.000Z"
+        },
+        "password_reset_token": {
+          "type": "string",
+          "example": "token=123456789"
+        },
+        "remember_token": {
+          "type": "string",
+          "example": "token=123456789"
+        },
+        "provider_id": {},
+        "provider_name": {},
+        "lastLoginDate": {
+          "type": "string",
+          "example": "2022-11-01T00:00:00.000Z"
+        },
+        "currentLoginDate": {
+          "type": "string",
+          "example": "2022-12-12T00:00:00.000Z"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2022-01-01T00:00:00.000Z"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2022-11-12T00:00:00.000Z"
+        }
+      }
+    },
+    "Note": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "ab476fh5gd65vc9"
+        },
+        "title": {
+          "type": "string",
+          "example": "Note title"
+        },
+        "subject": {
+          "type": "string",
+          "example": "Note subject"
+        },
+        "content": {
+          "type": "string",
+          "example": "Note content"
+        },
+        "start_date": {
+          "type": "string",
+          "example": "2022-10-01T00:00:00.000Z"
+        },
+        "due_date": {
+          "type": "string",
+          "example": "2022-10-15T00:00:00.000Z"
+        },
+        "assignee": {
           "type": "object",
           "properties": {
-            "father": {
+            "id": {
               "type": "string",
-              "example": "Simon Doe"
+              "example": "ab476fh5gd65vc9"
             },
-            "mother": {
+            "name": {
               "type": "string",
-              "example": "Marie Doe"
+              "example": "John Doe"
+            },
+            "email": {
+              "type": "string",
+              "example": "john@doe.com"
+            },
+            "profile_picture": {
+              "type": "string",
+              "example": "https://example.com/profile-picture.jpg"
             }
           }
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2022-01-01T00:00:00.000Z"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2022-11-12T00:00:00.000Z"
+        }
+      }
+    },
+    "CreateUser": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 201
+        },
+        "message": {
+          "type": "string",
+          "example": "Usuário criado com sucesso!"
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "ab476fh5gd65vc9"
+            },
+            "name": {
+              "type": "string",
+              "example": "John Doe"
+            },
+            "email": {
+              "type": "string",
+              "example": "john@doe.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "123456789"
+            },
+            "role": {
+              "type": "string",
+              "example": "admin"
+            },
+            "status": {
+              "type": "string",
+              "example": "active"
+            },
+            "profile_picture": {
+              "type": "string",
+              "example": "https://example.com/profile-picture.jpg"
+            },
+            "email_verified_at": {
+              "type": "string",
+              "example": "2022-01-01T00:00:00.000Z"
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2022-01-01T00:00:00.000Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "example": "2022-11-12T00:00:00.000Z"
+            }
+          }
+        },
+        "access_token": {
+          "type": "string",
+          "example": "token=123456789"
         }
       }
     },
@@ -577,6 +762,23 @@
         "message": {
           "type": "string",
           "example": "Requisição inválida!"
+        }
+      }
+    },
+    "InternalServerError": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": false
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 500
+        },
+        "message": {
+          "type": "string",
+          "example": "Erro interno do servidor!"
         }
       }
     },

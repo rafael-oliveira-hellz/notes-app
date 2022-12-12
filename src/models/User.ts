@@ -34,10 +34,12 @@ const userSchema = new Schema(
     provider_name: {
       type: String,
       required: false,
+      default: null,
     },
     provider_id: {
       type: String,
       required: false,
+      default: null,
     },
     profile_picture: {
       type: String,
