@@ -7,8 +7,10 @@ import express, { NextFunction } from 'express';
 import session from 'express-session';
 import helmet from 'helmet';
 import cron from 'node-cron';
+import swaggerUi from 'swagger-ui-express';
 import xss from 'xss-clean';
 import { config } from './config/config';
+import swaggerFile from './public/swagger_output.json';
 
 // Routes
 import { router as AuthRouter } from './routes/auth.route';
@@ -68,6 +70,7 @@ app.use((_req, res: any, next: NextFunction) => {
 
 app.use('/api/v1', UserRouter, AuthRouter, NoteRouter);
 app.get('/', (_req, res) => res.send('APP is working!'));
+app.use('/api/v1/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 const task = cron.schedule(
   '0 1 * * *',
