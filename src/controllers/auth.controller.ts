@@ -150,6 +150,33 @@ class AuthController {
       process.env.REFRESH_TOKEN_SECRET as string
     );
 
+    if (!user?.lastLoginDate) {
+      user.lastLoginDate = new Date();
+      user.currentLoginDate = new Date();
+      await user?.save();
+    }
+
+    if (user?.lastLoginDate) {
+      const currentDate = new Date();
+      const lastLoginDate = user?.currentLoginDate;
+      user.lastLoginDate = lastLoginDate;
+      user.currentLoginDate = currentDate;
+
+      await user?.save();
+    }
+
+    const currentDate = user?.currentLoginDate;
+    const lastLoginDate = user?.lastLoginDate;
+    const differenceInDays = Math.floor(
+      (currentDate.getTime() - lastLoginDate.getTime()) / (1000 * 3600 * 24)
+    );
+
+    logger.info('differenceInDays', { differenceInDays });
+
+    if (differenceInDays > 30) {
+      user.status = 'inactive';
+    }
+
     logger.debug('Usuário logado com sucesso.', {
       success: true,
       statusCode: StatusCodes.OK,
@@ -165,6 +192,14 @@ class AuthController {
         updated_at: user?.updated_at,
       },
     });
+
+    if (user?.status === 'inactive') {
+      return res.status(StatusCodes.FORBIDDEN).json({
+        success: false,
+        statusCode: StatusCodes.FORBIDDEN,
+        message: 'Usuário inativo!',
+      });
+    }
 
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,

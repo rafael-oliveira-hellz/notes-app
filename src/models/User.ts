@@ -43,11 +43,26 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
+    status: {
+      type: String,
+      required: true,
+      enum: ['active', 'inactive'],
+      default: 'active',
+    },
     role: {
       type: String,
       required: false,
       enum: ['user', 'admin'],
       default: 'user',
+    },
+    lastLoginDate: {
+      type: Date,
+      required: false,
+    },
+    currentLoginDate: {
+      type: Date,
+      required: false,
+      default: Date.now,
     },
   },
   {

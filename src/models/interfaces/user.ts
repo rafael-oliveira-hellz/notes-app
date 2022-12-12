@@ -10,6 +10,9 @@ export interface IUser {
   provider_name: string;
   provider_id: string;
   profile_picture: string;
+  status: 'active' | 'inactive';
+  lastLoginDate: Date;
+  currentLoginDate: Date;
   created_at: Date;
   updated_at: Date;
 }
