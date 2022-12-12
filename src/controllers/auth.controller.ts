@@ -179,6 +179,14 @@ class AuthController {
       await user?.save();
     }
 
+    if (user?.status === 'inactive') {
+      return res.status(StatusCodes.FORBIDDEN).json({
+        success: false,
+        statusCode: StatusCodes.FORBIDDEN,
+        message: 'Usuário inativo!',
+      });
+    }
+
     logger.debug('Usuário logado com sucesso.', {
       success: true,
       statusCode: StatusCodes.OK,
@@ -194,14 +202,6 @@ class AuthController {
         updated_at: user?.updated_at,
       },
     });
-
-    if (user?.status === 'inactive') {
-      return res.status(StatusCodes.FORBIDDEN).json({
-        success: false,
-        statusCode: StatusCodes.FORBIDDEN,
-        message: 'Usuário inativo!',
-      });
-    }
 
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
