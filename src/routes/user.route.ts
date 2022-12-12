@@ -43,6 +43,8 @@ logger.debug('User routes initialized', {
     '/users/me',
     '/users/:id',
     '/users/find',
+    '/users/active',
+    '/users/inactive',
     '/users/change-password',
     '/users/edit/profile',
   ],

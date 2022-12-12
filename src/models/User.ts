@@ -58,6 +58,7 @@ const userSchema = new Schema(
     lastLoginDate: {
       type: Date,
       required: false,
+      default: null,
     },
     currentLoginDate: {
       type: Date,

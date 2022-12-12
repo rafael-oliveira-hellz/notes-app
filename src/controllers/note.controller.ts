@@ -132,6 +132,141 @@ class NoteController {
     }
   };
 
+  // [TO TEST] Get the notes where start_date and due_date are null
+  getNotesWithoutDates = async (
+    req: Request,
+    res: Response
+  ): Promise<Response> => {
+    const token = getUserToken(req) as string;
+    const user = (await getUserByToken(token)) as unknown as IUser;
+
+    if (!user) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        statusCode: StatusCodes.UNAUTHORIZED,
+        message: 'Você não está autorizado a buscar anotações.',
+      });
+    }
+
+    const notes = await Note.find({
+      start_date: null,
+      due_date: null,
+    });
+
+    if (!notes) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhuma anotação encontrada.',
+      });
+    }
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      statusCode: StatusCodes.OK,
+      notes,
+    });
+  };
+
+  // [TO TEST] Get notes with status 'pending'
+  getPendingNotes = async (req: Request, res: Response): Promise<Response> => {
+    const token = getUserToken(req) as string;
+    const user = (await getUserByToken(token)) as unknown as IUser;
+
+    if (!user) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        statusCode: StatusCodes.UNAUTHORIZED,
+        message: 'Você não está autorizado a buscar anotações.',
+      });
+    }
+
+    const notes = await Note.find({
+      status: 'pending',
+    });
+
+    if (!notes) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhuma anotação encontrada.',
+      });
+    }
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      statusCode: StatusCodes.OK,
+      notes,
+    });
+  };
+
+  // [TO TEST] Get notes with status 'completed'
+  getCompletedNotes = async (
+    req: Request,
+    res: Response
+  ): Promise<Response> => {
+    const token = getUserToken(req) as string;
+    const user = (await getUserByToken(token)) as unknown as IUser;
+
+    if (!user) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        statusCode: StatusCodes.UNAUTHORIZED,
+        message: 'Você não está autorizado a buscar anotações.',
+      });
+    }
+
+    const notes = await Note.find({
+      status: 'completed',
+    });
+
+    if (!notes) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhuma anotação encontrada.',
+      });
+    }
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      statusCode: StatusCodes.OK,
+      notes,
+    });
+  };
+
+  // [To Test] Get notes with status 'overdue'
+  getOverdueNotes = async (req: Request, res: Response): Promise<Response> => {
+    const token = getUserToken(req) as string;
+    const user = (await getUserByToken(token)) as unknown as IUser;
+
+    if (!user) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        statusCode: StatusCodes.UNAUTHORIZED,
+        message: 'Você não está autorizado a buscar anotações.',
+      });
+    }
+
+    const notes = await Note.find({
+      status: 'overdue',
+    });
+
+    if (!notes) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhuma anotação encontrada.',
+      });
+    }
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      statusCode: StatusCodes.OK,
+      notes,
+    });
+  };
+
   // [x] Create a note
   create = async (req: Request, res: Response): Promise<Response> => {
     const token = getUserToken(req) as string;
@@ -147,11 +282,73 @@ class NoteController {
 
     const { title, subject, content, start_date, due_date } = req.body;
 
-    if (!title || !subject || !content || !start_date || !due_date) {
+    if (!title || !subject || !content) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Todos os campos são obrigatórios.',
+        message: "Os campos 'title', 'subject' e 'content' são obrigatórios.",
+      });
+    }
+
+    if (start_date && due_date) {
+      if (start_date > due_date) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
+          statusCode: StatusCodes.BAD_REQUEST,
+          message: 'A data de início não pode ser maior que a data de término.',
+        });
+      }
+
+      const note = await Note.create({
+        title,
+        subject,
+        content,
+        start_date,
+        due_date,
+        assignee: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          profile_picture: user.profile_picture,
+        },
+      });
+
+      if (!note) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Não foi possível criar a anotação.',
+        });
+      }
+
+      return res.status(StatusCodes.CREATED).json({
+        success: true,
+        statusCode: StatusCodes.CREATED,
+        note,
+      });
+    }
+
+    if (start_date && !due_date) {
+      const note = await Note.create({
+        title,
+        subject,
+        content,
+        start_date,
+        assignee: user.id,
+      });
+
+      if (!note) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Não foi possível criar a anotação.',
+        });
+      }
+
+      return res.status(StatusCodes.CREATED).json({
+        success: true,
+        statusCode: StatusCodes.CREATED,
+        note,
       });
     }
 
@@ -159,8 +356,6 @@ class NoteController {
       title,
       subject,
       content,
-      start_date,
-      due_date,
       assignee: user.id,
     });
 

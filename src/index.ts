@@ -6,6 +6,7 @@ import cors from 'cors';
 import express, { NextFunction } from 'express';
 import session from 'express-session';
 import helmet from 'helmet';
+import cron from 'node-cron';
 import xss from 'xss-clean';
 import { config } from './config/config';
 
@@ -13,6 +14,7 @@ import { config } from './config/config';
 import { router as AuthRouter } from './routes/auth.route';
 import { router as NoteRouter } from './routes/note.route';
 import { router as UserRouter } from './routes/user.route';
+import { updateNotesStatus } from './utils/UpdateNotesStatus';
 
 const app = express();
 
@@ -66,6 +68,34 @@ app.use((_req, res: any, next: NextFunction) => {
 
 app.use('/api/v1', UserRouter, AuthRouter, NoteRouter);
 app.get('/', (_req, res) => res.send('APP is working!'));
+
+const task = cron.schedule(
+  '0 1 * * *',
+  () => {
+    console.debug('Running a job at 01:00 at America/Sao_Paulo timezone');
+    updateNotesStatus();
+  },
+  {
+    scheduled: true,
+    timezone: 'America/Sao_Paulo',
+  }
+);
+
+try {
+  task.start();
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error(error.message);
+  }
+
+  const count = 5;
+
+  while (count < 5) {
+    setTimeout(() => {
+      task.start();
+    }, 1000 * 60);
+  }
+}
 
 app.listen(config.server.port, () =>
   console.log(`This app is listening on port ${config.server.port}`)

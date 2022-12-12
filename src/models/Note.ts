@@ -18,10 +18,18 @@ const noteSchema = new Schema({
   start_date: {
     type: Date,
     required: false,
+    default: null,
   },
   due_date: {
     type: Date,
     required: false,
+    default: null,
+  },
+  status: {
+    type: String,
+    required: false,
+    enum: ['pending', 'completed', 'overdue'],
+    default: 'pending',
   },
   assignee: {
     type: String,
