@@ -7,7 +7,7 @@ import { verifyToken } from '../middlewares/TokenControl';
 
 const router = Router();
 
-router.get('/users', UserController.getAllUsers);
+router.get('/users', verifyToken, isAdmin, UserController.getAllUsers);
 router.get('/users/me', verifyToken, UserController.getUserProfile);
 router.get('/users/find', verifyToken, isAdmin, UserController.getUserByField);
 router.get(
