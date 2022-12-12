@@ -40,7 +40,7 @@
         "description": "Endpoint para criar um novo usuário.",
         "parameters": [
           {
-            "name": "body",
+            "name": "name",
             "in": "body",
             "schema": {
               "type": "object",
@@ -55,6 +55,25 @@
                   "example": "any"
                 }
               }
+            },
+            "description": "Nome do usuário a ser cadastrado"
+          },
+          {
+            "name": "email",
+            "in": "body",
+            "description": "Email do usuário a ser cadastrado",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          {
+            "name": "password",
+            "in": "body",
+            "description": "Senha do usuário a ser cadastrado",
+            "schema": {
+              "type": "object",
+              "properties": {}
             }
           }
         ],
@@ -667,7 +686,7 @@
             },
             "role": {
               "type": "string",
-              "example": "admin"
+              "example": "user"
             },
             "status": {
               "type": "string",
@@ -677,10 +696,7 @@
               "type": "string",
               "example": "https://example.com/profile-picture.jpg"
             },
-            "email_verified_at": {
-              "type": "string",
-              "example": "2022-01-01T00:00:00.000Z"
-            },
+            "email_verified_at": {},
             "created_at": {
               "type": "string",
               "example": "2022-01-01T00:00:00.000Z"

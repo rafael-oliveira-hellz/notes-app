@@ -7,6 +7,22 @@ const router = Router();
 router.post('/auth/signup', AuthController.createUser, (_req, _res) => {
   // #swagger.tags = ['Auth']
   // #swagger.description = 'Endpoint para criar um novo usuário.'
+  /*  #swagger.parameters['name'] = {
+      in: 'body',
+      description: 'Nome do usuário a ser cadastrado',
+      type: 'string'
+  }
+      #swagger.parameters['email'] = {
+      in: 'body',
+      description: 'Email do usuário a ser cadastrado',
+      type: 'string'
+  }
+      #swagger.parameters['password'] = {
+      in: 'body',
+      description: 'Senha do usuário a ser cadastrado',
+      type: 'string'
+  }
+
   /* #swagger.responses[201] = {
       description: 'Usuário criado com sucesso.',
       schema: { $ref: "#/definitions/CreateUser" }
