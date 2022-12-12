@@ -45,7 +45,7 @@
             "description": "Dados do novo usuário.",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/CreateUser"
+              "$ref": "#/definitions/newUser"
             }
           }
         ],
