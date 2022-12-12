@@ -175,8 +175,6 @@ class AuthController {
 
     if (differenceInDays > 30) {
       user.status = 'inactive';
-
-      await user?.save();
     }
 
     logger.debug('Usuário logado com sucesso.', {
