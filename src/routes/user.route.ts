@@ -120,7 +120,6 @@ router.get(
     description: 'Campo a ser pesquisado.',
     required: true,
     type: 'string',
-    schema: { $ref: "#/definitions/UserQuery" }
   }*/
     /* #swagger.parameters['value'] = {
     in: 'query',

@@ -131,10 +131,6 @@ const doc = {
         },
       ],
     },
-    UserQuery: {
-      field: 'name',
-      value: 'John Doe',
-    },
     Note: {
       success: true,
       statusCode: 200,
