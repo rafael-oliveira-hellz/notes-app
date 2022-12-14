@@ -343,6 +343,7 @@ router.post('/notes', verifyToken, NoteController.create, (_req, _res) => {
   #swagger.responses[500] = {
     description: 'Erro interno do servidor.',
     schema: { $ref: "#/definitions/InternalServerError" }
+  }
   */
 });
 router.put(

@@ -269,7 +269,7 @@
           "200": {
             "description": "Listar todos os usuários no sistema.",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/UserList"
             }
           },
           "400": {
@@ -435,7 +435,10 @@
             "in": "query",
             "description": "Campo a ser pesquisado.",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/UserQuery"
+            }
           },
           {
             "name": "value",
@@ -507,7 +510,7 @@
           "200": {
             "description": "Listar usuários ativos no sistema.",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/UserList"
             }
           },
           "400": {
@@ -802,180 +805,634 @@
     },
     "/notes": {
       "get": {
-        "description": "",
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para listar todas as notas.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Notas listadas com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/NoteList"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Nenhuma anotação encontrada.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para criar uma nova anotação.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
+          },
+          {
+            "name": "note",
+            "in": "body",
+            "description": "Informações da anotação.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NoteCreate"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "201": {
+            "description": "Anotação criada com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/NoteCreated"
+            }
+          },
+          "400": {
+            "description": "Erro na requisição.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/notes/my-notes": {
       "get": {
-        "description": "",
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para listar todas as notas de um usuário autenticado.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Notas listadas com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/NoteList"
+            }
+          },
+          "400": {
+            "description": "Erro na requisição.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Nenhuma anotação encontrada.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/notes/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para listar uma nota específica.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID da nota.",
+            "schema": {
+              "$ref": "#/definitions/NoteId"
+            }
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Nota listada com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          },
+          "400": {
+            "description": "Erro na requisição.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Nenhuma anotação encontrada.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para deletar uma anotação.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID da nota.",
+            "schema": {
+              "$ref": "#/definitions/NoteId"
+            }
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Anotação deletada com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/NoteDeleted"
+            }
+          },
+          "400": {
+            "description": "Erro na requisição.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Nenhuma anotação encontrada.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/notes/search/request": {
       "get": {
-        "description": "",
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para listar uma nota específica.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           },
           {
             "name": "field",
             "in": "query",
-            "type": "string"
+            "description": "Campo de busca.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/NoteRequest"
+            }
           },
           {
             "name": "value",
             "in": "query",
-            "type": "string"
+            "description": "Valor do campo de busca.",
+            "required": false,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/NoteRequest"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Nota listada com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          },
+          "400": {
+            "description": "Campo de busca inválido.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Nenhuma anotação encontrada.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/notes/pending": {
       "get": {
-        "description": "",
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para listar notas pendentes.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Notas listadas com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/NotePending"
+            }
+          },
+          "400": {
+            "description": "Erro na requisição.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Nenhuma anotação encontrada.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/notes/completed": {
       "get": {
-        "description": "",
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para listar notas completadas.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Notas listadas com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/NoteCompleted"
+            }
+          },
+          "400": {
+            "description": "Erro na requisição.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Nenhuma anotação encontrada.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/notes/overdue": {
       "get": {
-        "description": "",
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para listar notas atrasadas.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Notas listadas com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/NoteOverdue"
+            }
+          },
+          "400": {
+            "description": "Erro na requisição.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Nenhuma anotação encontrada.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/notes/edit/{id}": {
       "put": {
-        "description": "",
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para editar uma anotação.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID da nota.",
+            "schema": {
+              "$ref": "#/definitions/NoteId"
+            }
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           },
           {
-            "name": "body",
+            "name": "note",
             "in": "body",
+            "description": "Informações da anotação.",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "example": "any"
-                },
-                "subject": {
-                  "example": "any"
-                },
-                "content": {
-                  "example": "any"
-                },
-                "start_date": {
-                  "example": "any"
-                },
-                "due_date": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/NoteUpdate"
             }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Anotação editada com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/NoteUpdated"
+            }
+          },
+          "400": {
+            "description": "Erro na requisição.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Nenhuma anotação encontrada.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     }
   },
@@ -983,108 +1440,589 @@
     "User": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "example": "639407f89236de177775ac8f"
+        "success": {
+          "type": "boolean",
+          "example": true
         },
-        "name": {
-          "type": "string",
-          "example": "John Doe"
+        "statusCode": {
+          "type": "number",
+          "example": 200
         },
-        "email": {
+        "message": {
           "type": "string",
-          "example": "john@doe.com"
+          "example": "Usuário listado com sucesso"
         },
-        "role": {
-          "type": "string",
-          "example": "user"
+        "user": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "639407f89236de177775ac8f"
+            },
+            "name": {
+              "type": "string",
+              "example": "John Doe"
+            },
+            "email": {
+              "type": "string",
+              "example": "john@doe.com"
+            },
+            "role": {
+              "type": "string",
+              "example": "user"
+            },
+            "status": {
+              "type": "string",
+              "example": "active"
+            },
+            "profile_picture": {
+              "type": "string",
+              "example": "https://example.com/profile-picture.jpg"
+            },
+            "email_verified_at": {
+              "type": "string",
+              "example": "2022-01-01T00:00:00.000Z"
+            },
+            "lastLoginDate": {
+              "type": "string",
+              "example": "2022-11-01T00:00:00.000Z"
+            },
+            "currentLoginDate": {
+              "type": "string",
+              "example": "2022-12-12T00:00:00.000Z"
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2022-01-01T00:00:00.000Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "example": "2022-11-12T00:00:00.000Z"
+            }
+          }
+        }
+      }
+    },
+    "UserList": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
         },
-        "status": {
-          "type": "string",
-          "example": "active"
+        "statusCode": {
+          "type": "number",
+          "example": 200
         },
-        "profile_picture": {
+        "message": {
           "type": "string",
-          "example": "https://example.com/profile-picture.jpg"
+          "example": "Usuários listados com sucesso"
         },
-        "email_verified_at": {
-          "type": "string",
-          "example": "2022-01-01T00:00:00.000Z"
-        },
-        "lastLoginDate": {
-          "type": "string",
-          "example": "2022-11-01T00:00:00.000Z"
-        },
-        "currentLoginDate": {
-          "type": "string",
-          "example": "2022-12-12T00:00:00.000Z"
-        },
-        "created_at": {
-          "type": "string",
-          "example": "2022-01-01T00:00:00.000Z"
-        },
-        "updated_at": {
-          "type": "string",
-          "example": "2022-11-12T00:00:00.000Z"
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "639407f89236de177775ac8f"
+              },
+              "name": {
+                "type": "string",
+                "example": "Mariah Doe"
+              },
+              "email": {
+                "type": "string",
+                "example": "mariah@doe.com"
+              },
+              "role": {
+                "type": "string",
+                "example": "user"
+              },
+              "status": {
+                "type": "string",
+                "example": "active"
+              },
+              "profile_picture": {
+                "type": "string",
+                "example": "https://example.com/profile-picture.jpg"
+              },
+              "email_verified_at": {
+                "type": "string",
+                "example": "2022-01-01T00:00:00.000Z"
+              },
+              "lastLoginDate": {
+                "type": "string",
+                "example": "2022-11-01T00:00:00.000Z"
+              },
+              "currentLoginDate": {
+                "type": "string",
+                "example": "2022-12-12T00:00:00.000Z"
+              },
+              "created_at": {
+                "type": "string",
+                "example": "2022-01-01T00:00:00.000Z"
+              },
+              "updated_at": {
+                "type": "string",
+                "example": "2022-11-12T00:00:00.000Z"
+              }
+            }
+          }
         }
       }
     },
     "UserInactive": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "example": "639407f89236de177775ac8f"
+        "success": {
+          "type": "boolean",
+          "example": true
         },
-        "name": {
-          "type": "string",
-          "example": "Mariah Doe"
+        "statusCode": {
+          "type": "number",
+          "example": 200
         },
-        "email": {
+        "message": {
           "type": "string",
-          "example": "mariah@doe.com"
+          "example": "Usuário inativado com sucesso"
         },
-        "role": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "639407f89236de188886ac8f"
+              },
+              "name": {
+                "type": "string",
+                "example": "Jose Doe"
+              },
+              "email": {
+                "type": "string",
+                "example": "jose@doe.com"
+              },
+              "role": {
+                "type": "string",
+                "example": "user"
+              },
+              "status": {
+                "type": "string",
+                "example": "inactive"
+              },
+              "profile_picture": {
+                "type": "string",
+                "example": "https://example.com/profile-picture.jpg"
+              },
+              "email_verified_at": {
+                "type": "string",
+                "example": "2022-01-01T00:00:00.000Z"
+              },
+              "lastLoginDate": {
+                "type": "string",
+                "example": "2022-11-01T00:00:00.000Z"
+              },
+              "currentLoginDate": {
+                "type": "string",
+                "example": "2022-12-12T00:00:00.000Z"
+              },
+              "created_at": {
+                "type": "string",
+                "example": "2022-01-01T00:00:00.000Z"
+              },
+              "updated_at": {
+                "type": "string",
+                "example": "2022-11-12T00:00:00.000Z"
+              }
+            }
+          }
+        }
+      }
+    },
+    "UserQuery": {
+      "type": "object",
+      "properties": {
+        "field": {
           "type": "string",
-          "example": "user"
+          "example": "name"
         },
-        "status": {
+        "value": {
           "type": "string",
-          "example": "inactive"
-        },
-        "profile_picture": {
-          "type": "string",
-          "example": "https://example.com/profile-picture.jpg"
-        },
-        "email_verified_at": {
-          "type": "string",
-          "example": "2022-01-01T00:00:00.000Z"
-        },
-        "lastLoginDate": {
-          "type": "string",
-          "example": "2022-11-01T00:00:00.000Z"
-        },
-        "currentLoginDate": {
-          "type": "string",
-          "example": "2022-12-12T00:00:00.000Z"
-        },
-        "created_at": {
-          "type": "string",
-          "example": "2022-01-01T00:00:00.000Z"
-        },
-        "updated_at": {
-          "type": "string",
-          "example": "2022-11-12T00:00:00.000Z"
+          "example": "John Doe"
         }
       }
     },
     "Note": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "example": "639271037445476efa30e136"
+        "success": {
+          "type": "boolean",
+          "example": true
         },
+        "statusCode": {
+          "type": "number",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Nota listada com sucesso"
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "639271037445476efa30e136"
+            },
+            "title": {
+              "type": "string",
+              "example": "Note title"
+            },
+            "subject": {
+              "type": "string",
+              "example": "Note subject"
+            },
+            "content": {
+              "type": "string",
+              "example": "Note content"
+            },
+            "start_date": {
+              "type": "string",
+              "example": "2022-10-01T00:00:00.000Z"
+            },
+            "due_date": {
+              "type": "string",
+              "example": "2022-10-15T00:00:00.000Z"
+            },
+            "status": {
+              "type": "string",
+              "example": "completed"
+            },
+            "assignee": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "639407f89236de177775ac8f"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john@doe.com"
+                },
+                "profile_picture": {
+                  "type": "string",
+                  "example": "https://example.com/profile-picture.jpg"
+                }
+              }
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2022-01-01T00:00:00.000Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "example": "2022-11-12T00:00:00.000Z"
+            }
+          }
+        }
+      }
+    },
+    "NoteList": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Notas listadas com sucesso"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "639271037445476efa30e136"
+              },
+              "title": {
+                "type": "string",
+                "example": "Note title"
+              },
+              "subject": {
+                "type": "string",
+                "example": "Note subject"
+              },
+              "content": {
+                "type": "string",
+                "example": "Note content"
+              },
+              "start_date": {
+                "type": "string",
+                "example": "2022-10-01T00:00:00.000Z"
+              },
+              "due_date": {
+                "type": "string",
+                "example": "2022-10-15T00:00:00.000Z"
+              },
+              "status": {
+                "type": "string",
+                "example": "pending"
+              },
+              "assignee": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "639407f89236de177775ac8f"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe 2"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "john@doe2.com"
+                  },
+                  "profile_picture": {
+                    "type": "string",
+                    "example": "https://example.com/profile-picture.jpg"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "NotePending": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Notas pendentes listadas com sucesso"
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "639271037445476efa30e136"
+            },
+            "title": {
+              "type": "string",
+              "example": "Note title"
+            },
+            "subject": {
+              "type": "string",
+              "example": "Note subject"
+            },
+            "content": {
+              "type": "string",
+              "example": "Note content"
+            },
+            "start_date": {
+              "type": "string",
+              "example": "2022-10-01T00:00:00.000Z"
+            },
+            "due_date": {
+              "type": "string",
+              "example": "2022-10-15T00:00:00.000Z"
+            },
+            "status": {
+              "type": "string",
+              "example": "pending"
+            },
+            "assignee": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "639407f89236de177775ac8f"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe 2"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john@doe2.com"
+                },
+                "profile_picture": {
+                  "type": "string",
+                  "example": "https://example.com/profile-picture.jpg"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "NoteCompleted": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Notas pendentes listadas com sucesso"
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "639271037445476efa30e136"
+            },
+            "title": {
+              "type": "string",
+              "example": "Note title"
+            },
+            "subject": {
+              "type": "string",
+              "example": "Note subject"
+            },
+            "content": {
+              "type": "string",
+              "example": "Note content"
+            },
+            "start_date": {
+              "type": "string",
+              "example": "2022-10-01T00:00:00.000Z"
+            },
+            "due_date": {
+              "type": "string",
+              "example": "2022-10-15T00:00:00.000Z"
+            },
+            "status": {
+              "type": "string",
+              "example": "completed"
+            },
+            "assignee": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "639407f89236de177775ac8f"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe 2"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john@doe2.com"
+                },
+                "profile_picture": {
+                  "type": "string",
+                  "example": "https://example.com/profile-picture.jpg"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "NoteOverdue": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Notas pendentes listadas com sucesso"
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "639271037445476efa30e136"
+            },
+            "title": {
+              "type": "string",
+              "example": "Note title"
+            },
+            "subject": {
+              "type": "string",
+              "example": "Note subject"
+            },
+            "content": {
+              "type": "string",
+              "example": "Note content"
+            },
+            "start_date": {
+              "type": "string",
+              "example": "2022-10-01T00:00:00.000Z"
+            },
+            "due_date": {
+              "type": "string",
+              "example": "2022-10-15T00:00:00.000Z"
+            },
+            "status": {
+              "type": "string",
+              "example": "overdue"
+            },
+            "assignee": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "639407f89236de177775ac8f"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe 2"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john@doe2.com"
+                },
+                "profile_picture": {
+                  "type": "string",
+                  "example": "https://example.com/profile-picture.jpg"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "NoteCreate": {
+      "type": "object",
+      "properties": {
         "title": {
           "type": "string",
           "example": "Note title"
@@ -1104,35 +2042,270 @@
         "due_date": {
           "type": "string",
           "example": "2022-10-15T00:00:00.000Z"
+        }
+      }
+    },
+    "NoteCreated": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
         },
-        "assignee": {
+        "statusCode": {
+          "type": "number",
+          "example": 201
+        },
+        "message": {
+          "type": "string",
+          "example": "Nota criada com sucesso"
+        },
+        "note": {
           "type": "object",
           "properties": {
             "id": {
               "type": "string",
-              "example": "639407f89236de177775ac8f"
+              "example": "639271037445476efa30e136"
             },
-            "name": {
+            "title": {
               "type": "string",
-              "example": "John Doe"
+              "example": "Note title"
             },
-            "email": {
+            "subject": {
               "type": "string",
-              "example": "john@doe.com"
+              "example": "Note subject"
             },
-            "profile_picture": {
+            "content": {
               "type": "string",
-              "example": "https://example.com/profile-picture.jpg"
+              "example": "Note content"
+            },
+            "start_date": {
+              "type": "string",
+              "example": "2022-10-01T00:00:00.000Z"
+            },
+            "due_date": {
+              "type": "string",
+              "example": "2022-10-15T00:00:00.000Z"
+            },
+            "status": {
+              "type": "string",
+              "example": "overdue"
+            },
+            "assignee": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "639407f89236de177775ac8f"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe 2"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john@doe2.com"
+                },
+                "profile_picture": {
+                  "type": "string",
+                  "example": "https://example.com/profile-picture.jpg"
+                }
+              }
             }
           }
-        },
-        "created_at": {
+        }
+      }
+    },
+    "NoteUpdate": {
+      "type": "object",
+      "properties": {
+        "title": {
           "type": "string",
-          "example": "2022-01-01T00:00:00.000Z"
+          "example": "Note title"
         },
-        "updated_at": {
+        "subject": {
           "type": "string",
-          "example": "2022-11-12T00:00:00.000Z"
+          "example": "Note subject"
+        },
+        "content": {
+          "type": "string",
+          "example": "Note content"
+        },
+        "start_date": {
+          "type": "string",
+          "example": "2022-10-01T00:00:00.000Z"
+        },
+        "due_date": {
+          "type": "string",
+          "example": "2022-10-15T00:00:00.000Z"
+        }
+      }
+    },
+    "NoteId": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "639271037445476efa30e136"
+        }
+      }
+    },
+    "NoteRequest": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string",
+          "example": "title"
+        },
+        "value": {
+          "type": "string",
+          "example": "Note title"
+        }
+      }
+    },
+    "NoteUpdated": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Nota atualizada com sucesso"
+        },
+        "note": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "639271037445476efa30e136"
+            },
+            "title": {
+              "type": "string",
+              "example": "Note title"
+            },
+            "subject": {
+              "type": "string",
+              "example": "Note subject"
+            },
+            "content": {
+              "type": "string",
+              "example": "Note content"
+            },
+            "start_date": {
+              "type": "string",
+              "example": "2022-10-01T00:00:00.000Z"
+            },
+            "due_date": {
+              "type": "string",
+              "example": "2022-10-15T00:00:00.000Z"
+            },
+            "status": {
+              "type": "string",
+              "example": "overdue"
+            },
+            "assignee": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "639407f89236de177775ac8f"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe 2"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john@doe2.com"
+                },
+                "profile_picture": {
+                  "type": "string",
+                  "example": "https://example.com/profile-picture.jpg"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "NoteDeleted": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Anotação removida com sucesso por ..."
+        },
+        "deletedNote": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "639271037445476efa30e136"
+            },
+            "title": {
+              "type": "string",
+              "example": "Note title"
+            },
+            "subject": {
+              "type": "string",
+              "example": "Note subject"
+            },
+            "content": {
+              "type": "string",
+              "example": "Note content"
+            },
+            "start_date": {
+              "type": "string",
+              "example": "2022-10-01T00:00:00.000Z"
+            },
+            "due_date": {
+              "type": "string",
+              "example": "2022-10-15T00:00:00.000Z"
+            },
+            "status": {
+              "type": "string",
+              "example": "overdue"
+            },
+            "assignee": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "639407f89236de177775ac8f"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe 2"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john@doe2.com"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "active"
+                },
+                "profile_picture": {
+                  "type": "string",
+                  "example": "https://example.com/profile-picture.jpg"
+                }
+              }
+            }
+          }
         }
       }
     },
