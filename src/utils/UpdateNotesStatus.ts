@@ -1,5 +1,7 @@
+import moment from 'moment-timezone';
 import Note from '../models/Note';
 import User from '../models/User';
+
 export const updateNotesStatus = async () => {
   const notes = await Note.find({ status: 'pending' });
   const users = await User.find().select('-password');
@@ -19,8 +21,9 @@ export const updateNotesStatus = async () => {
       const currentDate = user.currentLoginDate as Date;
       const lastLoginDate = user.lastLoginDate as Date;
 
-      const differenceInDays = Math.floor(
-        (currentDate.getTime() - lastLoginDate.getTime()) / (1000 * 3600 * 24)
+      const differenceInDays = moment(currentDate).diff(
+        moment(lastLoginDate),
+        'days'
       );
 
       if (differenceInDays > 30) {

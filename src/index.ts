@@ -75,7 +75,7 @@ app.use('/api/v1/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 const task = cron.schedule(
   '0 1 * * *',
   () => {
-    console.debug('Running a job at 01:00 at America/Sao_Paulo timezone');
+    logger.info('Running a job at 01:00 at America/Sao_Paulo timezone');
     updateNotesStatus();
   },
   {
@@ -88,7 +88,7 @@ try {
   task.start();
 } catch (error: unknown) {
   if (error instanceof Error) {
-    console.error(error.message);
+    logger.error(error.message);
   }
 
   const count = 5;
