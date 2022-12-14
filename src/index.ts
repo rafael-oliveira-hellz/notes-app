@@ -10,6 +10,7 @@ import cron from 'node-cron';
 import swaggerUi from 'swagger-ui-express';
 import xss from 'xss-clean';
 import { config } from './config/config';
+import logger from './config/winston-logger';
 import swaggerFile from './public/swagger_output.json';
 
 // Routes
@@ -45,9 +46,9 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      sameSite: 'lax',
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
+      sameSite: 'none',
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
       httpOnly: true,
     },
   })
