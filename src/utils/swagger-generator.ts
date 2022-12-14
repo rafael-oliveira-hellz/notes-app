@@ -17,7 +17,7 @@ const doc = {
   },
   host: 'notes-app-mvp.herokuapp.com/api/v1',
   basePath: '/',
-  schemes: ['http', 'https'],
+  schemes: ['https'],
   consumes: ['application/json'],
   produces: ['application/json'],
   tags: [
