@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import joi from 'joi';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import moment from 'moment';
 import logger from '../config/winston-logger';
 import { generateToken, getUserToken } from '../middlewares/TokenControl';
 import { comparePassword, hashPassword } from '../middlewares/ValidatePassword';
@@ -52,6 +53,10 @@ class AuthController {
 
     const hashedPassword = await hashPassword(password);
 
+    const creationDate = moment(new Date())
+      .tz('America/Sao_Paulo')
+      .toISOString();
+
     try {
       if (hashedPassword) {
         const user = await User.create({
@@ -59,6 +64,7 @@ class AuthController {
           email,
           password: hashedPassword,
           profile_picture,
+          created_at: creationDate,
         });
 
         const accessToken = generateToken(
@@ -82,9 +88,38 @@ class AuthController {
             name: user?.name,
             email: user?.email,
             role: user?.role,
+            status: user?.status,
+            email_verified_at:
+              user?.email_verified_at !== null
+                ? moment(user?.email_verified_at)
+                    .tz('America/Sao_Paulo')
+                    .format('DD/MM/YYYY HH:mm:ss')
+                : null,
             profile_picture: user?.profile_picture,
-            created_at: user?.created_at,
-            updated_at: user?.updated_at,
+            lastLoginDate:
+              user?.lastLoginDate !== null
+                ? moment(user?.lastLoginDate)
+                    .tz('America/Sao_Paulo')
+                    .format('DD/MM/YYYY HH:mm:ss')
+                : null,
+            currentLoginDate:
+              user?.currentLoginDate !== null
+                ? moment(user?.currentLoginDate)
+                    .tz('America/Sao_Paulo')
+                    .format('DD/MM/YYYY HH:mm:ss')
+                : null,
+            created_at:
+              user?.created_at !== null
+                ? moment(user?.created_at)
+                    .tz('America/Sao_Paulo')
+                    .format('DD/MM/YYYY HH:mm:ss')
+                : null,
+            updated_at:
+              user?.updated_at !== null
+                ? moment(user?.updated_at)
+                    .tz('America/Sao_Paulo')
+                    .format('DD/MM/YYYY HH:mm:ss')
+                : null,
           },
           access_token: accessToken,
         });
@@ -152,15 +187,25 @@ class AuthController {
     );
 
     if (!user?.lastLoginDate) {
-      user.lastLoginDate = new Date();
-      user.currentLoginDate = new Date();
-      user.email_verified_at = new Date();
+      user.lastLoginDate = moment(new Date())
+        .tz('America/Sao_Paulo')
+        .toISOString() as unknown as Date;
+
+      user.currentLoginDate = moment(new Date())
+        .tz('America/Sao_Paulo')
+        .toISOString() as unknown as Date;
+
+      user.email_verified_at = moment(new Date())
+        .tz('America/Sao_Paulo')
+        .toISOString() as unknown as Date;
 
       await user?.save();
     }
 
     if (user.lastLoginDate) {
-      const currentDate = new Date();
+      const currentDate = moment(new Date())
+        .tz('America/Sao_Paulo')
+        .toISOString() as unknown as Date;
       const lastLoginDate = user?.currentLoginDate;
       user.lastLoginDate = lastLoginDate;
       user.currentLoginDate = currentDate;
@@ -171,9 +216,10 @@ class AuthController {
     const currentDate = user.currentLoginDate;
     const lastLoginDate = user.lastLoginDate;
 
-    if (currentDate !== undefined && lastLoginDate !== undefined) {
-      const differenceInDays = Math.floor(
-        (currentDate.getTime() - lastLoginDate.getTime()) / (1000 * 3600 * 24)
+    if (currentDate && lastLoginDate) {
+      const differenceInDays = moment(currentDate).diff(
+        moment(lastLoginDate),
+        'days'
       );
 
       logger.info('differenceInDays', { differenceInDays });
@@ -204,10 +250,37 @@ class AuthController {
         email: user?.email,
         role: user?.role,
         status: user?.status,
+        email_verified_at:
+          user?.email_verified_at !== null
+            ? moment(user?.email_verified_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
         profile_picture: user?.profile_picture,
-        email_verified_at: user?.email_verified_at,
-        created_at: user?.created_at,
-        updated_at: user?.updated_at,
+        lastLoginDate:
+          user?.lastLoginDate !== null
+            ? moment(user?.lastLoginDate)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        currentLoginDate:
+          user?.currentLoginDate !== null
+            ? moment(user?.currentLoginDate)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        created_at:
+          user?.created_at !== null
+            ? moment(user?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          user?.updated_at !== null
+            ? moment(user?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
       },
       access_token: accessToken,
       refresh_token: refreshToken,
@@ -223,10 +296,37 @@ class AuthController {
         email: user?.email,
         role: user?.role,
         status: user?.status,
+        email_verified_at:
+          user?.email_verified_at !== null
+            ? moment(user?.email_verified_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
         profile_picture: user?.profile_picture,
-        email_verified_at: user?.email_verified_at,
-        created_at: user?.created_at,
-        updated_at: user?.updated_at,
+        lastLoginDate:
+          user?.lastLoginDate !== null
+            ? moment(user?.lastLoginDate)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        currentLoginDate:
+          user?.currentLoginDate !== null
+            ? moment(user?.currentLoginDate)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        created_at:
+          user?.created_at !== null
+            ? moment(user?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          user?.updated_at !== null
+            ? moment(user?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
       },
       access_token: accessToken,
       refresh_token: refreshToken,
@@ -336,12 +436,37 @@ class AuthController {
               email: user?.email,
               role: user?.role,
               status: user?.status,
+              email_verified_at:
+                user?.email_verified_at !== null
+                  ? moment(user?.email_verified_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
               profile_picture: user?.profile_picture,
-              email_verified_at: user?.email_verified_at,
-              lastLoginDate: user?.lastLoginDate,
-              currentLoginDate: user?.currentLoginDate,
-              created_at: user?.created_at,
-              updated_at: user?.updated_at,
+              lastLoginDate:
+                user?.lastLoginDate !== null
+                  ? moment(user?.lastLoginDate)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              currentLoginDate:
+                user?.currentLoginDate !== null
+                  ? moment(user?.currentLoginDate)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              created_at:
+                user?.created_at !== null
+                  ? moment(user?.created_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              updated_at:
+                user?.updated_at !== null
+                  ? moment(user?.updated_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
             },
           });
 
@@ -355,12 +480,37 @@ class AuthController {
               email: user?.email,
               role: user?.role,
               status: user?.status,
+              email_verified_at:
+                user?.email_verified_at !== null
+                  ? moment(user?.email_verified_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
               profile_picture: user?.profile_picture,
-              email_verified_at: user?.email_verified_at,
-              lastLoginDate: user?.lastLoginDate,
-              currentLoginDate: user?.currentLoginDate,
-              created_at: user?.created_at,
-              updated_at: user?.updated_at,
+              lastLoginDate:
+                user?.lastLoginDate !== null
+                  ? moment(user?.lastLoginDate)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              currentLoginDate:
+                user?.currentLoginDate !== null
+                  ? moment(user?.currentLoginDate)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              created_at:
+                user?.created_at !== null
+                  ? moment(user?.created_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              updated_at:
+                user?.updated_at !== null
+                  ? moment(user?.updated_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
             },
           });
         } else {

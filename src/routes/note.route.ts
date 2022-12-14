@@ -85,6 +85,55 @@ router.get(
   */
   }
 );
+router.get(
+  '/notes/user/:id',
+  verifyToken,
+  isAdmin,
+  NoteController.getAllUserNotes,
+  (_req, _res) => {
+    // #swagger.tags = ['Note']
+    // #swagger.description = 'Endpoint para listar todas as notas de um usuário.'
+    /* #swagger.parameters['authorization'] = {
+    in: 'header',
+    description: 'Token de autenticação do usuário.',
+    required: true,
+    type: 'string',
+    schema: { $ref: "#/definitions/VerifyUser" }
+  } */
+    /* #swagger.parameters['id'] = {
+    in: 'path',
+    description: 'ID do usuário.',
+    required: true,
+    type: 'string',
+    schema: { $ref: "#/definitions/UserId" }
+  } */
+    /* #swagger.responses[200] = {
+    description: 'Notas listadas com sucesso.',
+    schema: { $ref: "#/definitions/NoteList" }
+  }
+  #swagger.responses[400] = {
+    description: 'Erro na requisição.',
+    schema: { $ref: "#/definitions/BadRequest" }
+  }
+    #swagger.responses[401] = {
+    description: 'Token inválido.',
+    schema: { $ref: "#/definitions/Unauthorized" }
+  }
+    #swagger.responses[403] = {
+    description: 'Usuário não autorizado.',
+    schema: { $ref: "#/definitions/Forbidden" }
+  }
+  #swagger.responses[404] = {
+    description: 'Nenhuma anotação encontrada.',
+    schema: { $ref: "#/definitions/NotFound" }
+  }
+    #swagger.responses[500] = {
+    description: 'Erro interno do servidor.',
+    schema: { $ref: "#/definitions/InternalServerError" }
+  }
+  */
+  }
+);
 router.get('/notes/:id', verifyToken, NoteController.findByid, (_req, _res) => {
   // #swagger.tags = ['Note']
   // #swagger.description = 'Endpoint para listar uma nota específica.'

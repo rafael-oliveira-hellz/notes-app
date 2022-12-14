@@ -62,6 +62,9 @@ const doc = {
         updated_at: '2022-11-12T00:00:00.000Z',
       },
     },
+    UserId: {
+      id: '639407f89236de177775ac8f',
+    },
     UserList: {
       success: true,
       statusCode: 200,

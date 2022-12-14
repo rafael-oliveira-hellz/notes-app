@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import moment from 'moment-timezone';
 import logger from '../config/winston-logger';
 import { paginate } from '../middlewares/Pagination';
 import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
@@ -14,17 +15,42 @@ class UserController {
 
     response.data = response.data.map((user: any) => {
       return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        status: user.status,
-        profile_picture: user.profile_picture,
-        email_verified_at: user.email_verified_at,
-        lastLoginDate: user.lastLoginDate,
-        currentLoginDate: user.currentLoginDate,
-        created_at: user.created_at,
-        updated_at: user.updated_at,
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
+        role: user?.role,
+        status: user?.status,
+        email_verified_at:
+          user?.email_verified_at !== null
+            ? moment(user?.email_verified_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        profile_picture: user?.profile_picture,
+        lastLoginDate:
+          user?.lastLoginDate !== null
+            ? moment(user?.lastLoginDate)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        currentLoginDate:
+          user?.currentLoginDate !== null
+            ? moment(user?.currentLoginDate)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        created_at:
+          user?.created_at !== null
+            ? moment(user?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          user?.updated_at !== null
+            ? moment(user?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
       };
     });
 
@@ -50,17 +76,42 @@ class UserController {
           statusCode: StatusCodes.OK,
           message: 'Usuário encontrado com sucesso.',
           user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            status: user.status,
-            profile_picture: user.profile_picture,
-            email_verified_at: user.email_verified_at,
-            lastLoginDate: user.lastLoginDate,
-            currentLoginDate: user.currentLoginDate,
-            created_at: user.created_at,
-            updated_at: user.updated_at,
+            id: user?.id,
+            name: user?.name,
+            email: user?.email,
+            role: user?.role,
+            status: user?.status,
+            email_verified_at:
+              user?.email_verified_at !== null
+                ? moment(user?.email_verified_at)
+                    .tz('America/Sao_Paulo')
+                    .format('DD/MM/YYYY HH:mm:ss')
+                : null,
+            profile_picture: user?.profile_picture,
+            lastLoginDate:
+              user?.lastLoginDate !== null
+                ? moment(user?.lastLoginDate)
+                    .tz('America/Sao_Paulo')
+                    .format('DD/MM/YYYY HH:mm:ss')
+                : null,
+            currentLoginDate:
+              user?.currentLoginDate !== null
+                ? moment(user?.currentLoginDate)
+                    .tz('America/Sao_Paulo')
+                    .format('DD/MM/YYYY HH:mm:ss')
+                : null,
+            created_at:
+              user?.created_at !== null
+                ? moment(user?.created_at)
+                    .tz('America/Sao_Paulo')
+                    .format('DD/MM/YYYY HH:mm:ss')
+                : null,
+            updated_at:
+              user?.updated_at !== null
+                ? moment(user?.updated_at)
+                    .tz('America/Sao_Paulo')
+                    .format('DD/MM/YYYY HH:mm:ss')
+                : null,
           },
         });
       }
@@ -128,17 +179,42 @@ class UserController {
 
       response.data = response.data.map((user: any) => {
         return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          status: user.status,
-          profile_picture: user.profile_picture,
-          email_verified_at: user.email_verified_at,
-          lastLoginDate: user.lastLoginDate,
-          currentLoginDate: user.currentLoginDate,
-          created_at: user.created_at,
-          updated_at: user.updated_at,
+          id: user?.id,
+          name: user?.name,
+          email: user?.email,
+          role: user?.role,
+          status: user?.status,
+          email_verified_at:
+            user?.email_verified_at !== null
+              ? moment(user?.email_verified_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          profile_picture: user?.profile_picture,
+          lastLoginDate:
+            user?.lastLoginDate !== null
+              ? moment(user?.lastLoginDate)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          currentLoginDate:
+            user?.currentLoginDate !== null
+              ? moment(user?.currentLoginDate)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          created_at:
+            user?.created_at !== null
+              ? moment(user?.created_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          updated_at:
+            user?.updated_at !== null
+              ? moment(user?.updated_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
         };
       });
 
@@ -146,9 +222,50 @@ class UserController {
     }
 
     try {
-      const user = await User.find({
+      const userData = await User.find({
         [field]: { $regex: value, $options: 'i' },
       }).select(['-password', '-remember_token', '-password_reset_token']);
+
+      const user = userData.map((user: any) => {
+        return {
+          id: user?.id,
+          name: user?.name,
+          email: user?.email,
+          role: user?.role,
+          status: user?.status,
+          email_verified_at:
+            user?.email_verified_at !== null
+              ? moment(user?.email_verified_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          profile_picture: user?.profile_picture,
+          lastLoginDate:
+            user?.lastLoginDate !== null
+              ? moment(user?.lastLoginDate)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          currentLoginDate:
+            user?.currentLoginDate !== null
+              ? moment(user?.currentLoginDate)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          created_at:
+            user?.created_at !== null
+              ? moment(user?.created_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          updated_at:
+            user?.updated_at !== null
+              ? moment(user?.updated_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+        };
+      });
 
       if (user) {
         logger.debug('Busca realizada com sucesso.', {
@@ -199,18 +316,60 @@ class UserController {
         status: 'active',
       }).select(['-password', '-remember_token', '-password_reset_token']);
 
+      const allUsers = users.map((user: any) => {
+        return {
+          id: user?.id,
+          name: user?.name,
+          email: user?.email,
+          role: user?.role,
+          status: user?.status,
+          email_verified_at:
+            user?.email_verified_at !== null
+              ? moment(user?.email_verified_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          profile_picture: user?.profile_picture,
+          lastLoginDate:
+            user?.lastLoginDate !== null
+              ? moment(user?.lastLoginDate)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          currentLoginDate:
+            user?.currentLoginDate !== null
+              ? moment(user?.currentLoginDate)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          created_at:
+            user?.created_at !== null
+              ? moment(user?.created_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          updated_at:
+            user?.updated_at !== null
+              ? moment(user?.updated_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+        };
+      });
+
       logger.debug('Usuários encontrados com sucesso.', {
         success: true,
         statusCode: StatusCodes.OK,
         label: 'UserController',
         method: 'GET',
+        users: allUsers,
       });
 
       return res.status(StatusCodes.OK).json({
         success: true,
         statusCode: StatusCodes.OK,
         message: 'Usuários encontrados com sucesso.',
-        users,
+        users: allUsers,
       });
     } catch (error: any) {
       logger.error('Falha ao buscar usuários.', {
@@ -234,6 +393,47 @@ class UserController {
         status: 'inactive',
       }).select(['-password', '-remember_token', '-password_reset_token']);
 
+      const usersData = users.map((user: any) => {
+        return {
+          id: user?.id,
+          name: user?.name,
+          email: user?.email,
+          role: user?.role,
+          status: user?.status,
+          email_verified_at:
+            user?.email_verified_at !== null
+              ? moment(user?.email_verified_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          profile_picture: user?.profile_picture,
+          lastLoginDate:
+            user?.lastLoginDate !== null
+              ? moment(user?.lastLoginDate)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          currentLoginDate:
+            user?.currentLoginDate !== null
+              ? moment(user?.currentLoginDate)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          created_at:
+            user?.created_at !== null
+              ? moment(user?.created_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          updated_at:
+            user?.updated_at !== null
+              ? moment(user?.updated_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+        };
+      });
+
       logger.debug('Usuários encontrados com sucesso.', {
         success: true,
         statusCode: StatusCodes.OK,
@@ -245,7 +445,7 @@ class UserController {
         success: true,
         statusCode: StatusCodes.OK,
         message: 'Usuários encontrados com sucesso.',
-        users,
+        users: usersData,
       });
     } catch (error: any) {
       logger.error('Falha ao buscar usuários.', {
@@ -261,10 +461,6 @@ class UserController {
     try {
       const token = getUserToken(req) as string;
       const user = await getUserByToken(token);
-
-      logger.info('Dados do Usuario', {
-        user,
-      });
 
       if (user) {
         const { oldPassword, newPassword } = req.body;
@@ -311,10 +507,15 @@ class UserController {
         );
 
         if (isOldPasswordCorrect) {
-          const hashedPassword = await hashPassword(newPassword);
+          const hashedPassword: string = await hashPassword(newPassword);
 
           const updatedUser = await User.updateOne(
-            { password: hashedPassword },
+            {
+              password: hashedPassword,
+              updated_at: moment(new Date())
+                .tz('America/Sao_Paulo')
+                .toISOString(),
+            },
             { _id: user.id }
           );
 
@@ -330,6 +531,8 @@ class UserController {
               success: true,
               statusCode: StatusCodes.OK,
               message: 'Senha atualizada com sucesso.',
+              oldPassword,
+              newPassword,
             });
           }
 
@@ -421,6 +624,10 @@ class UserController {
         if (role) {
           user.role = role;
         }
+
+        user.updated_at = moment(new Date())
+          .tz('America/Sao_Paulo')
+          .toISOString() as unknown as Date;
 
         const updatedUser = await User.findByIdAndUpdate(
           { _id: user.id },

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import moment from 'moment-timezone';
 import logger from '../config/winston-logger';
 import { paginate } from '../middlewares/Pagination';
 import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
@@ -11,7 +12,39 @@ class NoteController {
   listAll = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(Note, req, res);
 
-    logger.info('notas', { id: response.data.id });
+    response.data = response.data.map((note: any) => {
+      return {
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        assignee: note?.assignee,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+      };
+    });
 
     return res.status(StatusCodes.OK).json(response);
   };
@@ -31,14 +64,48 @@ class NoteController {
       });
     }
 
+    const notes = userNotes.map((note: any) => {
+      return {
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        assignee: note?.assignee,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+      };
+    });
+
     return res.status(StatusCodes.OK).json({
       success: true,
       statusCode: StatusCodes.OK,
-      notes: userNotes,
+      notes,
     });
   };
 
-  // [ ] Get a note by id (user or admin)
+  // [TO TEST] Get a note by id (user or admin)
   findByid = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
 
@@ -55,7 +122,37 @@ class NoteController {
     return res.status(StatusCodes.OK).json({
       success: true,
       statusCode: StatusCodes.OK,
-      note,
+      note: {
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        assignee: note?.assignee,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+      },
     });
   };
 
@@ -81,15 +178,83 @@ class NoteController {
     if (value === null || value === undefined || value === '') {
       const result = await paginate(Note, req, res);
 
+      result.data = result.data.map((note: any) => {
+        return {
+          title: note?.title,
+          subject: note?.subject,
+          content: note?.content,
+          start_date:
+            note?.start_date !== null
+              ? moment(note?.start_date)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          due_date:
+            note?.due_date !== null
+              ? moment(note?.due_date)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          status: note?.status,
+          assignee: note?.assignee,
+          created_at:
+            note?.created_at !== null
+              ? moment(note?.created_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          updated_at:
+            note?.updated_at !== null
+              ? moment(note?.updated_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+        };
+      });
+
       res.status(StatusCodes.OK).json(result);
     }
 
     try {
-      const note = await Note.find({
+      const notes = await Note.find({
         [field]: { $regex: value, $options: 'i' },
       });
 
-      if (note) {
+      const allNotes = notes.map((note: any) => {
+        return {
+          title: note?.title,
+          subject: note?.subject,
+          content: note?.content,
+          start_date:
+            note?.start_date !== null
+              ? moment(note?.start_date)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          due_date:
+            note?.due_date !== null
+              ? moment(note?.due_date)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          status: note?.status,
+          assignee: note?.assignee,
+          created_at:
+            note?.created_at !== null
+              ? moment(note?.created_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          updated_at:
+            note?.updated_at !== null
+              ? moment(note?.updated_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+        };
+      });
+
+      if (notes) {
         logger.debug('Anotação encontrada com sucesso.', {
           success: true,
           statusCode: StatusCodes.OK,
@@ -101,7 +266,7 @@ class NoteController {
           success: true,
           statusCode: StatusCodes.OK,
           message: 'Anotação encontrada com sucesso.',
-          note,
+          notes: allNotes,
         });
       }
 
@@ -152,6 +317,40 @@ class NoteController {
       due_date: null,
     });
 
+    const allNotes = notes.map((note: any) => {
+      return {
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        assignee: note?.assignee,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+      };
+    });
+
     if (!notes) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
@@ -163,7 +362,7 @@ class NoteController {
     return res.status(StatusCodes.OK).json({
       success: true,
       statusCode: StatusCodes.OK,
-      notes,
+      notes: allNotes,
     });
   };
 
@@ -184,6 +383,40 @@ class NoteController {
       status: 'pending',
     });
 
+    const allNotes = notes.map((note: any) => {
+      return {
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        assignee: note?.assignee,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+      };
+    });
+
     if (!notes) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
@@ -195,7 +428,7 @@ class NoteController {
     return res.status(StatusCodes.OK).json({
       success: true,
       statusCode: StatusCodes.OK,
-      notes,
+      notes: allNotes,
     });
   };
 
@@ -216,6 +449,40 @@ class NoteController {
       status: 'completed',
     });
 
+    const allNotes = notes.map((note: any) => {
+      return {
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        assignee: note?.assignee,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+      };
+    });
+
     if (!notes) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
@@ -227,7 +494,7 @@ class NoteController {
     return res.status(StatusCodes.OK).json({
       success: true,
       statusCode: StatusCodes.OK,
-      notes,
+      notes: allNotes,
     });
   };
 
@@ -255,11 +522,100 @@ class NoteController {
         message: 'Nenhuma anotação encontrada.',
       });
     }
+    const allNotes = notes.map((note: any) => {
+      return {
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        assignee: note?.assignee,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+      };
+    });
 
     return res.status(StatusCodes.OK).json({
       success: true,
       statusCode: StatusCodes.OK,
-      notes,
+      notes: allNotes,
+    });
+  };
+
+  // [ ] Get all the notes from a specific user (admin only)
+  getAllUserNotes = async (req: Request, res: Response): Promise<Response> => {
+    const { id } = req.params;
+
+    const notes = await Note.find({
+      assignee: id,
+    });
+
+    if (!notes) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhuma anotação encontrada.',
+      });
+    }
+
+    const allNotes = notes.map((note: any) => {
+      return {
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+      };
+    });
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      statusCode: StatusCodes.OK,
+      notes: allNotes,
     });
   };
 
@@ -287,7 +643,7 @@ class NoteController {
     }
 
     if (start_date && due_date) {
-      if (start_date > due_date) {
+      if (start_date < due_date) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           success: false,
           statusCode: StatusCodes.BAD_REQUEST,
@@ -301,12 +657,7 @@ class NoteController {
         content,
         start_date,
         due_date,
-        assignee: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          profile_picture: user.profile_picture,
-        },
+        assignee: user.id,
       });
 
       if (!note) {
@@ -320,7 +671,37 @@ class NoteController {
       return res.status(StatusCodes.CREATED).json({
         success: true,
         statusCode: StatusCodes.CREATED,
-        note,
+        note: {
+          title: note?.title,
+          subject: note?.subject,
+          content: note?.content,
+          start_date:
+            note?.start_date !== null
+              ? moment(note?.start_date)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          due_date:
+            note?.due_date !== null
+              ? moment(note?.due_date)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          status: note?.status,
+          assignee: note?.assignee,
+          created_at:
+            note?.created_at !== null
+              ? moment(note?.created_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          updated_at:
+            note?.updated_at !== null
+              ? moment(note?.updated_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+        },
       });
     }
 
@@ -344,7 +725,37 @@ class NoteController {
       return res.status(StatusCodes.CREATED).json({
         success: true,
         statusCode: StatusCodes.CREATED,
-        note,
+        note: {
+          title: note?.title,
+          subject: note?.subject,
+          content: note?.content,
+          start_date:
+            note?.start_date !== null
+              ? moment(note?.start_date)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          due_date:
+            note?.due_date !== null
+              ? moment(note?.due_date)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          status: note?.status,
+          assignee: note?.assignee,
+          created_at:
+            note?.created_at !== null
+              ? moment(note?.created_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          updated_at:
+            note?.updated_at !== null
+              ? moment(note?.updated_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+        },
       });
     }
 
@@ -366,7 +777,37 @@ class NoteController {
     return res.status(StatusCodes.CREATED).json({
       success: true,
       statusCode: StatusCodes.CREATED,
-      note,
+      note: {
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        assignee: note?.assignee,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+      },
     });
   };
 
@@ -416,7 +857,7 @@ class NoteController {
     if (content !== null || content !== undefined || content !== '')
       note.content = content;
     if (start_date !== null || start_date !== undefined || start_date !== '')
-      note.start_date = start_date; // MM DD YYYY
+      note.start_date = start_date;
     if (due_date !== null || due_date !== undefined || due_date !== '')
       note.due_date = due_date;
 
@@ -440,7 +881,37 @@ class NoteController {
       success: true,
       statusCode: StatusCodes.OK,
       message: ReasonPhrases.OK,
-      note: updatedNote,
+      note: {
+        title: updatedNote?.title,
+        subject: updatedNote?.subject,
+        content: updatedNote?.content,
+        start_date:
+          updatedNote?.start_date !== null
+            ? moment(updatedNote?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          updatedNote?.due_date !== null
+            ? moment(updatedNote?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: updatedNote?.status,
+        assignee: updatedNote?.assignee,
+        created_at:
+          updatedNote?.created_at !== null
+            ? moment(updatedNote?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          updatedNote?.updated_at !== null
+            ? moment(updatedNote?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+      },
     });
   };
 
@@ -476,12 +947,35 @@ class NoteController {
       label: 'NoteController',
       method: 'DELETE',
       note: {
-        id: note.id,
-        title: note.title,
-        subject: note.subject,
-        content: note.content,
-        start_date: note.start_date,
-        due_date: note.due_date,
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        assignee: note?.assignee,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
       },
     });
 
@@ -490,10 +984,34 @@ class NoteController {
       statusCode: StatusCodes.OK,
       message: `Anotação removida com sucesso por ${user.name}`,
       deletedNote: {
-        id: note.id,
-        title: note.title,
-        subject: note.subject,
-        content: note.content,
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
         assignee: {
           id: user.id,
           name: user.name,
@@ -501,8 +1019,6 @@ class NoteController {
           profile_picture: user.profile_picture,
           status: user.status,
         },
-        start_date: note.start_date,
-        due_date: note.due_date,
       },
     });
   };

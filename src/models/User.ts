@@ -17,6 +17,7 @@ const userSchema = new Schema(
     email_verified_at: {
       type: Date,
       required: false,
+      default: null,
     },
     password: {
       type: String,
@@ -65,7 +66,7 @@ const userSchema = new Schema(
     currentLoginDate: {
       type: Date,
       required: false,
-      default: Date.now,
+      default: null,
     },
   },
   {

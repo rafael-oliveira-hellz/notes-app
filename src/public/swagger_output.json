@@ -972,6 +972,74 @@
         }
       }
     },
+    "/notes/user/{id}": {
+      "get": {
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para listar todas as notas de um usuário.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do usuário.",
+            "schema": {
+              "$ref": "#/definitions/UserId"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notas listadas com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/NoteList"
+            }
+          },
+          "400": {
+            "description": "Erro na requisição.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Nenhuma anotação encontrada.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
     "/notes/{id}": {
       "get": {
         "tags": [
@@ -1500,6 +1568,15 @@
               "example": "2022-11-12T00:00:00.000Z"
             }
           }
+        }
+      }
+    },
+    "UserId": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "639407f89236de177775ac8f"
         }
       }
     },
