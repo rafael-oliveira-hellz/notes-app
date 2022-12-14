@@ -243,16 +243,9 @@ router.patch(
       type: 'string',
       schema: { $ref: "#/definitions/VerifyUser" }
     }*/
-    /* #swagger.parameters['oldPassword'] = {
+    /* #swagger.parameters['password_change'] = {
       in: 'body',
-      description: 'Senha antiga do usuário.',
-      required: true,
-      type: 'string',
-      schema: { $ref: "#/definitions/ChangePassword" }
-    }*/
-    /* #swagger.parameters['newPassword'] = {
-      in: 'body',
-      description: 'Nova senha do usuário.',
+      description: 'Senha antiga e senha atual do usuário.',
       required: true,
       type: 'string',
       schema: { $ref: "#/definitions/ChangePassword" }

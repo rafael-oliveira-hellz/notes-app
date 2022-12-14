@@ -610,18 +610,9 @@
             }
           },
           {
-            "name": "oldPassword",
+            "name": "password_change",
             "in": "body",
-            "description": "Senha antiga do usuário.",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ChangePassword"
-            }
-          },
-          {
-            "name": "newPassword",
-            "in": "body",
-            "description": "Nova senha do usuário.",
+            "description": "Senha antiga e senha atual do usuário.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/ChangePassword"
