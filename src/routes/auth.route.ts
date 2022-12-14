@@ -7,7 +7,7 @@ const router = Router();
 router.post('/auth/signup', AuthController.createUser, (_req, _res) => {
   // #swagger.tags = ['Auth']
   // #swagger.description = 'Endpoint para criar um novo usuário.'
-  /* #swagger.parameters['createUser'] = {
+  /* #swagger.parameters['signup'] = {
      in: 'body',
      description: 'Dados do novo usuário.',
      required: true,
@@ -32,9 +32,102 @@ router.post('/auth/signup', AuthController.createUser, (_req, _res) => {
   }
   */
 });
-router.post('/auth/signin', AuthController.signIn);
-router.post('/auth/refresh-token', AuthController.refreshToken);
-router.get('/auth/verify-user', AuthController.verifyUser);
+router.post('/auth/signin', AuthController.signIn, (_req, _res) => {
+  // #swagger.tags = ['Auth']
+  // #swagger.description = 'Endpoint para realizar o login de um usuário.'
+  /* #swagger.parameters['signin'] = {
+     in: 'body',
+     description: 'Dados do usuário para o login.',
+     required: true,
+     type: 'object',
+     schema: { $ref: "#/definitions/UserLogin" }
+   }*/
+  /* #swagger.responses[200] = {
+    description: 'Usuário logado com sucesso.',
+    schema: { $ref: "#/definitions/UserLoginResponse" }
+  }
+    #swagger.responses[400] = {
+    description: 'Requisição inválida.',
+    schema: { $ref: "#/definitions/BadRequest" }
+  }
+    #swagger.responses[403] = {
+    description: 'Usuário não autorizado.',
+    schema: { $ref: "#/definitions/Forbidden" }
+  }
+    #swagger.responses[404] = {
+    description: 'Usuário não encontrado.',
+    schema: { $ref: "#/definitions/NotFound" }
+  }
+  #swagger.responses[500] = {
+    description: 'Erro interno do servidor.',
+    schema: { $ref: "#/definitions/InternalServerError" }
+  }
+  */
+});
+router.post(
+  '/auth/refresh-token',
+  AuthController.refreshToken,
+  (_req, _res) => {
+    // #swagger.tags = ['Auth']
+    // #swagger.description = 'Endpoint para atualizar o token de um usuário.'
+    /* #swagger.parameters['refresh_token'] = {
+     in: 'header',
+     description: 'Token para atualização do acesso.',
+     required: true,
+     type: 'string',
+     schema: { $ref: "#/definitions/RefreshToken" }
+   }*/
+    /* #swagger.responses[200] = {
+    description: 'Token atualizado com sucesso.',
+    schema: { $ref: "#/definitions/RefreshTokenResponse" }
+  }
+    #swagger.responses[400] = {
+    description: 'Requisição inválida.',
+    schema: { $ref: "#/definitions/BadRequest" }
+  }
+    #swagger.responses[404] = {
+    description: 'Usuário não encontrado.',
+    schema: { $ref: "#/definitions/NotFound" }
+  }
+  #swagger.responses[500] = {
+    description: 'Erro interno do servidor.',
+    schema: { $ref: "#/definitions/InternalServerError" }
+  }
+  */
+  }
+);
+router.get('/auth/verify-user', AuthController.verifyUser, (_req, _res) => {
+  // #swagger.tags = ['Auth']
+  // #swagger.description = 'Endpoint para verificar se um usuário existe.'
+  /* #swagger.parameters['verify_user'] = {
+     in: 'header',
+     description: 'Dados do usuário para verificação.',
+     required: true,
+     type: 'string',
+     schema: { $ref: "#/definitions/VerifyUser" }
+   }*/
+  /* #swagger.responses[200] = {
+    description: 'Usuário verificado com sucesso.',
+    schema: { $ref: "#/definitions/VerifyUserResponse" }
+  }
+    #swagger.responses[400] = {
+    description: 'Requisição inválida.',
+    schema: { $ref: "#/definitions/BadRequest" }
+  }
+    #swagger.responses[401] = {
+    description: 'Usuário não autorizado.',
+    schema: { $ref: "#/definitions/Unauthorized" }
+  }
+    #swagger.responses[404] = {
+    description: 'Usuário não encontrado.',
+    schema: { $ref: "#/definitions/NotFound" }
+  }
+  #swagger.responses[500] = {
+    description: 'Erro interno do servidor.',
+    schema: { $ref: "#/definitions/InternalServerError" }
+  }
+  */
+});
 
 logger.debug('Auth routes initialized', {
   label: 'AuthController',

@@ -3,7 +3,11 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import joi from 'joi';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import logger from '../config/winston-logger';
-import { generateToken, getUserToken } from '../middlewares/TokenControl';
+import {
+  generateToken,
+  getUserByToken,
+  getUserToken,
+} from '../middlewares/TokenControl';
 import { comparePassword, hashPassword } from '../middlewares/ValidatePassword';
 import { IUser } from '../models/interfaces/user';
 import User from '../models/User';
@@ -136,7 +140,7 @@ class AuthController {
       email !== user?.email ||
       !(await comparePassword(password, user?.password))
     ) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
+      return res.status(StatusCodes.BAD_REQUEST).json({
         message: 'E-mail ou senha incorretos',
       });
     }
@@ -203,21 +207,28 @@ class AuthController {
         name: user?.name,
         email: user?.email,
         role: user?.role,
+        status: user?.status,
         profile_picture: user?.profile_picture,
+        email_verified_at: user?.email_verified_at,
         created_at: user?.created_at,
         updated_at: user?.updated_at,
       },
+      access_token: accessToken,
+      refresh_token: refreshToken,
     });
 
     return res.status(StatusCodes.OK).json({
-      status: StatusCodes.OK,
+      success: true,
+      statusCode: StatusCodes.OK,
       message: 'Usuário logado com sucesso',
       user: {
         id: user?.id,
         name: user?.name,
         email: user?.email,
         role: user?.role,
+        status: user?.status,
         profile_picture: user?.profile_picture,
+        email_verified_at: user?.email_verified_at,
         created_at: user?.created_at,
         updated_at: user?.updated_at,
       },
@@ -228,7 +239,7 @@ class AuthController {
 
   // [TO TEST] Refresh token
   refreshToken = async (req: Request, res: Response) => {
-    const { refresh_token } = req.headers;
+    const refresh_token = getUserToken(req) as string;
 
     if (!refresh_token) {
       return res.status(StatusCodes.BAD_REQUEST).json({
@@ -238,40 +249,55 @@ class AuthController {
       });
     }
 
-    const decoded = jwt.verify(
-      String(refresh_token),
-      String(process.env.REFRESH_TOKEN_SECRET)
-    ) as JwtPayload;
+    try {
+      const user = await getUserByToken(refresh_token);
 
-    if (!decoded) {
-      return res.status(StatusCodes.FORBIDDEN).json({
-        success: false,
-        statusCode: StatusCodes.FORBIDDEN,
-        message: 'Não foi possível gerar um novo token de acesso',
+      if (!user) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Usuário não encontrado',
+        });
+      }
+
+      const accessToken = generateToken(
+        user,
+        process.env.ACCESS_TOKEN_SECRET as string
+      );
+
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Token de acesso atualizado com sucesso',
+        access_token: accessToken,
       });
+    } catch (error: Error | any) {
+      if (error instanceof Error) {
+        logger.error(error.message, {
+          success: false,
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          label: 'AuthController',
+          method: 'POST',
+          message: 'Não foi possível gerar um novo token de acesso',
+          error: {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          },
+        });
+
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Não foi possível gerar um novo token de acesso',
+          error: {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          },
+        });
+      }
     }
-
-    const user = await User.findOne({ where: { _id: decoded.id } });
-
-    if (!user) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        success: false,
-        statusCode: StatusCodes.NOT_FOUND,
-        message: 'Usuário não encontrado',
-      });
-    }
-
-    const accessToken = generateToken(
-      user,
-      process.env.ACCESS_TOKEN_SECRET as string
-    );
-
-    return res.status(StatusCodes.OK).json({
-      success: true,
-      statusCode: StatusCodes.OK,
-      message: 'Token de acesso atualizado com sucesso',
-      access_token: accessToken,
-    });
   };
 
   // [TO TEST] Verify user
@@ -315,7 +341,9 @@ class AuthController {
               name: user?.name,
               email: user?.email,
               role: user?.role,
+              status: user?.status,
               profile_picture: user?.profile_picture,
+              email_verified_at: user?.email_verified_at,
               created_at: user?.created_at,
               updated_at: user?.updated_at,
             },
@@ -346,8 +374,11 @@ class AuthController {
           statusCode: StatusCodes.UNAUTHORIZED,
           reason: ReasonPhrases.UNAUTHORIZED,
           message: 'Falha ao autenticar usuário',
-          error: error.message,
-          stack: error.stack,
+          error: {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          },
         });
       }
     } else {

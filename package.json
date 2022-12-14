@@ -19,7 +19,7 @@
     "watch-ts": "tsc -w",
     "deploy": "git add . && git commit -m Heroku && git push heroku master",
     "tsc": "tsc && cp -r -i -v src/public dist/",
-    "swagger": "node ./src/utils/swagger-generator.js"
+    "swagger": "node ./src/utils/swagger-generator.ts"
   },
   "engines": {
     "node": "18.12.1"
