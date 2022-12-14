@@ -143,7 +143,7 @@
         "description": "Endpoint para atualizar o token de um usuário.",
         "parameters": [
           {
-            "name": "refresh_token",
+            "name": "authorization",
             "in": "header",
             "description": "Token para atualização do acesso.",
             "required": true,
