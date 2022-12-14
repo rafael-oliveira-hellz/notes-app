@@ -10,15 +10,15 @@
   "tags": [
     {
       "name": "User",
-      "description": "Endpoints"
+      "description": "Endpoints para gerenciamento de usuários"
     },
     {
       "name": "Auth",
-      "description": "Endpoints"
+      "description": "Endpoints para autenticação e validação de usuários"
     },
     {
       "name": "Note",
-      "description": "Endpoints"
+      "description": "Endpoints para gerenciamento de anotações"
     }
   ],
   "schemes": [
@@ -235,15 +235,74 @@
     },
     "/users": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para obter todos os usuários.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de acesso.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página.",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limite de usuários por página.",
+            "required": false,
+            "type": "number"
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Listar todos os usuários no sistema.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Acesso não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Acesso negado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/users/me": {
