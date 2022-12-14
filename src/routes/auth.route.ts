@@ -70,7 +70,7 @@ router.post(
   (_req, _res) => {
     // #swagger.tags = ['Auth']
     // #swagger.description = 'Endpoint para atualizar o token de um usuário.'
-    /* #swagger.parameters['authorization'] = {
+    /* #swagger.parameters['refresh_token'] = {
      in: 'header',
      description: 'Token para atualização do acesso.',
      required: true,
