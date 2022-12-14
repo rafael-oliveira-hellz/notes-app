@@ -14,6 +14,7 @@ class NoteController {
 
     response.data = response.data.map((note: any) => {
       return {
+        id: note?.id,
         title: note?.title,
         subject: note?.subject,
         content: note?.content,
@@ -66,6 +67,7 @@ class NoteController {
 
     const notes = userNotes.map((note: any) => {
       return {
+        id: note?.id,
         title: note?.title,
         subject: note?.subject,
         content: note?.content,
@@ -123,6 +125,7 @@ class NoteController {
       success: true,
       statusCode: StatusCodes.OK,
       note: {
+        id: note?.id,
         title: note?.title,
         subject: note?.subject,
         content: note?.content,
@@ -180,6 +183,7 @@ class NoteController {
 
       result.data = result.data.map((note: any) => {
         return {
+          id: note?.id,
           title: note?.title,
           subject: note?.subject,
           content: note?.content,
@@ -222,6 +226,7 @@ class NoteController {
 
       const allNotes = notes.map((note: any) => {
         return {
+          id: note?.id,
           title: note?.title,
           subject: note?.subject,
           content: note?.content,
@@ -319,6 +324,7 @@ class NoteController {
 
     const allNotes = notes.map((note: any) => {
       return {
+        id: note?.id,
         title: note?.title,
         subject: note?.subject,
         content: note?.content,
@@ -385,6 +391,7 @@ class NoteController {
 
     const allNotes = notes.map((note: any) => {
       return {
+        id: note?.id,
         title: note?.title,
         subject: note?.subject,
         content: note?.content,
@@ -451,6 +458,7 @@ class NoteController {
 
     const allNotes = notes.map((note: any) => {
       return {
+        id: note?.id,
         title: note?.title,
         subject: note?.subject,
         content: note?.content,
@@ -524,6 +532,7 @@ class NoteController {
     }
     const allNotes = notes.map((note: any) => {
       return {
+        id: note?.id,
         title: note?.title,
         subject: note?.subject,
         content: note?.content,
@@ -581,6 +590,7 @@ class NoteController {
 
     const allNotes = notes.map((note: any) => {
       return {
+        id: note?.id,
         title: note?.title,
         subject: note?.subject,
         content: note?.content,
@@ -672,6 +682,7 @@ class NoteController {
         success: true,
         statusCode: StatusCodes.CREATED,
         note: {
+          id: note?.id,
           title: note?.title,
           subject: note?.subject,
           content: note?.content,
@@ -726,6 +737,7 @@ class NoteController {
         success: true,
         statusCode: StatusCodes.CREATED,
         note: {
+          id: note?.id,
           title: note?.title,
           subject: note?.subject,
           content: note?.content,
@@ -778,6 +790,7 @@ class NoteController {
       success: true,
       statusCode: StatusCodes.CREATED,
       note: {
+        id: note?.id,
         title: note?.title,
         subject: note?.subject,
         content: note?.content,
@@ -882,6 +895,7 @@ class NoteController {
       statusCode: StatusCodes.OK,
       message: ReasonPhrases.OK,
       note: {
+        id: updatedNote?.id,
         title: updatedNote?.title,
         subject: updatedNote?.subject,
         content: updatedNote?.content,
@@ -947,6 +961,7 @@ class NoteController {
       label: 'NoteController',
       method: 'DELETE',
       note: {
+        id: note?.id,
         title: note?.title,
         subject: note?.subject,
         content: note?.content,
@@ -984,6 +999,7 @@ class NoteController {
       statusCode: StatusCodes.OK,
       message: `Anotação removida com sucesso por ${user.name}`,
       deletedNote: {
+        id: note?.id,
         title: note?.title,
         subject: note?.subject,
         content: note?.content,
