@@ -307,49 +307,182 @@
     },
     "/users/me": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para obter o perfil do usuário.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de acesso.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Obter perfil do usuário.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Acesso não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Acesso negado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para deletar o perfil do usuário.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de acesso.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "204": {
+            "description": "Deletar perfil do usuário.",
+            "schema": {
+              "$ref": "#/definitions/NoContentR"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Acesso não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Acesso negado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/users/find": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para obter um usuário pelo campo.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de acesso.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           },
           {
             "name": "field",
             "in": "query",
+            "description": "Campo a ser pesquisado.",
+            "required": true,
             "type": "string"
           },
           {
             "name": "value",
             "in": "query",
+            "description": "Valor a ser pesquisado.",
+            "required": false,
             "type": "string"
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Obter usuário pelo campo.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Acesso não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Acesso negado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/users/active": {
@@ -362,7 +495,12 @@
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de acesso.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
         "responses": {
@@ -389,102 +527,277 @@
             "schema": {
               "$ref": "#/definitions/Forbidden"
             }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
           }
         }
       }
     },
     "/users/inactive": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para obter todos os usuários inativos.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de acesso.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Listar usuários inativos no sistema.",
+            "schema": {
+              "$ref": "#/definitions/UserInactive"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Acesso não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Acesso negado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/users/change-password": {
       "patch": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para alterar a senha do usuário.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de acesso.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           },
           {
-            "name": "body",
+            "name": "oldPassword",
             "in": "body",
+            "description": "Senha antiga do usuário.",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "oldPassword": {
-                  "example": "any"
-                },
-                "newPassword": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/ChangePassword"
+            }
+          },
+          {
+            "name": "newPassword",
+            "in": "body",
+            "description": "Nova senha do usuário.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ChangePassword"
             }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Alterar senha do usuário.",
+            "schema": {
+              "$ref": "#/definitions/ChangePasswordResponse"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Acesso não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Acesso negado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/users/edit/profile": {
       "put": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para editar o perfil do usuário.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de acesso.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           },
           {
-            "name": "body",
+            "name": "name",
             "in": "body",
+            "description": "Nome do usuário.",
+            "required": false,
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                },
-                "role": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/UpdateUser"
+            }
+          },
+          {
+            "name": "email",
+            "in": "body",
+            "description": "Email do usuário.",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UpdateUser"
+            }
+          },
+          {
+            "name": "role",
+            "in": "body",
+            "description": "Cargo do usuário (admin ou user).",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UpdateUser"
             }
           }
         ],
-        "responses": {}
+        "responses": {
+          "204": {
+            "description": "Editar perfil do usuário.",
+            "schema": {
+              "$ref": "#/definitions/NoContent"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Acesso não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Acesso negado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/users/{id}": {
       "delete": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para deletar um usuário.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID do usuário a ser removido.",
+            "schema": {
+              "$ref": "#/definitions/DeleteUser"
+            }
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "description": "Token de acesso.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Remover um usuário.",
+            "schema": {
+              "$ref": "#/definitions/DeleteUserResponse"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Acesso não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Acesso negado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/notes": {
@@ -682,13 +995,9 @@
           "type": "string",
           "example": "john@doe.com"
         },
-        "password": {
-          "type": "string",
-          "example": "123456789"
-        },
         "role": {
           "type": "string",
-          "example": "admin"
+          "example": "user"
         },
         "status": {
           "type": "string",
@@ -702,16 +1011,55 @@
           "type": "string",
           "example": "2022-01-01T00:00:00.000Z"
         },
-        "password_reset_token": {
+        "lastLoginDate": {
           "type": "string",
-          "example": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTQwN2Y4OTIzNmRlMTc3Nzc1YWM4ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3MDg4MDMwMSwiZXhwIjoxNjcwOTY2NzAxfQ.FgfcaI6-LIF240aJeryZdOLvTHdRDNIBsK2HjhF7nLOFbS51rkmehmcH3Lf7gwTBUu2_xx1P6S62GUWchArPpA"
+          "example": "2022-11-01T00:00:00.000Z"
         },
-        "remember_token": {
+        "currentLoginDate": {
           "type": "string",
-          "example": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTQwN2Y4OTIzNmRlMTc3Nzc1YWM4ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3MDg4MDMwMSwiZXhwIjoxNjcwOTY2NzAxfQ.xi8Hy6d6IXWKdVdsMH7iU32bEK5jHqOvqMG-ofsD6VcFcHUK49XJJ-NJpOTpfdjomwWebL_GWczdB21segdQnw"
+          "example": "2022-12-12T00:00:00.000Z"
         },
-        "provider_id": {},
-        "provider_name": {},
+        "created_at": {
+          "type": "string",
+          "example": "2022-01-01T00:00:00.000Z"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2022-11-12T00:00:00.000Z"
+        }
+      }
+    },
+    "UserInactive": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "639407f89236de177775ac8f"
+        },
+        "name": {
+          "type": "string",
+          "example": "Mariah Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "mariah@doe.com"
+        },
+        "role": {
+          "type": "string",
+          "example": "user"
+        },
+        "status": {
+          "type": "string",
+          "example": "inactive"
+        },
+        "profile_picture": {
+          "type": "string",
+          "example": "https://example.com/profile-picture.jpg"
+        },
+        "email_verified_at": {
+          "type": "string",
+          "example": "2022-01-01T00:00:00.000Z"
+        },
         "lastLoginDate": {
           "type": "string",
           "example": "2022-11-01T00:00:00.000Z"
@@ -882,6 +1230,57 @@
         "message": {
           "type": "string",
           "example": "Requisição realizada com sucesso!"
+        }
+      }
+    },
+    "Created": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 201
+        },
+        "message": {
+          "type": "string",
+          "example": "Recurso criado com sucesso!"
+        }
+      }
+    },
+    "NoContent": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 204
+        },
+        "message": {
+          "type": "string",
+          "example": "Recurso atualizado com sucesso!"
+        }
+      }
+    },
+    "NoContentR": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 204
+        },
+        "message": {
+          "type": "string",
+          "example": "Recurso removido com sucesso!"
         }
       }
     },
@@ -1148,6 +1547,136 @@
               "example": "https://example.com/profile-picture.jpg"
             },
             "email_verified_at": {
+              "type": "string",
+              "example": "2022-01-01T00:00:00.000Z"
+            },
+            "lastLoginDate": {
+              "type": "string",
+              "example": "2022-01-01T00:00:00.000Z"
+            },
+            "currentLoginDate": {
+              "type": "string",
+              "example": "2022-01-01T00:00:00.000Z"
+            },
+            "created_at": {
+              "type": "string",
+              "example": "2022-01-01T00:00:00.000Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "example": "2022-11-12T00:00:00.000Z"
+            }
+          }
+        }
+      }
+    },
+    "ChangePassword": {
+      "type": "object",
+      "properties": {
+        "oldPassword": {
+          "type": "string",
+          "example": "123456789"
+        },
+        "newPassword": {
+          "type": "string",
+          "example": "123456"
+        }
+      }
+    },
+    "ChangePasswordResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Senha atualizada com sucesso!"
+        }
+      }
+    },
+    "UpdateUser": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "john@doe.com"
+        },
+        "role": {
+          "type": "string",
+          "example": "user"
+        }
+      }
+    },
+    "DeleteUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "639407f89236de177775ac8f"
+        }
+      }
+    },
+    "DeleteUserResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Usuário removido com sucesso!"
+        },
+        "deletedUser": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "639407f89236de177775ac8f"
+            },
+            "name": {
+              "type": "string",
+              "example": "John Doe"
+            },
+            "email": {
+              "type": "string",
+              "example": "john@doe.com"
+            },
+            "role": {
+              "type": "string",
+              "example": "user"
+            },
+            "status": {
+              "type": "string",
+              "example": "active"
+            },
+            "profile_picture": {
+              "type": "string",
+              "example": "https://example.com/profile-picture.jpg"
+            },
+            "email_verified_at": {
+              "type": "string",
+              "example": "2022-01-01T00:00:00.000Z"
+            },
+            "lastLoginDate": {
+              "type": "string",
+              "example": "2022-01-01T00:00:00.000Z"
+            },
+            "currentLoginDate": {
               "type": "string",
               "example": "2022-01-01T00:00:00.000Z"
             },
