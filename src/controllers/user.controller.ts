@@ -12,6 +12,22 @@ class UserController {
   getAllUsers = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(User, req, res);
 
+    response.data = response.data.map((user: any) => {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+        profile_picture: user.profile_picture,
+        email_verified_at: user.email_verified_at,
+        lastLoginDate: user.lastLoginDate,
+        currentLoginDate: user.currentLoginDate,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
+      };
+    });
+
     return res.status(StatusCodes.OK).json(response);
   };
 
@@ -38,7 +54,11 @@ class UserController {
             name: user.name,
             email: user.email,
             role: user.role,
+            status: user.status,
             profile_picture: user.profile_picture,
+            email_verified_at: user.email_verified_at,
+            lastLoginDate: user.lastLoginDate,
+            currentLoginDate: user.currentLoginDate,
             created_at: user.created_at,
             updated_at: user.updated_at,
           },
@@ -71,7 +91,7 @@ class UserController {
     const value = String(req.query.value);
 
     if (field === null || field === undefined || field === '') {
-      logger.error('Não é possível buscar o usuário.', {
+      logger.error('Não é possível buscar realizar busca.', {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
         message: ReasonPhrases.BAD_REQUEST,
@@ -91,7 +111,7 @@ class UserController {
       field === 'password_reset_token' ||
       field === 'profile_picture'
     ) {
-      logger.error('Não é possível buscar o usuário por este campo.', {
+      logger.error('Não é possível buscar um usuário por este campo.', {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
       });
@@ -99,23 +119,39 @@ class UserController {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Não é possível buscar o usuário por este campo.',
+        message: 'Não é possível buscar um usuário por este campo.',
       });
     }
 
     if (value === null || value === undefined || value === '') {
-      const result = await paginate(User, req, res);
+      const response = await paginate(User, req, res);
 
-      res.status(StatusCodes.OK).json(result);
+      response.data = response.data.map((user: any) => {
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          status: user.status,
+          profile_picture: user.profile_picture,
+          email_verified_at: user.email_verified_at,
+          lastLoginDate: user.lastLoginDate,
+          currentLoginDate: user.currentLoginDate,
+          created_at: user.created_at,
+          updated_at: user.updated_at,
+        };
+      });
+
+      res.status(StatusCodes.OK).json(response);
     }
 
     try {
       const user = await User.find({
         [field]: { $regex: value, $options: 'i' },
-      }).select('-password');
+      }).select(['-password', '-remember_token', '-password_reset_token']);
 
       if (user) {
-        logger.debug('Usuário encontrado com sucesso.', {
+        logger.debug('Busca realizada com sucesso.', {
           success: true,
           statusCode: StatusCodes.OK,
           label: 'UserController',
@@ -125,12 +161,12 @@ class UserController {
         return res.status(StatusCodes.OK).json({
           success: true,
           statusCode: StatusCodes.OK,
-          message: 'Usuário encontrado com sucesso.',
+          message: 'Busca realizada com sucesso.',
           user,
         });
       }
 
-      logger.error('Usuário não encontrado.', {
+      logger.error('Erro ao realizar busca', {
         success: false,
         statusCode: StatusCodes.NOT_FOUND,
         error: ReasonPhrases.NOT_FOUND,
@@ -139,10 +175,10 @@ class UserController {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         statusCode: StatusCodes.NOT_FOUND,
-        message: 'Usuário não encontrado.',
+        message: 'Erro ao realizar busca.',
       });
     } catch (error) {
-      logger.error('Falha ao buscar usuário.', {
+      logger.error('Falha ao realizar busca', {
         success: false,
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
         error: ReasonPhrases.INTERNAL_SERVER_ERROR,
@@ -151,7 +187,7 @@ class UserController {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: 'Falha ao buscar usuário.',
+        message: 'Falha ao realizar busca.',
       });
     }
   };
@@ -161,7 +197,7 @@ class UserController {
     try {
       const users = await User.find({
         status: 'active',
-      }).select('-password');
+      }).select(['-password', '-remember_token', '-password_reset_token']);
 
       logger.debug('Usuários encontrados com sucesso.', {
         success: true,
@@ -196,7 +232,7 @@ class UserController {
     try {
       const users = await User.find({
         status: 'inactive',
-      }).select('-password');
+      }).select(['-password', '-remember_token', '-password_reset_token']);
 
       logger.debug('Usuários encontrados com sucesso.', {
         success: true,
@@ -347,7 +383,7 @@ class UserController {
       }
 
       if (user) {
-        const { name, email, password, role } = req.body;
+        const { name, email, role } = req.body;
 
         if (req.file) {
           user.profile_picture = `/uploads/images/${req.file.filename}`;
@@ -380,12 +416,6 @@ class UserController {
           }
 
           user.email = email;
-        }
-
-        if (password) {
-          const hashedPassword = await hashPassword(password);
-
-          user.password = hashedPassword;
         }
 
         if (role) {
@@ -536,13 +566,17 @@ class UserController {
           return res.status(StatusCodes.OK).json({
             success: true,
             statusCode: StatusCodes.OK,
-            message: `Usuário deletado com sucesso por ${user.name}`,
+            message: `Usuário removido com sucesso por ${user.name}`,
             deletedUser: {
               id: deletedUser.id,
               name: deletedUser.name,
               email: deletedUser.email,
               role: deletedUser.role,
+              status: deletedUser.status,
               profile_picture: deletedUser.profile_picture,
+              email_verified_at: deletedUser.email_verified_at,
+              lastLoginDate: deletedUser.lastLoginDate,
+              currentLoginDate: deletedUser.currentLoginDate,
               created_at: deletedUser.created_at,
               updated_at: deletedUser.updated_at,
             },
