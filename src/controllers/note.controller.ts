@@ -11,9 +11,9 @@ class NoteController {
   listAll = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(Note, req, res);
 
-    logger.info('notas', { response });
+    logger.info('notas', { id: response.data.id });
 
-    return res.status(StatusCodes.OK).json(JSON.stringify(response));
+    return res.status(StatusCodes.OK).json(response);
   };
 
   // [TO TEST] Get all notes from the logged in user
