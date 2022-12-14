@@ -509,14 +509,17 @@ class UserController {
         if (isOldPasswordCorrect) {
           const hashedPassword: string = await hashPassword(newPassword);
 
-          const updatedUser = await User.updateOne(
+          user.password = hashedPassword;
+          user.updated_at = moment(new Date())
+            .tz('America/Sao_Paulo')
+            .toISOString() as unknown as Date;
+
+          const updatedUser = await User.findByIdAndUpdate(
+            { _id: user.id },
             {
-              password: hashedPassword,
-              updated_at: moment(new Date())
-                .tz('America/Sao_Paulo')
-                .toISOString(),
+              $set: user,
             },
-            { _id: user.id }
+            { new: true }
           );
 
           if (updatedUser) {
