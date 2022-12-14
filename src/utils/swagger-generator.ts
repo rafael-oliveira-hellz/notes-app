@@ -34,15 +34,15 @@ const doc = {
       description: 'Endpoints para gerenciamento de anotações',
     },
   ],
-  securityDefinitions: {
-    user_auth: {
-      type: 'apiKey',
-      name: 'Authorization',
-      in: 'header',
-      description:
-        "Enter the token with the `Bearer: ` prefix, e.g. 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTQwN2Y4OTIzNmRlMTc3Nzc1YWM4ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3MDg4MDMwMSwiZXhwIjoxNjcwOTY2NzAxfQ.xi8Hy6d6IXWKdVdsMH7iU32bEK5jHqOvqMG-ofsD6VcFcHUK49XJJ-NJpOTpfdjomwWebL_GWczdB21segdQnw'.",
-    },
-  },
+  // securityDefinitions: {
+  //   user_auth: {
+  //     type: 'apiKey',
+  //     name: 'Authorization',
+  //     in: 'header',
+  //     description:
+  //       "Enter the token with the `Bearer: ` prefix, e.g. 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTQwN2Y4OTIzNmRlMTc3Nzc1YWM4ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3MDg4MDMwMSwiZXhwIjoxNjcwOTY2NzAxfQ.xi8Hy6d6IXWKdVdsMH7iU32bEK5jHqOvqMG-ofsD6VcFcHUK49XJJ-NJpOTpfdjomwWebL_GWczdB21segdQnw'.",
+  //   },
+  // },
   definitions: {
     User: {
       success: true,
