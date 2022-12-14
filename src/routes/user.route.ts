@@ -36,7 +36,7 @@ router.get(
     }
     /* #swagger.responses[200] = {
     description: 'Listar todos os usuários no sistema.',
-    schema: { $ref: "#/definitions/User" }
+    schema: { $ref: "#/definitions/UserList" }
   }*/
     /* #swagger.responses[400] = {
     description: 'Requisição inválida.',
@@ -120,6 +120,7 @@ router.get(
     description: 'Campo a ser pesquisado.',
     required: true,
     type: 'string',
+    schema: { $ref: "#/definitions/UserQuery" }
   }*/
     /* #swagger.parameters['value'] = {
     in: 'query',
@@ -170,7 +171,7 @@ router.get(
     }*/
     /* #swagger.responses[200] = {
       description: 'Listar usuários ativos no sistema.',
-      schema: { $ref: "#/definitions/User" }
+      schema: { $ref: "#/definitions/UserList" }
     }
       #swagger.responses[400] = {
       description: 'Requisição inválida.',

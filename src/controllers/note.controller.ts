@@ -14,7 +14,7 @@ class NoteController {
     return res.status(StatusCodes.OK).json(response);
   };
 
-  // [ ] Get all notes from the logged in user
+  // [TO TEST] Get all notes from the logged in user
   listAllFromUser = async (req: Request, res: Response): Promise<Response> => {
     const token = getUserToken(req) as string;
     const user = (await getUserByToken(token)) as unknown as IUser;
@@ -57,13 +57,10 @@ class NoteController {
     });
   };
 
-  // [ ] Get a note by field
+  // [TO TEST] Get a note by field
   findByField = async (req: Request, res: Response): Promise<Response> => {
     const field = String(req.query.field);
     const value = String(req.query.value);
-
-    console.log(field);
-    console.log(value);
 
     if (field === null || field === undefined || field === '') {
       logger.error('Não é possível buscar a anotação.', {
@@ -445,7 +442,7 @@ class NoteController {
     });
   };
 
-  // [ ] Delete a note from the logged in user
+  // [TO TEST] Delete a note from the logged in user
   delete = async (req: Request, res: Response): Promise<Response> => {
     const token = getUserToken(req) as string;
     const user = (await getUserByToken(token)) as unknown as IUser;
@@ -492,8 +489,15 @@ class NoteController {
       deletedNote: {
         id: note.id,
         title: note.title,
+        subject: note.subject,
         content: note.content,
-        assignee: user.id,
+        assignee: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          profile_picture: user.profile_picture,
+          status: user.status,
+        },
         start_date: note.start_date,
         due_date: note.due_date,
       },
