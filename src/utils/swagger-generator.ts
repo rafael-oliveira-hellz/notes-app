@@ -23,15 +23,15 @@ const doc = {
   tags: [
     {
       name: 'User',
-      description: 'Endpoints',
+      description: 'Endpoints para gerenciamento de usuários',
     },
     {
       name: 'Auth',
-      description: 'Endpoints',
+      description: 'Endpoints para autenticação e validação de usuários',
     },
     {
       name: 'Note',
-      description: 'Endpoints',
+      description: 'Endpoints para gerenciamento de anotações',
     },
   ],
   securityDefinitions: {

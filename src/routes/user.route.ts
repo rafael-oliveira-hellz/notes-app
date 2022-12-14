@@ -7,7 +7,27 @@ import { verifyToken } from '../middlewares/TokenControl';
 
 const router = Router();
 
-router.get('/users', verifyToken, isAdmin, UserController.getAllUsers);
+router.get(
+  '/users',
+  // verifyToken,
+  // isAdmin,
+  UserController.getAllUsers,
+  (_req, _res) => {
+    // #swagger.tags = ['User']
+    // #swagger.description = 'Endpoint para obter todos os usuários.'
+    /* #swagger.parameters['authorization'] = {
+     in: 'header',
+      description: 'Token de acesso.',
+      required: true,
+      type: 'string',
+      schema: { $ref: "#/definitions/VerifyUser" }
+    }*/
+    /* #swagger.responses[200] = {
+    description: 'Listar todos os usuários no sistema.',
+    schema: { $ref: "#/definitions/User" }
+  }*/
+  }
+);
 router.get('/users/me', verifyToken, UserController.getUserProfile);
 router.get('/users/find', verifyToken, isAdmin, UserController.getUserByField);
 router.get(
