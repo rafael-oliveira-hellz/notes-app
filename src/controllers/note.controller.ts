@@ -52,58 +52,130 @@ class NoteController {
 
   // [TO TEST] Get all notes from the logged in user
   listAllFromUser = async (req: Request, res: Response): Promise<Response> => {
-    const token = getUserToken(req) as string;
-    const user = (await getUserByToken(token)) as unknown as IUser;
+    try {
+      const token = getUserToken(req) as string;
+      const user = (await getUserByToken(token)) as unknown as IUser;
 
-    const userNotes = await Note.find({ assignee: user.id });
+      const userNotes = await Note.find({ assignee: user.id });
 
-    if (!userNotes) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        success: false,
-        statusCode: StatusCodes.NOT_FOUND,
-        message: 'Nenhuma anotação encontrada para este usuário.',
+      if (!userNotes) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Nenhuma anotação encontrada para este usuário.',
+        });
+      }
+
+      const notes = userNotes.map((note: any) => {
+        return {
+          id: note?.id,
+          title: note?.title,
+          subject: note?.subject,
+          content: note?.content,
+          start_date:
+            note?.start_date !== null
+              ? moment(note?.start_date)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          due_date:
+            note?.due_date !== null
+              ? moment(note?.due_date)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          status: note?.status,
+          assignee: note?.assignee,
+          created_at:
+            note?.created_at !== null
+              ? moment(note?.created_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+          updated_at:
+            note?.updated_at !== null
+              ? moment(note?.updated_at)
+                  .tz('America/Sao_Paulo')
+                  .format('DD/MM/YYYY HH:mm:ss')
+              : null,
+        };
       });
+
+      // Paginate "notes" where assignee is equal to the user.id
+
+      const page: number = Number(req.query.page) || 1;
+      const limit: number = Number(req.query.limit) || 25;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const result: any = {
+        totalDocuments: 0,
+        totalPages: 0,
+        previous: {},
+        current: {},
+        next: {},
+        data: {},
+      };
+
+      result.totalDocuments = notes.length;
+      result.totalPages = Math.ceil(notes.length / limit);
+      result.previous = {
+        page: page - 1,
+        limit,
+      };
+      result.current = {
+        page,
+        limit,
+      };
+      result.next = {
+        page: page + 1,
+        limit,
+      };
+      result.data = notes.slice(startIndex, endIndex);
+
+      if (endIndex < notes.length) {
+        result.next = {
+          page: page + 1,
+          limit,
+        };
+      }
+
+      if (startIndex > 0) {
+        result.previous = {
+          page: page - 1,
+          limit,
+        };
+      }
+
+      if (page > result.totalPages) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Nenhuma anotação encontrada para este usuário.',
+        });
+      }
+
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        statusCode: StatusCodes.OK,
+        result,
+      });
+    } catch (error: any) {
+      if (error instanceof Error) {
+        logger.error('Erro xpto', { error });
+
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Erro interno do servidor.',
+        });
+      }
     }
 
-    const notes = userNotes.map((note: any) => {
-      return {
-        id: note?.id,
-        title: note?.title,
-        subject: note?.subject,
-        content: note?.content,
-        start_date:
-          note?.start_date !== null
-            ? moment(note?.start_date)
-                .tz('America/Sao_Paulo')
-                .format('DD/MM/YYYY HH:mm:ss')
-            : null,
-        due_date:
-          note?.due_date !== null
-            ? moment(note?.due_date)
-                .tz('America/Sao_Paulo')
-                .format('DD/MM/YYYY HH:mm:ss')
-            : null,
-        status: note?.status,
-        assignee: note?.assignee,
-        created_at:
-          note?.created_at !== null
-            ? moment(note?.created_at)
-                .tz('America/Sao_Paulo')
-                .format('DD/MM/YYYY HH:mm:ss')
-            : null,
-        updated_at:
-          note?.updated_at !== null
-            ? moment(note?.updated_at)
-                .tz('America/Sao_Paulo')
-                .format('DD/MM/YYYY HH:mm:ss')
-            : null,
-      };
-    });
-
-    return res.status(StatusCodes.OK).json({
-      success: true,
-      statusCode: StatusCodes.OK,
-      notes,
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Erro interno do servidor.',
     });
   };
 
