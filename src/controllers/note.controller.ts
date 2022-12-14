@@ -11,17 +11,7 @@ class NoteController {
   listAll = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(Note, req, res);
 
-    response.data = response.data.map((note: any) => {
-      return {
-        id: note.id,
-        title: note.title,
-        subject: note.subject,
-        content: note.content,
-        assignee: note.assignee,
-        start_date: note.start_date,
-        due_date: note.due_date,
-      };
-    });
+    logger.log('notas', { response });
 
     return res.status(StatusCodes.OK).json(response);
   };
