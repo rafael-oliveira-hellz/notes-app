@@ -70,7 +70,7 @@ router.post(
   (_req, _res) => {
     // #swagger.tags = ['Auth']
     // #swagger.description = 'Endpoint para atualizar o token de um usuário.'
-    /* #swagger.parameters['refresh_token'] = {
+    /* #swagger.parameters['authorization'] = {
      in: 'header',
      description: 'Token para atualização do acesso.',
      required: true,
@@ -98,10 +98,10 @@ router.post(
 );
 router.get('/auth/verify-user', AuthController.verifyUser, (_req, _res) => {
   // #swagger.tags = ['Auth']
-  // #swagger.description = 'Endpoint para verificar se um usuário existe.'
+  // #swagger.description = 'Endpoint para verificar se o usuário existe.'
   /* #swagger.parameters['authorization'] = {
      in: 'header',
-     description: 'Dados do usuário para verificação.',
+     description: 'Token para autenticação do usuário.',
      required: true,
      type: 'string',
      schema: { $ref: "#/definitions/VerifyUser" }

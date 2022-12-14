@@ -144,7 +144,7 @@
         "description": "Endpoint para atualizar o token de um usuário.",
         "parameters": [
           {
-            "name": "refresh_token",
+            "name": "authorization",
             "in": "header",
             "description": "Token para atualização do acesso.",
             "required": true,
@@ -187,12 +187,12 @@
         "tags": [
           "Auth"
         ],
-        "description": "Endpoint para verificar se um usuário existe.",
+        "description": "Endpoint para verificar se o usuário existe.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "description": "Dados do usuário para verificação.",
+            "description": "Token para autenticação do usuário.",
             "required": true,
             "type": "string",
             "schema": {
