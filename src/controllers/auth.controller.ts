@@ -3,11 +3,7 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import joi from 'joi';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import logger from '../config/winston-logger';
-import {
-  generateToken,
-  getUserByToken,
-  getUserToken,
-} from '../middlewares/TokenControl';
+import { generateToken, getUserToken } from '../middlewares/TokenControl';
 import { comparePassword, hashPassword } from '../middlewares/ValidatePassword';
 import { IUser } from '../models/interfaces/user';
 import User from '../models/User';
@@ -239,7 +235,7 @@ class AuthController {
 
   // [TO TEST] Refresh token
   refreshToken = async (req: Request, res: Response) => {
-    const refresh_token = getUserToken(req) as string;
+    const refresh_token = getUserToken(req);
 
     if (!refresh_token) {
       return res.status(StatusCodes.BAD_REQUEST).json({
@@ -250,7 +246,20 @@ class AuthController {
     }
 
     try {
-      const user = await getUserByToken(refresh_token);
+      const decoded = jwt.verify(
+        String(refresh_token),
+        String(process.env.REFRESH_TOKEN_SECRET)
+      ) as JwtPayload;
+
+      if (!decoded) {
+        return res.status(StatusCodes.FORBIDDEN).json({
+          success: false,
+          statusCode: StatusCodes.FORBIDDEN,
+          message: 'Não foi possível gerar um novo token de acesso',
+        });
+      }
+
+      const user = await User.findOne({ where: { _id: decoded.id } });
 
       if (!user) {
         return res.status(StatusCodes.NOT_FOUND).json({
