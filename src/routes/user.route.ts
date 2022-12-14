@@ -288,23 +288,9 @@ router.put(
       type: 'string',
       schema: { $ref: "#/definitions/VerifyUser" }
     }*/
-    /* #swagger.parameters['name'] = {
+    /* #swagger.parameters['update'] = {
       in: 'body',
       description: 'Nome do usuário.',
-      required: false,
-      type: 'string',
-      schema: { $ref: "#/definitions/UpdateUser" }
-    }*/
-    /* #swagger.parameters['email'] = {
-      in: 'body',
-      description: 'Email do usuário.',
-      required: false,
-      type: 'string',
-      schema: { $ref: "#/definitions/UpdateUser" }
-    }*/
-    /* #swagger.parameters['role'] = {
-      in: 'body',
-      description: 'Cargo do usuário (admin ou user).',
       required: false,
       type: 'string',
       schema: { $ref: "#/definitions/UpdateUser" }

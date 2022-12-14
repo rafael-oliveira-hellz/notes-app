@@ -663,27 +663,9 @@
             }
           },
           {
-            "name": "name",
+            "name": "update",
             "in": "body",
             "description": "Nome do usuário.",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/UpdateUser"
-            }
-          },
-          {
-            "name": "email",
-            "in": "body",
-            "description": "Email do usuário.",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/UpdateUser"
-            }
-          },
-          {
-            "name": "role",
-            "in": "body",
-            "description": "Cargo do usuário (admin ou user).",
             "required": false,
             "schema": {
               "$ref": "#/definitions/UpdateUser"

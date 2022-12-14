@@ -85,7 +85,6 @@ class NoteController {
                   .format('DD/MM/YYYY HH:mm:ss')
               : null,
           status: note?.status,
-          assignee: note?.assignee,
           created_at:
             note?.created_at !== null
               ? moment(note?.created_at)
@@ -100,8 +99,6 @@ class NoteController {
               : null,
         };
       });
-
-      // Paginate "notes" where assignee is equal to the user.id
 
       const page: number = Number(req.query.page) || 1;
       const limit: number = Number(req.query.limit) || 25;
@@ -158,6 +155,7 @@ class NoteController {
       return res.status(StatusCodes.OK).json({
         success: true,
         statusCode: StatusCodes.OK,
+        message: 'Anotações encontradas com sucesso.',
         result,
       });
     } catch (error: any) {
