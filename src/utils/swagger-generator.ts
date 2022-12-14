@@ -25,6 +25,14 @@ const doc = {
       name: 'User',
       description: 'Endpoints',
     },
+    {
+      name: 'Auth',
+      description: 'Endpoints',
+    },
+    {
+      name: 'Note',
+      description: 'Endpoints',
+    },
   ],
   securityDefinitions: {
     user_auth: {
@@ -37,7 +45,7 @@ const doc = {
   },
   definitions: {
     User: {
-      id: 'ab476fh5gd65vc9',
+      id: '639407f89236de177775ac8f',
       name: 'John Doe',
       email: 'john@doe.com',
       password: '123456789',
