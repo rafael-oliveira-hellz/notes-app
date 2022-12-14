@@ -166,8 +166,8 @@ const doc = {
         'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTQwN2Y4OTIzNmRlMTc3Nzc1YWM4ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3MDg4MDMwMSwiZXhwIjoxNjcwOTY2NzAxfQ.xi8Hy6d6IXWKdVdsMH7iU32bEK5jHqOvqMG-ofsD6VcFcHUK49XJJ-NJpOTpfdjomwWebL_GWczdB21segdQnw',
     },
     RefreshToken: {
-      refresh_token:
-        'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTQwN2Y4OTIzNmRlMTc3Nzc1YWM4ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3MDg4MDMwMSwiZXhwIjoxNjcwOTY2NzAxfQ.xi8Hy6d6IXWKdVdsMH7iU32bEK5jHqOvqMG-ofsD6VcFcHUK49XJJ-NJpOTpfdjomwWebL_GWczdB21segdQnw',
+      Authorization:
+        'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOTQwN2Y4OTIzNmRlMTc3Nzc1YWM4ZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3MDg4MDMwMSwiZXhwIjoxNjcwOTY2NzAxfQ.xi8Hy6d6IXWKdVdsMH7iU32bEK5jHqOvqMG-ofsD6VcFcHUK49XJJ-NJpOTpfdjomwWebL_GWczdB21segdQnw',
     },
     RefreshTokenResponse: {
       success: true,

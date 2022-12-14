@@ -99,7 +99,7 @@ router.post(
 router.get('/auth/verify-user', AuthController.verifyUser, (_req, _res) => {
   // #swagger.tags = ['Auth']
   // #swagger.description = 'Endpoint para verificar se um usuário existe.'
-  /* #swagger.parameters['verify_user'] = {
+  /* #swagger.parameters['authorization'] = {
      in: 'header',
      description: 'Dados do usuário para verificação.',
      required: true,
