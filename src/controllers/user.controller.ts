@@ -7,7 +7,6 @@ import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
 import { comparePassword, hashPassword } from '../middlewares/ValidatePassword';
 import User from '../models/User';
 import { isEmailValid } from '../utils/Validations';
-
 class UserController {
   // [TO TEST] Get all users
   getAllUsers = async (req: Request, res: Response): Promise<Response> => {
