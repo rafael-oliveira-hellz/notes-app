@@ -4,8 +4,8 @@ import moment from 'moment-timezone';
 import logger from '../config/winston-logger';
 import { paginate } from '../middlewares/Pagination';
 import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
-import { IUser } from '../models/interfaces/user';
 import Note from '../models/Note';
+import { IUser } from '../models/interfaces/user';
 
 class NoteController {
   // [TO TEST] Get all notes (admin only)
@@ -143,7 +143,6 @@ class NoteController {
           limit,
         };
       }
-
       if (page > result.totalPages) {
         return res.status(StatusCodes.NOT_FOUND).json({
           success: false,
@@ -330,6 +329,66 @@ class NoteController {
       });
 
       if (notes) {
+        if (allNotes.length > 1) {
+          const page: number = Number(req.query.page) || 1;
+          const limit: number = Number(req.query.limit) || 25;
+          const startIndex = (page - 1) * limit;
+          const endIndex = page * limit;
+
+          const result: any = {
+            totalDocuments: 0,
+            totalPages: 0,
+            previous: {},
+            current: {},
+            next: {},
+            data: {},
+          };
+
+          result.totalDocuments = allNotes.length;
+          result.totalPages = Math.ceil(allNotes.length / limit);
+          result.previous = {
+            page: page - 1,
+            limit,
+          };
+          result.current = {
+            page,
+            limit,
+          };
+          result.next = {
+            page: page + 1,
+            limit,
+          };
+          result.data = allNotes.slice(startIndex, endIndex);
+
+          if (endIndex < allNotes.length) {
+            result.next = {
+              page: page + 1,
+              limit,
+            };
+          }
+
+          if (startIndex > 0) {
+            result.previous = {
+              page: page - 1,
+              limit,
+            };
+          }
+          if (page > result.totalPages) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+              success: false,
+              statusCode: StatusCodes.NOT_FOUND,
+              message: 'Nenhuma anotação encontrada para este usuário.',
+            });
+          }
+
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Anotações encontradas com sucesso.',
+            result,
+          });
+        }
+
         logger.debug('Anotação encontrada com sucesso.', {
           success: true,
           statusCode: StatusCodes.OK,
@@ -435,6 +494,73 @@ class NoteController {
       });
     }
 
+    if (allNotes.length > 1) {
+      const page: number = Number(req.query.page) || 1;
+      const limit: number = Number(req.query.limit) || 25;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const result: any = {
+        totalDocuments: 0,
+        totalPages: 0,
+        previous: {},
+        current: {},
+        next: {},
+        data: {},
+      };
+
+      result.totalDocuments = allNotes.length;
+      result.totalPages = Math.ceil(allNotes.length / limit);
+      result.previous = {
+        page: page - 1,
+        limit,
+      };
+      result.current = {
+        page,
+        limit,
+      };
+      result.next = {
+        page: page + 1,
+        limit,
+      };
+      result.data = allNotes.slice(startIndex, endIndex);
+
+      if (endIndex < allNotes.length) {
+        result.next = {
+          page: page + 1,
+          limit,
+        };
+      }
+
+      if (startIndex > 0) {
+        result.previous = {
+          page: page - 1,
+          limit,
+        };
+      }
+      if (page > result.totalPages) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Nenhuma anotação encontrada para este usuário.',
+        });
+      }
+
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Anotações encontradas com sucesso.',
+        result,
+      });
+    }
+
+    logger.debug('Anotação encontrada com sucesso.', {
+      success: true,
+      statusCode: StatusCodes.OK,
+      label: 'NoteController',
+      method: 'GET',
+    });
+
     return res.status(StatusCodes.OK).json({
       success: true,
       statusCode: StatusCodes.OK,
@@ -501,6 +627,73 @@ class NoteController {
         message: 'Nenhuma anotação encontrada.',
       });
     }
+
+    if (allNotes.length > 1) {
+      const page: number = Number(req.query.page) || 1;
+      const limit: number = Number(req.query.limit) || 25;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const result: any = {
+        totalDocuments: 0,
+        totalPages: 0,
+        previous: {},
+        current: {},
+        next: {},
+        data: {},
+      };
+
+      result.totalDocuments = allNotes.length;
+      result.totalPages = Math.ceil(allNotes.length / limit);
+      result.previous = {
+        page: page - 1,
+        limit,
+      };
+      result.current = {
+        page,
+        limit,
+      };
+      result.next = {
+        page: page + 1,
+        limit,
+      };
+      result.data = allNotes.slice(startIndex, endIndex);
+
+      if (endIndex < allNotes.length) {
+        result.next = {
+          page: page + 1,
+          limit,
+        };
+      }
+
+      if (startIndex > 0) {
+        result.previous = {
+          page: page - 1,
+          limit,
+        };
+      }
+      if (page > result.totalPages) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Nenhuma anotação encontrada para este usuário.',
+        });
+      }
+
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Anotações encontradas com sucesso.',
+        result,
+      });
+    }
+
+    logger.debug('Anotação encontrada com sucesso.', {
+      success: true,
+      statusCode: StatusCodes.OK,
+      label: 'NoteController',
+      method: 'GET',
+    });
 
     return res.status(StatusCodes.OK).json({
       success: true,
@@ -569,6 +762,73 @@ class NoteController {
       });
     }
 
+    if (allNotes.length > 1) {
+      const page: number = Number(req.query.page) || 1;
+      const limit: number = Number(req.query.limit) || 25;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const result: any = {
+        totalDocuments: 0,
+        totalPages: 0,
+        previous: {},
+        current: {},
+        next: {},
+        data: {},
+      };
+
+      result.totalDocuments = allNotes.length;
+      result.totalPages = Math.ceil(allNotes.length / limit);
+      result.previous = {
+        page: page - 1,
+        limit,
+      };
+      result.current = {
+        page,
+        limit,
+      };
+      result.next = {
+        page: page + 1,
+        limit,
+      };
+      result.data = allNotes.slice(startIndex, endIndex);
+
+      if (endIndex < allNotes.length) {
+        result.next = {
+          page: page + 1,
+          limit,
+        };
+      }
+
+      if (startIndex > 0) {
+        result.previous = {
+          page: page - 1,
+          limit,
+        };
+      }
+      if (page > result.totalPages) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Nenhuma anotação encontrada para este usuário.',
+        });
+      }
+
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Anotações encontradas com sucesso.',
+        result,
+      });
+    }
+
+    logger.debug('Anotação encontrada com sucesso.', {
+      success: true,
+      statusCode: StatusCodes.OK,
+      label: 'NoteController',
+      method: 'GET',
+    });
+
     return res.status(StatusCodes.OK).json({
       success: true,
       statusCode: StatusCodes.OK,
@@ -635,6 +895,73 @@ class NoteController {
       };
     });
 
+    if (allNotes.length > 1) {
+      const page: number = Number(req.query.page) || 1;
+      const limit: number = Number(req.query.limit) || 25;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const result: any = {
+        totalDocuments: 0,
+        totalPages: 0,
+        previous: {},
+        current: {},
+        next: {},
+        data: {},
+      };
+
+      result.totalDocuments = allNotes.length;
+      result.totalPages = Math.ceil(allNotes.length / limit);
+      result.previous = {
+        page: page - 1,
+        limit,
+      };
+      result.current = {
+        page,
+        limit,
+      };
+      result.next = {
+        page: page + 1,
+        limit,
+      };
+      result.data = allNotes.slice(startIndex, endIndex);
+
+      if (endIndex < allNotes.length) {
+        result.next = {
+          page: page + 1,
+          limit,
+        };
+      }
+
+      if (startIndex > 0) {
+        result.previous = {
+          page: page - 1,
+          limit,
+        };
+      }
+      if (page > result.totalPages) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Nenhuma anotação encontrada para este usuário.',
+        });
+      }
+
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Anotações encontradas com sucesso.',
+        result,
+      });
+    }
+
+    logger.debug('Anotação encontrada com sucesso.', {
+      success: true,
+      statusCode: StatusCodes.OK,
+      label: 'NoteController',
+      method: 'GET',
+    });
+
     return res.status(StatusCodes.OK).json({
       success: true,
       statusCode: StatusCodes.OK,
@@ -690,6 +1017,73 @@ class NoteController {
                 .format('DD/MM/YYYY HH:mm:ss')
             : null,
       };
+    });
+
+    if (allNotes.length > 1) {
+      const page: number = Number(req.query.page) || 1;
+      const limit: number = Number(req.query.limit) || 25;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+
+      const result: any = {
+        totalDocuments: 0,
+        totalPages: 0,
+        previous: {},
+        current: {},
+        next: {},
+        data: {},
+      };
+
+      result.totalDocuments = allNotes.length;
+      result.totalPages = Math.ceil(allNotes.length / limit);
+      result.previous = {
+        page: page - 1,
+        limit,
+      };
+      result.current = {
+        page,
+        limit,
+      };
+      result.next = {
+        page: page + 1,
+        limit,
+      };
+      result.data = allNotes.slice(startIndex, endIndex);
+
+      if (endIndex < allNotes.length) {
+        result.next = {
+          page: page + 1,
+          limit,
+        };
+      }
+
+      if (startIndex > 0) {
+        result.previous = {
+          page: page - 1,
+          limit,
+        };
+      }
+      if (page > result.totalPages) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Nenhuma anotação encontrada para este usuário.',
+        });
+      }
+
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Anotações encontradas com sucesso.',
+        result,
+      });
+    }
+
+    logger.debug('Anotação encontrada com sucesso.', {
+      success: true,
+      statusCode: StatusCodes.OK,
+      label: 'NoteController',
+      method: 'GET',
     });
 
     return res.status(StatusCodes.OK).json({

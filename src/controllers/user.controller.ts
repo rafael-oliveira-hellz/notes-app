@@ -176,7 +176,6 @@ class UserController {
 
     if (value === null || value === undefined || value === '') {
       const response = await paginate(User, req, res);
-
       response.data = response.data.map((user: any) => {
         return {
           id: user?.id,
@@ -275,6 +274,67 @@ class UserController {
           method: 'GET',
         });
 
+        if (user.length > 1) {
+          const page: number = Number(req.query.page) || 1;
+          const limit: number = Number(req.query.limit) || 25;
+          const startIndex = (page - 1) * limit;
+          const endIndex = page * limit;
+
+          const result: any = {
+            totalDocuments: 0,
+            totalPages: 0,
+            previous: {},
+            current: {},
+            next: {},
+            data: {},
+          };
+
+          result.totalDocuments = user.length;
+          result.totalPages = Math.ceil(user.length / limit);
+          result.previous = {
+            page: page - 1,
+            limit,
+          };
+          result.current = {
+            page,
+            limit,
+          };
+          result.next = {
+            page: page + 1,
+            limit,
+          };
+          result.data = user.slice(startIndex, endIndex);
+
+          if (endIndex < user.length) {
+            result.next = {
+              page: page + 1,
+              limit,
+            };
+          }
+
+          if (startIndex > 0) {
+            result.previous = {
+              page: page - 1,
+              limit,
+            };
+          }
+
+          if (page > result.totalPages) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+              success: false,
+              statusCode: StatusCodes.NOT_FOUND,
+              message: 'Nenhuma anotação encontrada para este usuário.',
+            });
+          }
+
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Busca realizada com sucesso.',
+            result,
+          });
+        }
+
         return res.status(StatusCodes.OK).json({
           success: true,
           statusCode: StatusCodes.OK,
@@ -301,11 +361,13 @@ class UserController {
         error: ReasonPhrases.INTERNAL_SERVER_ERROR,
       });
 
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: 'Falha ao realizar busca.',
-      });
+      if (error instanceof Error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Erro interno do servidor.',
+        });
+      }
     }
   };
 
@@ -357,20 +419,83 @@ class UserController {
         };
       });
 
-      logger.debug('Usuários encontrados com sucesso.', {
-        success: true,
-        statusCode: StatusCodes.OK,
-        label: 'UserController',
-        method: 'GET',
-        users: allUsers,
-      });
+      if (allUsers) {
+        if (allUsers.length > 1) {
+          const page: number = Number(req.query.page) || 1;
+          const limit: number = Number(req.query.limit) || 25;
+          const startIndex = (page - 1) * limit;
+          const endIndex = page * limit;
 
-      return res.status(StatusCodes.OK).json({
-        success: true,
-        statusCode: StatusCodes.OK,
-        message: 'Usuários encontrados com sucesso.',
-        users: allUsers,
-      });
+          const result: any = {
+            totalDocuments: 0,
+            totalPages: 0,
+            previous: {},
+            current: {},
+            next: {},
+            data: {},
+          };
+
+          result.totalDocuments = allUsers.length;
+          result.totalPages = Math.ceil(allUsers.length / limit);
+          result.previous = {
+            page: page - 1,
+            limit,
+          };
+          result.current = {
+            page,
+            limit,
+          };
+          result.next = {
+            page: page + 1,
+            limit,
+          };
+          result.data = allUsers.slice(startIndex, endIndex);
+
+          if (endIndex < allUsers.length) {
+            result.next = {
+              page: page + 1,
+              limit,
+            };
+          }
+
+          if (startIndex > 0) {
+            result.previous = {
+              page: page - 1,
+              limit,
+            };
+          }
+
+          if (page > result.totalPages) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+              success: false,
+              statusCode: StatusCodes.NOT_FOUND,
+              message: 'Nenhuma anotação encontrada para este usuário.',
+            });
+          }
+
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Busca realizada com sucesso.',
+            result,
+          });
+        }
+
+        logger.debug('Usuários encontrados com sucesso.', {
+          success: true,
+          statusCode: StatusCodes.OK,
+          label: 'UserController',
+          method: 'GET',
+          users: allUsers,
+        });
+
+        return res.status(StatusCodes.OK).json({
+          success: true,
+          statusCode: StatusCodes.OK,
+          message: 'Usuários encontrados com sucesso.',
+          users: allUsers,
+        });
+      }
     } catch (error: any) {
       logger.error('Falha ao buscar usuários.', {
         success: false,
@@ -381,6 +506,7 @@ class UserController {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
         message: 'Falha ao buscar usuários.',
       });
     }
@@ -393,7 +519,7 @@ class UserController {
         status: 'inactive',
       }).select(['-password', '-remember_token', '-password_reset_token']);
 
-      const usersData = users.map((user: any) => {
+      const allUsers = users.map((user: any) => {
         return {
           id: user?.id,
           name: user?.name,
@@ -434,24 +560,95 @@ class UserController {
         };
       });
 
-      logger.debug('Usuários encontrados com sucesso.', {
-        success: true,
-        statusCode: StatusCodes.OK,
-        label: 'UserController',
-        method: 'GET',
-      });
+      if (allUsers) {
+        if (allUsers.length > 1) {
+          const page: number = Number(req.query.page) || 1;
+          const limit: number = Number(req.query.limit) || 25;
+          const startIndex = (page - 1) * limit;
+          const endIndex = page * limit;
 
-      return res.status(StatusCodes.OK).json({
-        success: true,
-        statusCode: StatusCodes.OK,
-        message: 'Usuários encontrados com sucesso.',
-        users: usersData,
-      });
+          const result: any = {
+            totalDocuments: 0,
+            totalPages: 0,
+            previous: {},
+            current: {},
+            next: {},
+            data: {},
+          };
+
+          result.totalDocuments = allUsers.length;
+          result.totalPages = Math.ceil(allUsers.length / limit);
+          result.previous = {
+            page: page - 1,
+            limit,
+          };
+          result.current = {
+            page,
+            limit,
+          };
+          result.next = {
+            page: page + 1,
+            limit,
+          };
+          result.data = allUsers.slice(startIndex, endIndex);
+
+          if (endIndex < allUsers.length) {
+            result.next = {
+              page: page + 1,
+              limit,
+            };
+          }
+
+          if (startIndex > 0) {
+            result.previous = {
+              page: page - 1,
+              limit,
+            };
+          }
+
+          if (page > result.totalPages) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+              success: false,
+              statusCode: StatusCodes.NOT_FOUND,
+              message: 'Nenhuma anotação encontrada para este usuário.',
+            });
+          }
+
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Busca realizada com sucesso.',
+            result,
+          });
+        }
+
+        logger.debug('Usuários encontrados com sucesso.', {
+          success: true,
+          statusCode: StatusCodes.OK,
+          label: 'UserController',
+          method: 'GET',
+          users: allUsers,
+        });
+
+        return res.status(StatusCodes.OK).json({
+          success: true,
+          statusCode: StatusCodes.OK,
+          message: 'Usuários encontrados com sucesso.',
+          users: allUsers,
+        });
+      }
     } catch (error: any) {
       logger.error('Falha ao buscar usuários.', {
         success: false,
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
         error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+        message: 'Falha ao buscar usuários.',
       });
     }
   };
