@@ -6,8 +6,8 @@ import moment from 'moment';
 import logger from '../config/winston-logger';
 import { generateToken, getUserToken } from '../middlewares/TokenControl';
 import { comparePassword, hashPassword } from '../middlewares/ValidatePassword';
-import { IUser } from '../models/interfaces/user';
 import User from '../models/User';
+import { IUser } from '../models/interfaces/user';
 
 class AuthController {
   // [TO TEST] Create a user
@@ -15,7 +15,6 @@ class AuthController {
     const { name, email, password } = req.body;
     const profile_picture = '/uploads/';
 
-    // Validate the request body with joi
     const schema = joi.object({
       email: joi.string().email().required(),
       password: joi.string().min(6).required(),
