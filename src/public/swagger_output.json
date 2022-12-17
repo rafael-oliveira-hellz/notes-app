@@ -435,6 +435,16 @@
             "description": "Valor a ser pesquisado.",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
@@ -493,6 +503,16 @@
             "schema": {
               "$ref": "#/definitions/VerifyUser"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
@@ -545,6 +565,16 @@
             "schema": {
               "$ref": "#/definitions/VerifyUser"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
@@ -1172,6 +1202,16 @@
             "schema": {
               "$ref": "#/definitions/NoteRequest"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {

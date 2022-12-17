@@ -4,7 +4,7 @@ import AuthController from '../controllers/auth.controller';
 
 const router = Router();
 
-router.post('/auth/signup', AuthController.createUser, (_req, _res) => {
+router.post('/auth/signup', AuthController.createUser, () => {
   // #swagger.tags = ['Auth']
   // #swagger.description = 'Endpoint para criar um novo usuário.'
   /* #swagger.parameters['signup'] = {
@@ -32,7 +32,7 @@ router.post('/auth/signup', AuthController.createUser, (_req, _res) => {
   }
   */
 });
-router.post('/auth/signin', AuthController.signIn, (_req, _res) => {
+router.post('/auth/signin', AuthController.signIn, () => {
   // #swagger.tags = ['Auth']
   // #swagger.description = 'Endpoint para realizar o login de um usuário.'
   /* #swagger.parameters['signin'] = {
@@ -64,20 +64,17 @@ router.post('/auth/signin', AuthController.signIn, (_req, _res) => {
   }
   */
 });
-router.post(
-  '/auth/refresh-token',
-  AuthController.refreshToken,
-  (_req, _res) => {
-    // #swagger.tags = ['Auth']
-    // #swagger.description = 'Endpoint para atualizar o token de um usuário.'
-    /* #swagger.parameters['authorization'] = {
+router.post('/auth/refresh-token', AuthController.refreshToken, () => {
+  // #swagger.tags = ['Auth']
+  // #swagger.description = 'Endpoint para atualizar o token de um usuário.'
+  /* #swagger.parameters['authorization'] = {
      in: 'header',
      description: 'Token para atualização do acesso.',
      required: true,
      type: 'string',
      schema: { $ref: "#/definitions/RefreshToken" }
    }*/
-    /* #swagger.responses[200] = {
+  /* #swagger.responses[200] = {
     description: 'Token atualizado com sucesso.',
     schema: { $ref: "#/definitions/RefreshTokenResponse" }
   }
@@ -94,9 +91,8 @@ router.post(
     schema: { $ref: "#/definitions/InternalServerError" }
   }
   */
-  }
-);
-router.get('/auth/verify-user', AuthController.verifyUser, (_req, _res) => {
+});
+router.get('/auth/verify-user', AuthController.verifyUser, () => {
   // #swagger.tags = ['Auth']
   // #swagger.description = 'Endpoint para verificar se o usuário existe.'
   /* #swagger.parameters['authorization'] = {

@@ -6,22 +6,17 @@ import { verifyToken } from '../middlewares/TokenControl';
 
 const router = Router();
 
-router.get(
-  '/notes',
-  verifyToken,
-  isAdmin,
-  NoteController.listAll,
-  (_req, _res) => {
-    // #swagger.tags = ['Note']
-    // #swagger.description = 'Endpoint para listar todas as notas.'
-    /* #swagger.parameters['authorization'] = {
+router.get('/notes', verifyToken, isAdmin, NoteController.listAll, () => {
+  // #swagger.tags = ['Note']
+  // #swagger.description = 'Endpoint para listar todas as notas.'
+  /* #swagger.parameters['authorization'] = {
     in: 'header',
     description: 'Token de autenticação do usuário.',
     required: true,
     type: 'string',
     schema: { $ref: "#/definitions/VerifyUser" }
   } */
-    /* #swagger.responses[200] = {
+  /* #swagger.responses[200] = {
     description: 'Notas listadas com sucesso.',
     schema: { $ref: "#/definitions/NoteList" }
   }
@@ -42,13 +37,12 @@ router.get(
     schema: { $ref: "#/definitions/InternalServerError" }
   }
   */
-  }
-);
+});
 router.get(
   '/notes/my-notes',
   verifyToken,
   NoteController.listAllFromUser,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['Note']
     // #swagger.description = 'Endpoint para listar todas as notas de um usuário autenticado.'
     /* #swagger.parameters['authorization'] = {
@@ -90,7 +84,7 @@ router.get(
   verifyToken,
   isAdmin,
   NoteController.getAllUserNotes,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['Note']
     // #swagger.description = 'Endpoint para listar todas as notas de um usuário.'
     /* #swagger.parameters['authorization'] = {
@@ -134,7 +128,7 @@ router.get(
   */
   }
 );
-router.get('/notes/:id', verifyToken, NoteController.findByid, (_req, _res) => {
+router.get('/notes/:id', verifyToken, NoteController.findByid, () => {
   // #swagger.tags = ['Note']
   // #swagger.description = 'Endpoint para listar uma nota específica.'
   /* #swagger.parameters['authorization'] = {
@@ -181,7 +175,7 @@ router.get(
   '/notes/search/request',
   verifyToken,
   NoteController.findByField,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['Note']
     // #swagger.description = 'Endpoint para listar uma nota específica.'
     /* #swagger.parameters['authorization'] = {
@@ -237,7 +231,7 @@ router.get(
   verifyToken,
   isAdmin,
   NoteController.listPending,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['Note']
     // #swagger.description = 'Endpoint para listar notas pendentes.'
     /* #swagger.parameters['authorization'] = {
@@ -279,7 +273,7 @@ router.get(
   verifyToken,
   isAdmin,
   NoteController.listCompleted,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['Note']
     // #swagger.description = 'Endpoint para listar notas completadas.'
     /* #swagger.parameters['authorization'] = {
@@ -320,7 +314,7 @@ router.get(
   verifyToken,
   isAdmin,
   NoteController.listOverdue,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['Note']
     // #swagger.description = 'Endpoint para listar notas atrasadas.'
     /* #swagger.parameters['authorization'] = {
@@ -356,7 +350,7 @@ router.get(
   }*/
   }
 );
-router.post('/notes', verifyToken, NoteController.create, (_req, _res) => {
+router.post('/notes', verifyToken, NoteController.create, () => {
   // #swagger.tags = ['Note']
   // #swagger.description = 'Endpoint para criar uma nova anotação.'
   /* #swagger.parameters['authorization'] = {
@@ -395,35 +389,31 @@ router.post('/notes', verifyToken, NoteController.create, (_req, _res) => {
   }
   */
 });
-router.put(
-  '/notes/edit/:id',
-  verifyToken,
-  NoteController.update,
-  (_req, _res) => {
-    // #swagger.tags = ['Note']
-    // #swagger.description = 'Endpoint para editar uma anotação.'
-    /* #swagger.parameters['authorization'] = {
+router.put('/notes/edit/:id', verifyToken, NoteController.update, () => {
+  // #swagger.tags = ['Note']
+  // #swagger.description = 'Endpoint para editar uma anotação.'
+  /* #swagger.parameters['authorization'] = {
     in: 'header',
     description: 'Token de autenticação do usuário.',
     required: true,
     type: 'string',
     schema: { $ref: "#/definitions/VerifyUser" }
   } */
-    /* #swagger.parameters['id'] = {
+  /* #swagger.parameters['id'] = {
     in: 'path',
     description: 'ID da nota.',
     required: true,
     type: 'string',
     schema: { $ref: "#/definitions/NoteId" }
   } */
-    /* #swagger.parameters['note'] = {
+  /* #swagger.parameters['note'] = {
     in: 'body',
     description: 'Informações da anotação.',
     required: true,
     type: 'object',
     schema: { $ref: "#/definitions/NoteUpdate" }
   } */
-    /* #swagger.responses[200] = {
+  /* #swagger.responses[200] = {
     description: 'Anotação editada com sucesso.',
     schema: { $ref: "#/definitions/NoteUpdated" }
   }
@@ -447,30 +437,25 @@ router.put(
     description: 'Erro interno do servidor.',
     schema: { $ref: "#/definitions/InternalServerError" }
   }*/
-  }
-);
-router.delete(
-  '/notes/:id',
-  verifyToken,
-  NoteController.delete,
-  (_req, _res) => {
-    // #swagger.tags = ['Note']
-    // #swagger.description = 'Endpoint para deletar uma anotação.'
-    /* #swagger.parameters['authorization'] = {
+});
+router.delete('/notes/:id', verifyToken, NoteController.delete, () => {
+  // #swagger.tags = ['Note']
+  // #swagger.description = 'Endpoint para deletar uma anotação.'
+  /* #swagger.parameters['authorization'] = {
     in: 'header',
     description: 'Token de autenticação do usuário.',
     required: true,
     type: 'string',
     schema: { $ref: "#/definitions/VerifyUser" }
   } */
-    /* #swagger.parameters['id'] = {
+  /* #swagger.parameters['id'] = {
     in: 'path',
     description: 'ID da nota.',
     required: true,
     type: 'string',
     schema: { $ref: "#/definitions/NoteId" }
   } */
-    /* #swagger.responses[200] = {
+  /* #swagger.responses[200] = {
     description: 'Anotação deletada com sucesso.',
     schema: { $ref: "#/definitions/NoteDeleted" }
   }
@@ -494,8 +479,7 @@ router.delete(
     description: 'Erro interno do servidor.',
     schema: { $ref: "#/definitions/InternalServerError" }
   }*/
-  }
-);
+});
 
 logger.debug('Note routes initialized', {
   label: 'NoteController',

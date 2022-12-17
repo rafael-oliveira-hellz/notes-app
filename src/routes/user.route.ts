@@ -7,22 +7,17 @@ import { verifyToken } from '../middlewares/TokenControl';
 
 const router = Router();
 
-router.get(
-  '/users',
-  verifyToken,
-  isAdmin,
-  UserController.getAllUsers,
-  (_req, _res) => {
-    // #swagger.tags = ['User']
-    // #swagger.description = 'Endpoint para obter todos os usuários.'
-    /* #swagger.parameters['authorization'] = {
+router.get('/users', verifyToken, isAdmin, UserController.getAllUsers, () => {
+  // #swagger.tags = ['User']
+  // #swagger.description = 'Endpoint para obter todos os usuários.'
+  /* #swagger.parameters['authorization'] = {
      in: 'header',
       description: 'Token de acesso.',
       required: true,
       type: 'string',
       schema: { $ref: "#/definitions/VerifyUser" }
     }*/
-    /* #swagger.parameters['page'] = {
+  /* #swagger.parameters['page'] = {
       in: 'query',
       description: 'Número da página.',
       required: false,
@@ -38,74 +33,68 @@ router.get(
     description: 'Listar todos os usuários no sistema.',
     schema: { $ref: "#/definitions/UserList" }
   }*/
-    /* #swagger.responses[400] = {
+  /* #swagger.responses[400] = {
     description: 'Requisição inválida.',
     schema: { $ref: "#/definitions/BadRequest" }
     }*/
-    /* #swagger.responses[401] = {
+  /* #swagger.responses[401] = {
     description: 'Acesso não autorizado.',
     schema: { $ref: "#/definitions/Unauthorized" }
     }*/
-    /* #swagger.responses[403] = {
+  /* #swagger.responses[403] = {
     description: 'Acesso negado.',
     schema: { $ref: "#/definitions/Forbidden" }
     }*/
-    /* #swagger.responses[404] = {
+  /* #swagger.responses[404] = {
     description: 'Usuário não encontrado.',
     schema: { $ref: "#/definitions/NotFound" }
     }*/
-    /* #swagger.responses[500] = {
+  /* #swagger.responses[500] = {
     description: 'Erro interno do servidor.',
     schema: { $ref: "#/definitions/InternalServerError" }
   }*/
-  }
-);
-router.get(
-  '/users/me',
-  verifyToken,
-  UserController.getUserProfile,
-  (_req, _res) => {
-    // #swagger.tags = ['User']
-    // #swagger.description = 'Endpoint para obter o perfil do usuário.'
-    /* #swagger.parameters['authorization'] = {
+});
+router.get('/users/me', verifyToken, UserController.getUserProfile, () => {
+  // #swagger.tags = ['User']
+  // #swagger.description = 'Endpoint para obter o perfil do usuário.'
+  /* #swagger.parameters['authorization'] = {
     in: 'header',
     description: 'Token de acesso.',
     required: true,
     type: 'string',
     schema: { $ref: "#/definitions/VerifyUser" }
   }*/
-    /* #swagger.responses[200] = {
+  /* #swagger.responses[200] = {
     description: 'Obter perfil do usuário.',
     schema: { $ref: "#/definitions/User" }
   }*/
-    /* #swagger.responses[400] = {
+  /* #swagger.responses[400] = {
     description: 'Requisição inválida.',
     schema: { $ref: "#/definitions/BadRequest" }
   }*/
-    /* #swagger.responses[401] = {
+  /* #swagger.responses[401] = {
     description: 'Acesso não autorizado.',
     schema: { $ref: "#/definitions/Unauthorized" }
   }*/
-    /* #swagger.responses[403] = {
+  /* #swagger.responses[403] = {
     description: 'Acesso negado.',
     schema: { $ref: "#/definitions/Forbidden" }
   }*/
-    /* #swagger.responses[404] = {
+  /* #swagger.responses[404] = {
     description: 'Usuário não encontrado.',
     schema: { $ref: "#/definitions/NotFound" }
   }*/
-    /* #swagger.responses[500] = {
+  /* #swagger.responses[500] = {
     description: 'Erro interno do servidor.',
     schema: { $ref: "#/definitions/InternalServerError" }
   }*/
-  }
-);
+});
 router.get(
   '/users/find',
   verifyToken,
   isAdmin,
   UserController.getUserByField,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['User']
     // #swagger.description = 'Endpoint para obter um usuário pelo campo.'
     /* #swagger.parameters['authorization'] = {
@@ -158,7 +147,7 @@ router.get(
   verifyToken,
   isAdmin,
   UserController.getActiveUsers,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['User']
     // #swagger.description = 'Endpoint para obter todos os usuários ativos.'
     /* #swagger.parameters['authorization'] = {
@@ -195,7 +184,7 @@ router.get(
   verifyToken,
   isAdmin,
   UserController.getInactiveUsers,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['User']
     // #swagger.description = 'Endpoint para obter todos os usuários inativos.'
     /* #swagger.parameters['authorization'] = {
@@ -232,7 +221,7 @@ router.patch(
   '/users/change-password',
   verifyToken,
   UserController.updateUserPassword,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['User']
     // #swagger.description = 'Endpoint para alterar a senha do usuário.'
     /* #swagger.parameters['authorization'] = {
@@ -277,7 +266,7 @@ router.put(
   verifyToken,
   imageUpload.single('profile_picture'),
   UserController.updateUser,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['User']
     // #swagger.description = 'Endpoint para editar o perfil do usuário.'
     /* #swagger.parameters['authorization'] = {
@@ -317,21 +306,17 @@ router.put(
     */
   }
 );
-router.delete(
-  '/users/me',
-  verifyToken,
-  UserController.deleteProfile,
-  (_req, _res) => {
-    // #swagger.tags = ['User']
-    // #swagger.description = 'Endpoint para deletar o perfil do usuário.'
-    /* #swagger.parameters['authorization'] = {
+router.delete('/users/me', verifyToken, UserController.deleteProfile, () => {
+  // #swagger.tags = ['User']
+  // #swagger.description = 'Endpoint para deletar o perfil do usuário.'
+  /* #swagger.parameters['authorization'] = {
     in: 'header',
     description: 'Token de acesso.',
     required: true,
     type: 'string',
     schema: { $ref: "#/definitions/VerifyUser" }
   }*/
-    /* #swagger.responses[204] = {
+  /* #swagger.responses[204] = {
     description: 'Deletar perfil do usuário.',
     schema: { $ref: "#/definitions/NoContentR" }
   }
@@ -352,14 +337,13 @@ router.delete(
   schema: { $ref: "#/definitions/InternalServerError" }
 }
   */
-  }
-);
+});
 router.delete(
   '/users/:id',
   verifyToken,
   isAdmin,
   UserController.deleteUser,
-  (_req, _res) => {
+  () => {
     // #swagger.tags = ['User']
     // #swagger.description = 'Endpoint para deletar um usuário.'
     /* #swagger.parameters['authorization'] = {
