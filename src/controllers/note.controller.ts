@@ -446,9 +446,9 @@ class NoteController {
       });
     }
 
+    // find notes where start_date and due_date are null with mongoose
     const notes = await Note.find({
-      start_date: null,
-      due_date: null,
+      $and: [{ start_date: null }, { due_date: null }],
     });
 
     const allNotes = notes.map((note: any) => {
