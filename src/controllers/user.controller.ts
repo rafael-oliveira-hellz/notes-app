@@ -560,7 +560,7 @@ class UserController {
       });
 
       if (allUsers) {
-        if (allUsers.length > 1) {
+        if (allUsers.length >= 0) {
           const page: number = Number(req.query.page) || 1;
           const limit: number = Number(req.query.limit) || 25;
           const startIndex = (page - 1) * limit;
@@ -604,21 +604,6 @@ class UserController {
               limit,
             };
           }
-
-          if (page > result.totalPages) {
-            return res.status(StatusCodes.NOT_FOUND).json({
-              success: false,
-              statusCode: StatusCodes.NOT_FOUND,
-              message: 'Nenhuma anotação encontrada para este usuário.',
-            });
-          }
-
-          return res.status(StatusCodes.OK).json({
-            success: true,
-            statusCode: StatusCodes.OK,
-            message: 'Busca realizada com sucesso.',
-            result,
-          });
         }
 
         logger.debug('Usuários encontrados com sucesso.', {
