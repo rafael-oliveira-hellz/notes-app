@@ -1099,6 +1099,64 @@
         }
       }
     },
+    "/notes/undated": {
+      "get": {
+        "tags": [
+          "Note"
+        ],
+        "description": "Endpoint para listar todas as notas sem data de início e data de conclusão.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Token de autenticação do usuário.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notas listadas com sucesso.",
+            "schema": {
+              "$ref": "#/definitions/NoteList"
+            }
+          },
+          "400": {
+            "description": "Erro na requisição.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Token inválido.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Usuário não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "404": {
+            "description": "Nenhuma anotação encontrada.",
+            "schema": {
+              "$ref": "#/definitions/NotFound"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
     "/notes/{id}": {
       "get": {
         "tags": [

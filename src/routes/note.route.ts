@@ -128,6 +128,50 @@ router.get(
   */
   }
 );
+
+router.get(
+  '/notes/undated',
+  verifyToken,
+  isAdmin,
+  NoteController.getNotesWithoutDates,
+  () => {
+    // #swagger.tags = ['Note']
+    // #swagger.description = 'Endpoint para listar todas as notas sem data de início e data de conclusão.'
+    /* #swagger.parameters['authorization'] = {
+    in: 'header',
+    description: 'Token de autenticação do usuário.',
+    required: true,
+    type: 'string',
+    schema: { $ref: "#/definitions/VerifyUser" }
+  } */
+    /* #swagger.responses[200] = {
+    description: 'Notas listadas com sucesso.',
+    schema: { $ref: "#/definitions/NoteList" }
+  }
+  #swagger.responses[400] = {
+    description: 'Erro na requisição.',
+    schema: { $ref: "#/definitions/BadRequest" }
+  }
+    #swagger.responses[401] = {
+    description: 'Token inválido.',
+    schema: { $ref: "#/definitions/Unauthorized" }
+  }
+    #swagger.responses[403] = {
+    description: 'Usuário não autorizado.',
+    schema: { $ref: "#/definitions/Forbidden" }
+  }
+  #swagger.responses[404] = {
+    description: 'Nenhuma anotação encontrada.',
+    schema: { $ref: "#/definitions/NotFound" }
+  }
+    #swagger.responses[500] = {
+    description: 'Erro interno do servidor.',
+    schema: { $ref: "#/definitions/InternalServerError" }
+  }
+  */
+  }
+);
+
 router.get('/notes/:id', verifyToken, NoteController.findByid, () => {
   // #swagger.tags = ['Note']
   // #swagger.description = 'Endpoint para listar uma nota específica.'
