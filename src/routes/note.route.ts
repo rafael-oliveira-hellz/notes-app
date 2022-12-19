@@ -172,104 +172,6 @@ router.get(
   }
 );
 
-router.get('/notes/:id', verifyToken, NoteController.findByid, () => {
-  // #swagger.tags = ['Note']
-  // #swagger.description = 'Endpoint para listar uma nota específica.'
-  /* #swagger.parameters['authorization'] = {
-    in: 'header',
-    description: 'Token de autenticação do usuário.',
-    required: true,
-    type: 'string',
-    schema: { $ref: "#/definitions/VerifyUser" }
-  } */
-  /* #swagger.parameters['id'] = {
-    in: 'path',
-    description: 'ID da nota.',
-    required: true,
-    type: 'string',
-    schema: { $ref: "#/definitions/NoteId" }
-  } */
-  /* #swagger.responses[200] = {
-    description: 'Nota listada com sucesso.',
-    schema: { $ref: "#/definitions/Note" }
-  }
-  #swagger.responses[400] = {
-    description: 'Erro na requisição.',
-    schema: { $ref: "#/definitions/BadRequest" }
-  }
-    #swagger.responses[401] = {
-    description: 'Token inválido.',
-    schema: { $ref: "#/definitions/Unauthorized" }
-  }
-    #swagger.responses[403] = {
-    description: 'Usuário não autorizado.',
-    schema: { $ref: "#/definitions/Forbidden" }
-  }
-    #swagger.responses[404] = {
-    description: 'Nenhuma anotação encontrada.',
-    schema: { $ref: "#/definitions/NotFound" }
-  }
-    #swagger.responses[500] = {
-    description: 'Erro interno do servidor.',
-    schema: { $ref: "#/definitions/InternalServerError" }
-  }
-  */
-});
-router.get(
-  '/notes/search/request',
-  verifyToken,
-  NoteController.findByField,
-  () => {
-    // #swagger.tags = ['Note']
-    // #swagger.description = 'Endpoint para listar uma nota específica.'
-    /* #swagger.parameters['authorization'] = {
-    in: 'header',
-    description: 'Token de autenticação do usuário.',
-    required: true,
-    type: 'string',
-    schema: { $ref: "#/definitions/VerifyUser" }
-  } */
-    /* #swagger.parameters['field'] = {
-    in: 'query',
-    description: 'Campo de busca.',
-    required: true,
-    type: 'string',
-    schema: { $ref: "#/definitions/NoteRequest" }
-  } */
-    /* #swagger.parameters['value'] = {
-    in: 'query',
-    description: 'Valor do campo de busca.',
-    required: false,
-    type: 'string',
-    schema: { $ref: "#/definitions/NoteRequest" }
-  }
-  /* #swagger.responses[200] = {
-    description: 'Nota listada com sucesso.',
-    schema: { $ref: "#/definitions/Note" }
-  }
-  #swagger.responses[400] = {
-    description: 'Campo de busca inválido.',
-    schema: { $ref: "#/definitions/BadRequest" }
-  }
-    #swagger.responses[401] = {
-    description: 'Token inválido.',
-    schema: { $ref: "#/definitions/Unauthorized" }
-  }
-    #swagger.responses[403] = {
-    description: 'Usuário não autorizado.',
-    schema: { $ref: "#/definitions/Forbidden" }
-  }
-    #swagger.responses[404] = {
-    description: 'Nenhuma anotação encontrada.',
-    schema: { $ref: "#/definitions/NotFound" }
-  }
-    #swagger.responses[500] = {
-    description: 'Erro interno do servidor.',
-    schema: { $ref: "#/definitions/InternalServerError" }
-  }
-  */
-  }
-);
 router.get(
   '/notes/pending',
   verifyToken,
@@ -394,6 +296,106 @@ router.get(
   }*/
   }
 );
+
+router.get('/notes/:id', verifyToken, NoteController.findByid, () => {
+  // #swagger.tags = ['Note']
+  // #swagger.description = 'Endpoint para listar uma nota específica.'
+  /* #swagger.parameters['authorization'] = {
+    in: 'header',
+    description: 'Token de autenticação do usuário.',
+    required: true,
+    type: 'string',
+    schema: { $ref: "#/definitions/VerifyUser" }
+  } */
+  /* #swagger.parameters['id'] = {
+    in: 'path',
+    description: 'ID da nota.',
+    required: true,
+    type: 'string',
+    schema: { $ref: "#/definitions/NoteId" }
+  } */
+  /* #swagger.responses[200] = {
+    description: 'Nota listada com sucesso.',
+    schema: { $ref: "#/definitions/Note" }
+  }
+  #swagger.responses[400] = {
+    description: 'Erro na requisição.',
+    schema: { $ref: "#/definitions/BadRequest" }
+  }
+    #swagger.responses[401] = {
+    description: 'Token inválido.',
+    schema: { $ref: "#/definitions/Unauthorized" }
+  }
+    #swagger.responses[403] = {
+    description: 'Usuário não autorizado.',
+    schema: { $ref: "#/definitions/Forbidden" }
+  }
+    #swagger.responses[404] = {
+    description: 'Nenhuma anotação encontrada.',
+    schema: { $ref: "#/definitions/NotFound" }
+  }
+    #swagger.responses[500] = {
+    description: 'Erro interno do servidor.',
+    schema: { $ref: "#/definitions/InternalServerError" }
+  }
+  */
+});
+router.get(
+  '/notes/search/request',
+  verifyToken,
+  NoteController.findByField,
+  () => {
+    // #swagger.tags = ['Note']
+    // #swagger.description = 'Endpoint para listar uma nota específica.'
+    /* #swagger.parameters['authorization'] = {
+    in: 'header',
+    description: 'Token de autenticação do usuário.',
+    required: true,
+    type: 'string',
+    schema: { $ref: "#/definitions/VerifyUser" }
+  } */
+    /* #swagger.parameters['field'] = {
+    in: 'query',
+    description: 'Campo de busca.',
+    required: true,
+    type: 'string',
+    schema: { $ref: "#/definitions/NoteRequest" }
+  } */
+    /* #swagger.parameters['value'] = {
+    in: 'query',
+    description: 'Valor do campo de busca.',
+    required: false,
+    type: 'string',
+    schema: { $ref: "#/definitions/NoteRequest" }
+  }
+  /* #swagger.responses[200] = {
+    description: 'Nota listada com sucesso.',
+    schema: { $ref: "#/definitions/Note" }
+  }
+  #swagger.responses[400] = {
+    description: 'Campo de busca inválido.',
+    schema: { $ref: "#/definitions/BadRequest" }
+  }
+    #swagger.responses[401] = {
+    description: 'Token inválido.',
+    schema: { $ref: "#/definitions/Unauthorized" }
+  }
+    #swagger.responses[403] = {
+    description: 'Usuário não autorizado.',
+    schema: { $ref: "#/definitions/Forbidden" }
+  }
+    #swagger.responses[404] = {
+    description: 'Nenhuma anotação encontrada.',
+    schema: { $ref: "#/definitions/NotFound" }
+  }
+    #swagger.responses[500] = {
+    description: 'Erro interno do servidor.',
+    schema: { $ref: "#/definitions/InternalServerError" }
+  }
+  */
+  }
+);
+
 router.post('/notes', verifyToken, NoteController.create, () => {
   // #swagger.tags = ['Note']
   // #swagger.description = 'Endpoint para criar uma nova anotação.'
