@@ -479,6 +479,9 @@ const doc = {
     UpdateUser: {
       name: 'John Doe',
       email: 'john@doe.com',
+      profile_picture: 'https://i.ibb.co/z5FrMR2/5e7599f65f27.png',
+    },
+    UpdateUserRole: {
       role: 'user',
     },
     DeleteUser: {

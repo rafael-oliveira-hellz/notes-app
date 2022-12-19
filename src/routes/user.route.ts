@@ -279,29 +279,30 @@ router.patch(
     /* #swagger.parameters['role'] = {
       in: 'body',
       description: 'Role a ser fornecida ao usuário.',
-      required: true
+      required: true,
+      type: 'string',
+      schema: { $ref: "#/definitions/UpdateUserRole" }
     }*/
     /* #swagger.responses[200] = {
       description: 'Alterar role do usuário.',
       schema: { $ref: "#/definitions/OK" }
-    }
-      #swagger.responses[400] = {
+    }*/
+    /*#swagger.responses[400] = {
       description: 'Requisição inválida.',
       schema: { $ref: "#/definitions/BadRequest" }
-    }
-      #swagger.responses[401] = {
+    }*/
+    /*#swagger.responses[401] = {
       description: 'Acesso não autorizado.',
       schema: { $ref: "#/definitions/Unauthorized" }
-    }
-      #swagger.responses[403] = {
+    }*/
+    /*#swagger.responses[403] = {
       description: 'Acesso negado.',
       schema: { $ref: "#/definitions/Forbidden" }
-    }
-    #swagger.responses[500] = {
+    }*/
+    /*#swagger.responses[500] = {
     description: 'Erro interno do servidor.',
     schema: { $ref: "#/definitions/InternalServerError" }
-  }
-    */
+  }*/
   }
 );
 
@@ -320,45 +321,32 @@ router.put(
       type: 'string',
       schema: { $ref: "#/definitions/VerifyUser" }
     }*/
-    /* #swagger.parameters['name'] = {
+    /* #swagger.parameters['UpdateUser'] = {
       in: 'body',
-      description: 'Nome do usuário.',
+      description: 'Dados para atualização de usuário.',
       required: false,
-      type: 'string'
-    }*/
-    /* #swagger.parameters['email'] = {
-      in: 'body',
-      description: 'E-mail do usuário.',
-      required: false,
-      type: 'string'
-    }*/
-    /* #swagger.parameters['profile_picture'] = {
-      in: 'body',
-      description: 'URL da imagem para o perfil do usuário.',
-      required: false,
-      type: 'string'
+      schema: { $ref: "#/definitions/UpdateUser" }
     }*/
     /* #swagger.responses[204] = {
-      description: 'Editar perfil do usuário.',
+      description: 'Alterar role do usuário.',
       schema: { $ref: "#/definitions/NoContent" }
-    }
-      #swagger.responses[400] = {
+    }*/
+    /*#swagger.responses[400] = {
       description: 'Requisição inválida.',
       schema: { $ref: "#/definitions/BadRequest" }
-    }
-      #swagger.responses[401] = {
+    }*/
+    /*#swagger.responses[401] = {
       description: 'Acesso não autorizado.',
       schema: { $ref: "#/definitions/Unauthorized" }
-    }
-      #swagger.responses[403] = {
+    }*/
+    /*#swagger.responses[403] = {
       description: 'Acesso negado.',
       schema: { $ref: "#/definitions/Forbidden" }
-    }
-    #swagger.responses[500] = {
+    }*/
+    /*#swagger.responses[500] = {
     description: 'Erro interno do servidor.',
     schema: { $ref: "#/definitions/InternalServerError" }
-  }
-    */
+  }*/
   }
 );
 router.delete('/users/me', verifyToken, UserController.deleteProfile, () => {
