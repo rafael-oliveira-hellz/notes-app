@@ -672,6 +672,74 @@
         }
       }
     },
+    "/users/edit/{id}/role": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para alterar a role do usuário.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Token de acesso.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
+          },
+          {
+            "name": "role",
+            "in": "body",
+            "description": "Role a ser fornecida ao usuário.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Alterar role do usuário.",
+            "schema": {
+              "$ref": "#/definitions/OK"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Acesso não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Acesso negado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
     "/users/edit/profile": {
       "put": {
         "tags": [
@@ -690,12 +758,33 @@
             }
           },
           {
-            "name": "update",
+            "name": "name",
             "in": "body",
             "description": "Nome do usuário.",
             "required": false,
             "schema": {
-              "$ref": "#/definitions/UpdateUser"
+              "type": "object",
+              "properties": {}
+            }
+          },
+          {
+            "name": "email",
+            "in": "body",
+            "description": "E-mail do usuário.",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          {
+            "name": "profile_picture",
+            "in": "body",
+            "description": "URL da imagem para o perfil do usuário.",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {}
             }
           }
         ],

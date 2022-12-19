@@ -13,7 +13,8 @@ class AuthController {
   // [TO TEST] Create a user
   createUser = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
-    const profile_picture = '/uploads/';
+    const profile_picture =
+      'https://xsgames.co/randomusers/assets/images/favicon.png';
 
     const schema = joi.object({
       email: joi.string().email().required(),
@@ -52,10 +53,6 @@ class AuthController {
 
     const hashedPassword = await hashPassword(password);
 
-    const creationDate = moment(new Date())
-      .tz('America/Sao_Paulo')
-      .toISOString();
-
     try {
       if (hashedPassword) {
         const user = await User.create({
@@ -63,7 +60,7 @@ class AuthController {
           email,
           password: hashedPassword,
           profile_picture,
-          created_at: creationDate,
+          created_at: moment(new Date()).tz('America/Sao_Paulo').toISOString(),
         });
 
         const accessToken = generateToken(

@@ -2670,6 +2670,11 @@ ignore@^5.2.0:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.2.1.tgz#c2b1f76cb999ede1502f3a226a9310fdfe88d46c"
   integrity sha512-d2qQLzTJ9WxQftPAuEQpSPmKqzxePjzVbpAVv62AQ64NTL+wR4JkrVqR/LqFsFEUsHDAiId52mJteHDFuDkElA==
 
+imgbb-uploader@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/imgbb-uploader/-/imgbb-uploader-1.5.0.tgz#9b2245bb68845c45f6b6f83635a637aa055f39c9"
+  integrity sha512-60cEP5Mw48ZM0evf/mo1j/sHPzgaM83z9cdjDRf6DNrpbWk/dw+2UIe2MRtC1HqQ6i9GyJfGOzNbspriWVGTeA==
+
 import-fresh@^3.0.0, import-fresh@^3.2.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-3.3.0.tgz#37162c25fcb9ebaa2e6e53d5b4d88ce17d9e0c2b"

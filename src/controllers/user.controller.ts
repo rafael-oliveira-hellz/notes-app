@@ -785,10 +785,10 @@ class UserController {
       }
 
       if (user) {
-        const { name, email, role } = req.body;
+        const { name, email, profile_picture } = req.body;
 
-        if (req.file) {
-          user.profile_picture = `/uploads/images/${req.file.filename}`;
+        if (profile_picture) {
+          user.profile_picture = profile_picture;
         }
 
         if (name) {
@@ -818,10 +818,6 @@ class UserController {
           }
 
           user.email = email;
-        }
-
-        if (role) {
-          user.role = role;
         }
 
         user.updated_at = moment(new Date())
@@ -870,6 +866,77 @@ class UserController {
         success: false,
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
         message: 'Falha ao atualizar o usuário.',
+      });
+    }
+  };
+
+  updateRole = async (req: Request, res: Response) => {
+    try {
+      const userId = req.params.id;
+      const { role } = req.body;
+
+      const user = await User.findById({ _id: userId });
+
+      if (role === null || role === undefined || role === '') {
+        logger.error('A [ role ] não pode ser nula.', {
+          success: false,
+          statusCode: StatusCodes.BAD_REQUEST,
+          message: ReasonPhrases.BAD_REQUEST,
+        });
+
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
+          statusCode: StatusCodes.BAD_REQUEST,
+          message: 'A [ role ] não pode ser nula.',
+        });
+      }
+
+      if (user) {
+        user.role = role;
+        user.updated_at = moment(new Date())
+          .tz('America/Sao_Paulo')
+          .toISOString() as unknown as Date;
+
+        const updatedUser = await User.findByIdAndUpdate(
+          { _id: userId },
+          {
+            $set: user,
+          },
+          { new: true }
+        );
+
+        if (updatedUser) {
+          logger.debug('Role atualizada com sucesso.', {
+            success: true,
+            statusCode: StatusCodes.OK,
+            label: 'UserController',
+            method: 'PATCH',
+          });
+
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Role atualizada com sucesso.',
+          });
+        }
+      }
+
+      logger.error('Falha ao atualizar a role de usuário.', {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+    } catch (error) {
+      logger.error('Falha ao atualizar a role de usuário.', {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Falha ao atualizar a role de usuário.',
       });
     }
   };

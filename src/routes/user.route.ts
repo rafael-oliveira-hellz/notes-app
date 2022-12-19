@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import logger from '../config/winston-logger';
 import UserController from '../controllers/user.controller';
-import { imageUpload } from '../middlewares/Multer';
 import { isAdmin } from '../middlewares/PermissionControl';
 import { verifyToken } from '../middlewares/TokenControl';
 
@@ -261,10 +260,55 @@ router.patch(
     */
   }
 );
+
+router.patch(
+  '/users/edit/:id/role',
+  verifyToken,
+  isAdmin,
+  UserController.updateRole,
+  () => {
+    // #swagger.tags = ['User']
+    // #swagger.description = 'Endpoint para alterar a role do usuário.'
+    /* #swagger.parameters['authorization'] = {
+      in: 'header',
+      description: 'Token de acesso.',
+      required: true,
+      type: 'string',
+      schema: { $ref: "#/definitions/VerifyUser" }
+    }*/
+    /* #swagger.parameters['role'] = {
+      in: 'body',
+      description: 'Role a ser fornecida ao usuário.',
+      required: true
+    }*/
+    /* #swagger.responses[200] = {
+      description: 'Alterar role do usuário.',
+      schema: { $ref: "#/definitions/OK" }
+    }
+      #swagger.responses[400] = {
+      description: 'Requisição inválida.',
+      schema: { $ref: "#/definitions/BadRequest" }
+    }
+      #swagger.responses[401] = {
+      description: 'Acesso não autorizado.',
+      schema: { $ref: "#/definitions/Unauthorized" }
+    }
+      #swagger.responses[403] = {
+      description: 'Acesso negado.',
+      schema: { $ref: "#/definitions/Forbidden" }
+    }
+    #swagger.responses[500] = {
+    description: 'Erro interno do servidor.',
+    schema: { $ref: "#/definitions/InternalServerError" }
+  }
+    */
+  }
+);
+
 router.put(
   '/users/edit/profile',
   verifyToken,
-  imageUpload.single('profile_picture'),
+  // imageUpload.single('profile_picture'),
   UserController.updateUser,
   () => {
     // #swagger.tags = ['User']
@@ -276,12 +320,23 @@ router.put(
       type: 'string',
       schema: { $ref: "#/definitions/VerifyUser" }
     }*/
-    /* #swagger.parameters['update'] = {
+    /* #swagger.parameters['name'] = {
       in: 'body',
       description: 'Nome do usuário.',
       required: false,
-      type: 'string',
-      schema: { $ref: "#/definitions/UpdateUser" }
+      type: 'string'
+    }*/
+    /* #swagger.parameters['email'] = {
+      in: 'body',
+      description: 'E-mail do usuário.',
+      required: false,
+      type: 'string'
+    }*/
+    /* #swagger.parameters['profile_picture'] = {
+      in: 'body',
+      description: 'URL da imagem para o perfil do usuário.',
+      required: false,
+      type: 'string'
     }*/
     /* #swagger.responses[204] = {
       description: 'Editar perfil do usuário.',
