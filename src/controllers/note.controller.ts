@@ -581,9 +581,9 @@ class NoteController {
       });
     }
 
-    const notes = await Note.find({
-      status: 'pending',
-    });
+    const notes = await Note.find({ status: 'pending' });
+
+    console.log(notes);
 
     const allNotes = notes.map((note: any) => {
       return {
