@@ -31,43 +31,43 @@ app.use(
     },
   })
 );
-app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
-app.use(helmet.noSniff());
-app.use(helmet.xssFilter());
-app.use(xss());
+// app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
+// app.use(helmet.noSniff());
+// app.use(helmet.xssFilter());
+// app.use(xss());
 app.use(cors({ credentials: true, origin: '*' }));
 
 app.use(express.static(__dirname + '/public'));
-app.set('trust proxy', 1);
+// app.set('trust proxy', 1);
 
-app.use(
-  session({
-    secret: process.env.APP_SESSION_KEY as string,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      sameSite: 'none',
-      secure: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-      httpOnly: true,
-    },
-  })
-);
+// app.use(
+//   session({
+//     secret: process.env.APP_SESSION_KEY as string,
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: {
+//       sameSite: 'none',
+//       secure: true,
+//       maxAge: 1000 * 60 * 60 * 24 * 7,
+//       httpOnly: true,
+//     },
+//   })
+// );
 
-app.use((_req, res: any, next: NextFunction) => {
-  res.setHeader(
-    'Strict-Transport-Security',
-    'max-age=31536000; includeSubDomains'
-  );
-  res.setHeader('X-Frame-Options', 'DENY');
-  res.setHeader('X-XSS-Protection', '1; mode=block');
-  res.setHeader('Permissions-Policy', 'geolocation=(), payment=()');
-  res.setHeader('X-Download-Options', 'noopen');
-  res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
-  res.setHeader('X-DNS-Prefetch-Control', 'off');
+// app.use((_req, res: any, next: NextFunction) => {
+//   res.setHeader(
+//     'Strict-Transport-Security',
+//     'max-age=31536000; includeSubDomains'
+//   );
+//   res.setHeader('X-Frame-Options', 'DENY');
+//   res.setHeader('X-XSS-Protection', '1; mode=block');
+//   res.setHeader('Permissions-Policy', 'geolocation=(), payment=()');
+//   res.setHeader('X-Download-Options', 'noopen');
+//   res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
+//   res.setHeader('X-DNS-Prefetch-Control', 'off');
 
-  next();
-});
+//   next();
+// });
 
 app.use('/api/v1', UserRouter, AuthRouter, NoteRouter);
 app.get('/', (_req, res) => res.send('APP is working!'));
