@@ -411,9 +411,15 @@ class AuthController {
     if (req.headers.authorization) {
       const token = getUserToken(req) as string;
 
+      logger.info("token in verifyUser - controller: ", token)
+
       const decoded = jwt.verify(token, SECRET) as JwtPayload;
 
+      logger.info("decoded: ", decoded)
+
       user = await User.findById(decoded.id).select('-password');
+
+      logger.info("verify user: ", user)
     } else {
       user = null;
     }
@@ -423,6 +429,8 @@ class AuthController {
       statusCode: StatusCodes.OK,
       user
     });
+
+    logger.info("verify user 2: ", user)
 
     return res.status(StatusCodes.OK).json({
       success: true,

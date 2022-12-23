@@ -11,6 +11,8 @@ const getUserToken = (req: Request) => {
 
   const token = authToken && authToken.split(' ')[1];
 
+  logger.info("user token from req: ", token)
+
   return token;
 };
 
@@ -98,6 +100,14 @@ const generateToken = (user: JwtPayload, secretKey: string): string => {
     success: true,
     statusCode: StatusCodes.OK,
   });
+
+  const my = User.findById({
+    _id: user.id,
+  }) as unknown as IUser;
+
+  logger.info('test data user: ', my)
+
+  logger.info('param user: ', user)
 
   const token = jwt.sign(
     {
