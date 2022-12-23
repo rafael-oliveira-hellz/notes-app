@@ -57,6 +57,8 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
     });
   }
 
+  console.info("alertaaaaaaaaaaaaaaaa")
+
   const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
 
   try {
