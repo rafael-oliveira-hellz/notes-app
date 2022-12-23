@@ -79,7 +79,7 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
       });
     }
 
-    const user = await User.findById(decoded.id)
+    const user = await User.findById({_id: decoded.id})
 
     Bundle.setBundle(req, user, null)
 
