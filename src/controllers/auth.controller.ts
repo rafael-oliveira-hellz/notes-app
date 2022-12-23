@@ -417,7 +417,9 @@ class AuthController {
 
       logger.info("decoded: ", decoded)
 
-      user = await User.findById(decoded.id).select('-password');
+      user = await User.findById({
+        _id: decoded.id
+      }).select('-password');
 
       logger.info("verify user: ", user)
     } else {
