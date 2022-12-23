@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import Bundle from 'utils/Bundle';
 import logger from '../config/winston-logger';
 import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
 import { IUser } from '../models/interfaces/user';
@@ -39,27 +41,23 @@ export const isAdmin = async (
 };
 
 
-export const isOwnUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const token = getUserToken(req) as string;
-  const user = (await getUserByToken(token)) as unknown as IUser;
+export const isOwnUser = (request: Request, response: Response, next: NextFunction) => {
+  const user = Bundle.getBundle(request, null);
 
-  if (!user) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      success: false,
-      statusCode: StatusCodes.UNAUTHORIZED,
-      message: 'Token inválido.',
-    });
-  }
+  const token = getUserToken(request) as string;
 
-    return res.status(StatusCodes.UNAUTHORIZED).json({
+  logger.info("Token autenticação: ", token)
+
+  const secretKey = process.env.ACCESS_TOKEN_SECRET as string;
+  const decoded = jwt.verify(token, secretKey) as JwtPayload;
+
+  if (user.models.id !== decoded.id) {
+    return response.status(StatusCodes.UNAUTHORIZED).json({
       success: false,
       statusCode: StatusCodes.UNAUTHORIZED,
       message: 'Acesso não autorizado.',
     });
+  }
 
   next();
-};
+}
