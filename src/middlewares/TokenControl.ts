@@ -63,6 +63,8 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
   try {
     const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
+    logger.info("decoded: ", decoded)
+
     if (!decoded) {
       logger.error(
         'Acesso negado. Você não tem permissão para acessar este recurso!',

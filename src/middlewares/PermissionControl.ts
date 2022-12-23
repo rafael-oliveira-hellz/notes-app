@@ -37,3 +37,29 @@ export const isAdmin = async (
 
   next();
 };
+
+
+export const isOwnUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = getUserToken(req) as string;
+  const user = (await getUserByToken(token)) as unknown as IUser;
+
+  if (!user) {
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      success: false,
+      statusCode: StatusCodes.UNAUTHORIZED,
+      message: 'Token inválido.',
+    });
+  }
+
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      success: false,
+      statusCode: StatusCodes.UNAUTHORIZED,
+      message: 'Acesso não autorizado.',
+    });
+
+  next();
+};
