@@ -95,7 +95,7 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
 };
 
 // Generate user access token
-const generateToken = (user: JwtPayload, secretKey: string): string => {
+const generateToken = (user: any, secretKey: string): string => {
   logger.info('Gerando token de acesso...', {
     success: true,
     statusCode: StatusCodes.OK,
