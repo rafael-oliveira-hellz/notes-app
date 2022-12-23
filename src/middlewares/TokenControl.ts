@@ -4,7 +4,6 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import logger from '../config/winston-logger';
 import { IUser } from '../models/interfaces/user';
 import User from '../models/User';
-import Bundle from '../utils/Bundle';
 
 // Get the user token from somewhere
 const getUserToken = (req: Request) => {
@@ -79,9 +78,7 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
       });
     }
 
-    const user = await User.findById({_id: decoded.id})
-
-    Bundle.setBundle(req, user, null)
+    req.user = decoded;
 
     next();
   } catch (error) {
