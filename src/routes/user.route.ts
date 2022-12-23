@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import logger from '../config/winston-logger';
 import UserController from '../controllers/user.controller';
-import { isAdmin } from '../middlewares/PermissionControl';
+import { isAdmin, isOwnUser } from '../middlewares/PermissionControl';
 import { verifyToken } from '../middlewares/TokenControl';
 
 const router = Router();
@@ -53,7 +53,7 @@ router.get('/users', verifyToken, isAdmin, UserController.getAllUsers, () => {
     schema: { $ref: "#/definitions/InternalServerError" }
   }*/
 });
-router.get('/users/me', verifyToken, UserController.getUserProfile, () => {
+router.get('/users/me', verifyToken, isOwnUser, UserController.getUserProfile, () => {
   // #swagger.tags = ['User']
   // #swagger.description = 'Endpoint para obter o perfil do usuário.'
   /* #swagger.parameters['authorization'] = {
