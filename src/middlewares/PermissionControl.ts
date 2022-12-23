@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import Bundle from 'utils/Bundle';
 import logger from '../config/winston-logger';
 import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
 import { IUser } from '../models/interfaces/user';
+import Bundle from '../utils/Bundle';
 
 // verify if the user has the 'admin' role
 
