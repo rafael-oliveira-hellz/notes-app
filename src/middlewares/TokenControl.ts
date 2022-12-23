@@ -79,9 +79,13 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
       });
     }
 
+    logger.info("decoded: ", decoded)
+
     const user = User.findById({
       _id: decoded.id,
     }) as unknown as IUser;
+
+    logger.info("decoded user: ", user)
 
     Bundle.setBundle(req, user, null);
 
