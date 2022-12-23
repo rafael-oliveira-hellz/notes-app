@@ -163,8 +163,7 @@ class AuthController {
     }
 
     // COMPLETE - If the login and password are wrong, return 401
-    if (user.email !== email ||      
-      !(await comparePassword(password, user?.password))) {
+    if (!(await comparePassword(password, user?.password))) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         message: 'E-mail ou senha incorretos',
       });
@@ -412,17 +411,9 @@ class AuthController {
     if (req.headers.authorization) {
       const token = getUserToken(req) as string;
 
-      logger.info("token in verifyUser - controller: ", token)
-
       const decoded = jwt.verify(token, SECRET) as JwtPayload;
 
-      logger.info("decoded: ", decoded)
-
-      user = await User.findById({
-        _id: decoded.id
-      }).select('-password');
-
-      logger.info("verify user: ", user)
+      user = await User.findById(decoded.id).select('-password');
     } else {
       user = null;
     }
@@ -432,8 +423,6 @@ class AuthController {
       statusCode: StatusCodes.OK,
       user
     });
-
-    logger.info("verify user 2: ", user)
 
     return res.status(StatusCodes.OK).json({
       success: true,
