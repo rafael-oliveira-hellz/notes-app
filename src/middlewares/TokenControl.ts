@@ -84,10 +84,10 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
     logger.info("decoded id: ", decoded)
 
     const user = await User.findById({
-      id: decoded.id,
+      _id: decoded.id,
     }) as unknown as IUser;
 
-    logger.info("decoded user: ", user.id ? user.id : 'n/a')
+    logger.info("decoded user: ", {user})
 
     Bundle.setBundle(req, user, null);
 
