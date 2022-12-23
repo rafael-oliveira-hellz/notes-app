@@ -83,11 +83,9 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
 
     logger.info("decoded id: ", decoded)
 
-    const user = User.findById({
-      id: decoded.id,
-    }) as unknown as IUser;
+    const user = req.user = decoded
 
-    logger.info("decoded user: ", user.id ? user.id : 'n/a')
+    logger.info("decoded user: ", user)
 
     Bundle.setBundle(req, user, null);
 
