@@ -163,10 +163,7 @@ class AuthController {
     }
 
     // COMPLETE - If the login and password are wrong, return 401
-    if (
-      email !== user?.email ||
-      !(await comparePassword(password, user?.password))
-    ) {
+    if (!(await comparePassword(password, user?.password))) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         message: 'E-mail ou senha incorretos',
       });
@@ -409,156 +406,30 @@ class AuthController {
   verifyUser = async (req: Request, res: Response) => {
     let user;
 
-    if (req.headers['authorization']) {
-      try {
-        const token = getUserToken(req) as string;
+    const SECRET = String(process.env.ACCESS_TOKEN_SECRET);
 
-        const decoded = jwt.verify(
-          token,
-          String(process.env.ACCESS_TOKEN_SECRET)
-        ) as JwtPayload;
+    if (req.headers.authorization) {
+      const token = getUserToken(req) as string;
 
-        user = (await User.findOne({
-          where: { _id: decoded.id },
-        })) as unknown as IUser;
+      const decoded = jwt.verify(token, SECRET) as JwtPayload;
 
-        if (user) {
-          logger.info('Usuário autenticado com sucesso.', {
-            success: true,
-            statusCode: StatusCodes.OK,
-            user: {
-              id: user?.id,
-              name: user?.name,
-              email: user?.email,
-              role: user?.role,
-              status: user?.status,
-              email_verified_at:
-                user?.email_verified_at !== null
-                  ? moment(user?.email_verified_at)
-                      .tz('America/Sao_Paulo')
-                      .format('DD/MM/YYYY HH:mm:ss')
-                  : null,
-              profile_picture: user?.profile_picture,
-              lastLoginDate:
-                user?.lastLoginDate !== null
-                  ? moment(user?.lastLoginDate)
-                      .tz('America/Sao_Paulo')
-                      .format('DD/MM/YYYY HH:mm:ss')
-                  : null,
-              currentLoginDate:
-                user?.currentLoginDate !== null
-                  ? moment(user?.currentLoginDate)
-                      .tz('America/Sao_Paulo')
-                      .format('DD/MM/YYYY HH:mm:ss')
-                  : null,
-              created_at:
-                user?.created_at !== null
-                  ? moment(user?.created_at)
-                      .tz('America/Sao_Paulo')
-                      .format('DD/MM/YYYY HH:mm:ss')
-                  : null,
-              updated_at:
-                user?.updated_at !== null
-                  ? moment(user?.updated_at)
-                      .tz('America/Sao_Paulo')
-                      .format('DD/MM/YYYY HH:mm:ss')
-                  : null,
-            },
-          });
-
-          return res.status(StatusCodes.OK).json({
-            success: true,
-            statusCode: StatusCodes.OK,
-            message: 'Usuário autenticado com sucesso',
-            user: {
-              id: user?.id,
-              name: user?.name,
-              email: user?.email,
-              role: user?.role,
-              status: user?.status,
-              email_verified_at:
-                user?.email_verified_at !== null
-                  ? moment(user?.email_verified_at)
-                      .tz('America/Sao_Paulo')
-                      .format('DD/MM/YYYY HH:mm:ss')
-                  : null,
-              profile_picture: user?.profile_picture,
-              lastLoginDate:
-                user?.lastLoginDate !== null
-                  ? moment(user?.lastLoginDate)
-                      .tz('America/Sao_Paulo')
-                      .format('DD/MM/YYYY HH:mm:ss')
-                  : null,
-              currentLoginDate:
-                user?.currentLoginDate !== null
-                  ? moment(user?.currentLoginDate)
-                      .tz('America/Sao_Paulo')
-                      .format('DD/MM/YYYY HH:mm:ss')
-                  : null,
-              created_at:
-                user?.created_at !== null
-                  ? moment(user?.created_at)
-                      .tz('America/Sao_Paulo')
-                      .format('DD/MM/YYYY HH:mm:ss')
-                  : null,
-              updated_at:
-                user?.updated_at !== null
-                  ? moment(user?.updated_at)
-                      .tz('America/Sao_Paulo')
-                      .format('DD/MM/YYYY HH:mm:ss')
-                  : null,
-            },
-          });
-        } else {
-          logger.error('Usuário não encontrado.', {
-            success: false,
-            statusCode: StatusCodes.NOT_FOUND,
-            message: ReasonPhrases.NOT_FOUND,
-          });
-
-          return res.status(StatusCodes.NOT_FOUND).json({
-            success: false,
-            statusCode: StatusCodes.NOT_FOUND,
-            message: 'Usuário não encontrado',
-          });
-        }
-      } catch (error: any) {
-        logger.error('Falha ao autenticar usuário.', {
-          success: false,
-          statusCode: StatusCodes.UNAUTHORIZED,
-          message: error.message,
-          stack: error.stack,
-        });
-
-        return res.status(StatusCodes.UNAUTHORIZED).json({
-          success: false,
-          statusCode: StatusCodes.UNAUTHORIZED,
-          reason: ReasonPhrases.UNAUTHORIZED,
-          message: 'Falha ao autenticar usuário',
-          error: {
-            name: error.name,
-            message: error.message,
-            stack: error.stack,
-          },
-        });
-      }
+      user = await User.findById(decoded.id).select('-password');
     } else {
       user = null;
-
-      logger.error(
-        'Token não fornecido. Não foi possível autenticar o usuário!',
-        {
-          success: false,
-          statusCode: StatusCodes.UNAUTHORIZED,
-        }
-      );
-
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        statusCode: StatusCodes.UNAUTHORIZED,
-        message: 'Token inválido. Não foi possível autenticar o usuário!',
-      });
     }
+
+    logger.info('Usuário autenticado com sucesso.', {
+      success: true,
+      statusCode: StatusCodes.OK,
+      user
+    });
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: 'Usuário autenticado com sucesso',
+      user
+    });
   };
 }
 
