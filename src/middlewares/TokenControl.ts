@@ -11,8 +11,6 @@ const getUserToken = (req: Request) => {
 
   const token = authToken && authToken.split(' ')[1];
 
-  logger.info("user token from req: ", token)
-
   return token;
 };
 
@@ -63,8 +61,6 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
   try {
     const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
-    logger.info("decoded: ", decoded)
-
     if (!decoded) {
       logger.error(
         'Acesso negado. Você não tem permissão para acessar este recurso!',
@@ -97,19 +93,11 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
 };
 
 // Generate user access token
-const generateToken = (user: any, secretKey: string): string => {
+const generateToken = (user: JwtPayload, secretKey: string): string => {
   logger.info('Gerando token de acesso...', {
     success: true,
     statusCode: StatusCodes.OK,
   });
-
-  const my = User.findById({
-    _id: user.id,
-  }) as unknown as IUser;
-
-  logger.info('test data user: ', my)
-
-  logger.info('param user: ', user)
 
   const token = jwt.sign(
     {
