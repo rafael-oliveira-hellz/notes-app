@@ -136,7 +136,7 @@ const getUserByToken = async (token: string) => {
 
   const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
-  const user = User.findById({
+  const user = await User.findById({
     _id: decoded.id,
   }) as unknown as IUser;
 
