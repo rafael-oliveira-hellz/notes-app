@@ -6,8 +6,8 @@ import moment from 'moment';
 import logger from '../config/winston-logger';
 import { generateToken, getUserToken } from '../middlewares/TokenControl';
 import { comparePassword, hashPassword } from '../middlewares/ValidatePassword';
-import User from '../models/User';
 import { IUser } from '../models/interfaces/user';
+import User from '../models/User';
 
 class AuthController {
   // [TO TEST] Create a user
@@ -163,7 +163,8 @@ class AuthController {
     }
 
     // COMPLETE - If the login and password are wrong, return 401
-    if (!(await comparePassword(password, user?.password))) {
+    if (user.email !== email ||      
+      !(await comparePassword(password, user?.password))) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         message: 'E-mail ou senha incorretos',
       });
