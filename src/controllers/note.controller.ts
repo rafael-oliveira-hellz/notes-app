@@ -6,7 +6,6 @@ import { paginate } from '../middlewares/Pagination';
 import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
 import { IUser } from '../models/interfaces/user';
 import Note from '../models/Note';
-import User from '../models/User';
 
 class NoteController {
   // [TO TEST] Get all notes (admin only)
@@ -24,7 +23,6 @@ class NoteController {
     }
 
     response.data = response.data.map(async (note: any) => {
-      const user = await User.findById({ _id: note.assignee });
       return {
         id: note?.id,
         title: note?.title,
@@ -43,7 +41,7 @@ class NoteController {
                 .format('DD/MM/YYYY HH:mm:ss')
             : null,
         status: note?.status,
-        assignee: user?.name,
+        assignee: note?.assignee,
         created_at:
           note?.created_at !== null
             ? moment(note?.created_at)
