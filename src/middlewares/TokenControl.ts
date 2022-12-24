@@ -78,6 +78,8 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
       });
     }
 
+    logger.info(decoded);
+
     req.user = decoded;
 
     next();
@@ -125,9 +127,9 @@ const getUserByToken = async (token: string) => {
 
   const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
-  const user = await User.findById({
+  const user = (await User.findById({
     _id: decoded.id,
-  }) as unknown as IUser;
+  })) as unknown as IUser;
 
   return user;
 };
