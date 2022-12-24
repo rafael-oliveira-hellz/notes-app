@@ -22,7 +22,8 @@ class NoteController {
       });
     }
 
-    response.data = response.data.map((note: any) => {
+    response.data = response.data.map(async (note: any) => {
+      const user = await getUserByToken(note.assignee);
       return {
         id: note?.id,
         title: note?.title,
@@ -41,7 +42,7 @@ class NoteController {
                 .format('DD/MM/YYYY HH:mm:ss')
             : null,
         status: note?.status,
-        assignee: note?.assignee,
+        assignee: user?.name,
         created_at:
           note?.created_at !== null
             ? moment(note?.created_at)
