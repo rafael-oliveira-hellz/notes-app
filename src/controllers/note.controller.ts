@@ -1073,7 +1073,7 @@ class NoteController {
     }
 
     if (start_date && due_date) {
-      if (start_date < due_date) {
+      if (start_date > due_date) {
         console.log('start_date', start_date);
         console.log('due_date', due_date);
         return res.status(StatusCodes.BAD_REQUEST).json({
