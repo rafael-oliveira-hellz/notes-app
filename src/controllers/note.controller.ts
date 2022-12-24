@@ -60,54 +60,62 @@ class NoteController {
 
   // [TO TEST] Get all notes from the logged in user
   listAllFromUser = async (req: Request, res: Response): Promise<Response> => {
-    try {
-      const token = getUserToken(req) as string;
-      const user = (await getUserByToken(token)) as unknown as IUser;
+    const token = getUserToken(req) as string;
+    const user = (await getUserByToken(token)) as unknown as IUser;
 
-      const userNotes = await Note.find({ assignee: user.id });
+    const userNotes = await Note.find({ assignee: user.id });
 
-      if (userNotes.length === 0 || !userNotes) {
-        return res.status(StatusCodes.NOT_FOUND).json({
-          success: false,
-          statusCode: StatusCodes.NOT_FOUND,
-          message: 'Nenhuma anotação encontrada para este usuário.',
-        });
-      }
-
-      const notes = userNotes.map((note: any) => {
-        return {
-          id: note?.id,
-          title: note?.title,
-          subject: note?.subject,
-          content: note?.content,
-          start_date:
-            note?.start_date !== null
-              ? moment(note?.start_date)
-                  .tz('America/Sao_Paulo')
-                  .format('DD/MM/YYYY HH:mm:ss')
-              : null,
-          due_date:
-            note?.due_date !== null
-              ? moment(note?.due_date)
-                  .tz('America/Sao_Paulo')
-                  .format('DD/MM/YYYY HH:mm:ss')
-              : null,
-          status: note?.status,
-          created_at:
-            note?.created_at !== null
-              ? moment(note?.created_at)
-                  .tz('America/Sao_Paulo')
-                  .format('DD/MM/YYYY HH:mm:ss')
-              : null,
-          updated_at:
-            note?.updated_at !== null
-              ? moment(note?.updated_at)
-                  .tz('America/Sao_Paulo')
-                  .format('DD/MM/YYYY HH:mm:ss')
-              : null,
-        };
+    if (userNotes.length === 0 || !userNotes) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhuma anotação encontrada para este usuário.',
       });
+    }
 
+    const notes = userNotes.map((note: any) => {
+      return {
+        id: note?.id,
+        title: note?.title,
+        subject: note?.subject,
+        content: note?.content,
+        start_date:
+          note?.start_date !== null
+            ? moment(note?.start_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        due_date:
+          note?.due_date !== null
+            ? moment(note?.due_date)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        status: note?.status,
+        created_at:
+          note?.created_at !== null
+            ? moment(note?.created_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+        updated_at:
+          note?.updated_at !== null
+            ? moment(note?.updated_at)
+                .tz('America/Sao_Paulo')
+                .format('DD/MM/YYYY HH:mm:ss')
+            : null,
+      };
+    });
+
+    if (notes.length === 0 || !notes) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhuma anotação encontrada para este usuário.',
+      });
+    }
+
+    if (notes.length > 1) {
       const page: number = Number(req.query.page) || 1;
       const limit: number = Number(req.query.limit) || 25;
       const startIndex = (page - 1) * limit;
@@ -165,22 +173,13 @@ class NoteController {
         message: 'Anotações encontradas com sucesso.',
         result,
       });
-    } catch (error: any) {
-      if (error instanceof Error) {
-        logger.error('Erro xpto', { error });
-
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-          success: false,
-          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-          message: 'Erro interno do servidor.',
-        });
-      }
     }
 
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: 'Erro interno do servidor.',
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: 'Anotação encontrada com sucesso.',
+      notes,
     });
   };
 
