@@ -322,64 +322,55 @@ class UserController {
           method: 'GET',
         });
 
-        if (user.length > 1) {
-          const page: number = Number(req.query.page) || 1;
-          const limit: number = Number(req.query.limit) || 25;
-          const startIndex = (page - 1) * limit;
-          const endIndex = page * limit;
+        const page: number = Number(req.query.page) || 1;
+        const limit: number = Number(req.query.limit) || 25;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
 
-          const result: any = {
-            totalDocuments: 0,
-            totalPages: 0,
-            previous: {},
-            current: {},
-            next: {},
-            data: {},
-          };
+        const result: any = {
+          totalDocuments: 0,
+          totalPages: 0,
+          previous: {},
+          current: {},
+          next: {},
+          data: {},
+        };
 
-          result.totalDocuments = user.length;
-          result.totalPages = Math.ceil(user.length / limit);
-          result.previous = {
-            page: page - 1,
-            limit,
-          };
-          result.current = {
-            page,
-            limit,
-          };
+        result.totalDocuments = user.length;
+        result.totalPages = Math.ceil(user.length / limit);
+        result.previous = {
+          page: page - 1,
+          limit,
+        };
+        result.current = {
+          page,
+          limit,
+        };
+        result.next = {
+          page: page + 1,
+          limit,
+        };
+        result.data = user.slice(startIndex, endIndex);
+
+        if (endIndex < user.length) {
           result.next = {
             page: page + 1,
             limit,
           };
-          result.data = user.slice(startIndex, endIndex);
+        }
 
-          if (endIndex < user.length) {
-            result.next = {
-              page: page + 1,
-              limit,
-            };
-          }
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit,
+          };
+        }
 
-          if (startIndex > 0) {
-            result.previous = {
-              page: page - 1,
-              limit,
-            };
-          }
-
-          if (page > result.totalPages) {
-            return res.status(StatusCodes.NOT_FOUND).json({
-              success: false,
-              statusCode: StatusCodes.NOT_FOUND,
-              message: 'Nenhuma anotação encontrada para este usuário.',
-            });
-          }
-
-          return res.status(StatusCodes.OK).json({
-            success: true,
-            statusCode: StatusCodes.OK,
-            message: 'Busca realizada com sucesso.',
-            result,
+        if (page > result.totalPages) {
+          return res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            statusCode: StatusCodes.NOT_FOUND,
+            message: 'Nenhuma anotação encontrada para este usuário.',
           });
         }
 
@@ -387,20 +378,15 @@ class UserController {
           success: true,
           statusCode: StatusCodes.OK,
           message: 'Busca realizada com sucesso.',
-          user,
+          result,
         });
       }
 
-      logger.error('Erro ao realizar busca', {
-        success: false,
-        statusCode: StatusCodes.NOT_FOUND,
-        error: ReasonPhrases.NOT_FOUND,
-      });
-
-      return res.status(StatusCodes.NOT_FOUND).json({
-        success: false,
-        statusCode: StatusCodes.NOT_FOUND,
-        message: 'Erro ao realizar busca.',
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Busca realizada com sucesso.',
+        user,
       });
     } catch (error) {
       logger.error('Falha ao realizar busca', {
@@ -476,80 +462,63 @@ class UserController {
       });
 
       if (allUsers) {
-        if (allUsers.length > 1) {
-          const page: number = Number(req.query.page) || 1;
-          const limit: number = Number(req.query.limit) || 25;
-          const startIndex = (page - 1) * limit;
-          const endIndex = page * limit;
+        const page: number = Number(req.query.page) || 1;
+        const limit: number = Number(req.query.limit) || 25;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
 
-          const result: any = {
-            totalDocuments: 0,
-            totalPages: 0,
-            previous: {},
-            current: {},
-            next: {},
-            data: {},
-          };
+        const result: any = {
+          totalDocuments: 0,
+          totalPages: 0,
+          previous: {},
+          current: {},
+          next: {},
+          data: {},
+        };
 
-          result.totalDocuments = allUsers.length;
-          result.totalPages = Math.ceil(allUsers.length / limit);
-          result.previous = {
-            page: page - 1,
-            limit,
-          };
-          result.current = {
-            page,
-            limit,
-          };
+        result.totalDocuments = allUsers.length;
+        result.totalPages = Math.ceil(allUsers.length / limit);
+        result.previous = {
+          page: page - 1,
+          limit,
+        };
+        result.current = {
+          page,
+          limit,
+        };
+        result.next = {
+          page: page + 1,
+          limit,
+        };
+        result.data = allUsers.slice(startIndex, endIndex);
+
+        if (endIndex < allUsers.length) {
           result.next = {
             page: page + 1,
             limit,
           };
-          result.data = allUsers.slice(startIndex, endIndex);
-
-          if (endIndex < allUsers.length) {
-            result.next = {
-              page: page + 1,
-              limit,
-            };
-          }
-
-          if (startIndex > 0) {
-            result.previous = {
-              page: page - 1,
-              limit,
-            };
-          }
-
-          if (page > result.totalPages) {
-            return res.status(StatusCodes.NOT_FOUND).json({
-              success: false,
-              statusCode: StatusCodes.NOT_FOUND,
-              message: 'Nenhuma anotação encontrada para este usuário.',
-            });
-          }
-
-          return res.status(StatusCodes.OK).json({
-            success: true,
-            statusCode: StatusCodes.OK,
-            message: 'Busca realizada com sucesso.',
-            result,
-          });
         }
 
-        logger.debug('Usuários encontrados com sucesso.', {
-          success: true,
-          statusCode: StatusCodes.OK,
-          label: 'UserController',
-          method: 'GET',
-          users: allUsers,
-        });
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit,
+          };
+        }
+
+        if (page > result.totalPages) {
+          return res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            statusCode: StatusCodes.NOT_FOUND,
+            message: 'Nenhuma anotação encontrada para este usuário.',
+          });
+        }
 
         return res.status(StatusCodes.OK).json({
           success: true,
           statusCode: StatusCodes.OK,
-          message: 'Usuários encontrados com sucesso.',
-          users: allUsers,
+          message: 'Busca realizada com sucesso.',
+          result,
         });
       }
     } catch (error: any) {
@@ -625,80 +594,63 @@ class UserController {
       });
 
       if (allUsers) {
-        if (allUsers.length > 1) {
-          const page: number = Number(req.query.page) || 1;
-          const limit: number = Number(req.query.limit) || 25;
-          const startIndex = (page - 1) * limit;
-          const endIndex = page * limit;
+        const page: number = Number(req.query.page) || 1;
+        const limit: number = Number(req.query.limit) || 25;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
 
-          const result: any = {
-            totalDocuments: 0,
-            totalPages: 0,
-            previous: {},
-            current: {},
-            next: {},
-            data: {},
-          };
+        const result: any = {
+          totalDocuments: 0,
+          totalPages: 0,
+          previous: {},
+          current: {},
+          next: {},
+          data: {},
+        };
 
-          result.totalDocuments = allUsers.length;
-          result.totalPages = Math.ceil(allUsers.length / limit);
-          result.previous = {
-            page: page - 1,
-            limit,
-          };
-          result.current = {
-            page,
-            limit,
-          };
+        result.totalDocuments = allUsers.length;
+        result.totalPages = Math.ceil(allUsers.length / limit);
+        result.previous = {
+          page: page - 1,
+          limit,
+        };
+        result.current = {
+          page,
+          limit,
+        };
+        result.next = {
+          page: page + 1,
+          limit,
+        };
+        result.data = allUsers.slice(startIndex, endIndex);
+
+        if (endIndex < allUsers.length) {
           result.next = {
             page: page + 1,
             limit,
           };
-          result.data = allUsers.slice(startIndex, endIndex);
-
-          if (endIndex < allUsers.length) {
-            result.next = {
-              page: page + 1,
-              limit,
-            };
-          }
-
-          if (startIndex > 0) {
-            result.previous = {
-              page: page - 1,
-              limit,
-            };
-          }
-
-          if (page > result.totalPages) {
-            return res.status(StatusCodes.NOT_FOUND).json({
-              success: false,
-              statusCode: StatusCodes.NOT_FOUND,
-              message: 'Nenhuma anotação encontrada para este usuário.',
-            });
-          }
-
-          return res.status(StatusCodes.OK).json({
-            success: true,
-            statusCode: StatusCodes.OK,
-            message: 'Busca realizada com sucesso.',
-            result,
-          });
         }
 
-        logger.debug('Usuários encontrados com sucesso.', {
-          success: true,
-          statusCode: StatusCodes.OK,
-          label: 'UserController',
-          method: 'GET',
-          users: allUsers,
-        });
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit,
+          };
+        }
+
+        if (page > result.totalPages) {
+          return res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            statusCode: StatusCodes.NOT_FOUND,
+            message: 'Nenhuma anotação encontrada para este usuário.',
+          });
+        }
 
         return res.status(StatusCodes.OK).json({
           success: true,
           statusCode: StatusCodes.OK,
-          message: 'Usuários encontrados com sucesso.',
-          users: allUsers,
+          message: 'Busca realizada com sucesso.',
+          result,
         });
       }
     } catch (error: any) {
