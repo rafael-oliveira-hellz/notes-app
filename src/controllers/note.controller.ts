@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import User from 'models/User';
 import moment from 'moment-timezone';
 import logger from '../config/winston-logger';
 import { paginate } from '../middlewares/Pagination';
@@ -23,6 +24,8 @@ class NoteController {
     }
 
     response.data = response.data.map((note: any) => {
+      const assignee = User.findById(note?.assignee) as unknown as IUser;
+
       return {
         id: note?.id,
         title: note?.title,
@@ -41,7 +44,12 @@ class NoteController {
                 .format('DD/MM/YYYY HH:mm:ss')
             : null,
         status: note?.status,
-        assignee: note?.assignee,
+        assignee: {
+          id: assignee?.id,
+          name: assignee?.name,
+          email: assignee?.email,
+          profile_picture: assignee?.profile_picture,
+        },
         created_at:
           note?.created_at !== null
             ? moment(note?.created_at)
