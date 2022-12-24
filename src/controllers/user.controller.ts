@@ -12,6 +12,21 @@ class UserController {
   getAllUsers = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(User, req, res);
 
+    if (!response || response.data.length === 0) {
+      logger.debug('Nenhum usuário encontrado.', {
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        label: 'UserController',
+        method: 'GET',
+      });
+
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhum usuário encontrado.',
+      });
+    }
+
     response.data = response.data.map((user: any) => {
       return {
         id: user?.id,
@@ -175,6 +190,26 @@ class UserController {
 
     if (value === null || value === undefined || value === '') {
       const response = await paginate(User, req, res);
+
+      if (
+        !response ||
+        response === null ||
+        response === undefined ||
+        response.data.length === 0
+      ) {
+        logger.error('Não foi possível buscar usuário.', {
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: ReasonPhrases.NOT_FOUND,
+        });
+
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: ReasonPhrases.NOT_FOUND,
+        });
+      }
+
       response.data = response.data.map((user: any) => {
         return {
           id: user?.id,
@@ -223,6 +258,20 @@ class UserController {
       const userData = await User.find({
         [field]: { $regex: value, $options: 'i' },
       }).select(['-password', '-remember_token', '-password_reset_token']);
+
+      if (userData.length === 0 || !userData) {
+        logger.error('Usuário não encontrado.', {
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: ReasonPhrases.NOT_FOUND,
+        });
+
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: ReasonPhrases.NOT_FOUND,
+        });
+      }
 
       const user = userData.map((user: any) => {
         return {
@@ -377,6 +426,14 @@ class UserController {
         status: 'active',
       }).select(['-password', '-remember_token', '-password_reset_token']);
 
+      if (!users || users.length === 0) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Nenhum usuário encontrado.',
+        });
+      }
+
       const allUsers = users.map((user: any) => {
         return {
           id: user?.id,
@@ -518,6 +575,14 @@ class UserController {
         status: 'inactive',
       }).select(['-password', '-remember_token', '-password_reset_token']);
 
+      if (!users || users.length === 0) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Nenhum usuário inativo encontrado.',
+        });
+      }
+
       const allUsers = users.map((user: any) => {
         return {
           id: user?.id,
@@ -560,7 +625,7 @@ class UserController {
       });
 
       if (allUsers) {
-        if (allUsers.length >= 0) {
+        if (allUsers.length > 1) {
           const page: number = Number(req.query.page) || 1;
           const limit: number = Number(req.query.limit) || 25;
           const startIndex = (page - 1) * limit;
@@ -604,6 +669,21 @@ class UserController {
               limit,
             };
           }
+
+          if (page > result.totalPages) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+              success: false,
+              statusCode: StatusCodes.NOT_FOUND,
+              message: 'Nenhuma anotação encontrada para este usuário.',
+            });
+          }
+
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Busca realizada com sucesso.',
+            result,
+          });
         }
 
         logger.debug('Usuários encontrados com sucesso.', {
@@ -857,10 +937,10 @@ class UserController {
 
   updateRole = async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id;
       const { role } = req.body;
+      const { id } = req.params;
 
-      const user = await User.findById({ _id: userId });
+      const user = await User.findById({ _id: id });
 
       if (role === null || role === undefined || role === '') {
         logger.error('A [ role ] não pode ser nula.', {
@@ -883,7 +963,7 @@ class UserController {
           .toISOString() as unknown as Date;
 
         const updatedUser = await User.findByIdAndUpdate(
-          { _id: userId },
+          { _id: id },
           {
             $set: user,
           },

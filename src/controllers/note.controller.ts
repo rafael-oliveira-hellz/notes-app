@@ -4,13 +4,21 @@ import moment from 'moment-timezone';
 import logger from '../config/winston-logger';
 import { paginate } from '../middlewares/Pagination';
 import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
-import Note from '../models/Note';
 import { IUser } from '../models/interfaces/user';
+import Note from '../models/Note';
 
 class NoteController {
   // [TO TEST] Get all notes (admin only)
   listAll = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(Note, req, res);
+
+    if (!response || response.data.length === 0) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhuma anotação encontrada.',
+      });
+    }
 
     response.data = response.data.map((note: any) => {
       return {
@@ -58,7 +66,7 @@ class NoteController {
 
       const userNotes = await Note.find({ assignee: user.id });
 
-      if (!userNotes) {
+      if (userNotes.length === 0 || !userNotes) {
         return res.status(StatusCodes.NOT_FOUND).json({
           success: false,
           statusCode: StatusCodes.NOT_FOUND,
@@ -250,6 +258,19 @@ class NoteController {
     if (value === null || value === undefined || value === '') {
       const result = await paginate(Note, req, res);
 
+      if (
+        result === null ||
+        result.data.length === 0 ||
+        result.data === undefined ||
+        result.data === null
+      ) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Nenhuma anotação encontrada para este usuário.',
+        });
+      }
+
       result.data = result.data.map((note: any) => {
         return {
           id: note?.id,
@@ -292,6 +313,14 @@ class NoteController {
       const notes = await Note.find({
         [field]: { $regex: value, $options: 'i' },
       });
+
+      if (notes.length === 0 || notes === null || notes === undefined) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Nenhuma anotação encontrada para este usuário.',
+        });
+      }
 
       const allNotes = notes.map((note: any) => {
         return {
@@ -451,6 +480,14 @@ class NoteController {
       $and: [{ start_date: null }, { due_date: null }],
     });
 
+    if (notes.length === 0 || !notes) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhuma anotação encontrada.',
+      });
+    }
+
     const allNotes = notes.map((note: any) => {
       return {
         id: note?.id,
@@ -485,14 +522,6 @@ class NoteController {
             : null,
       };
     });
-
-    if (!notes) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        success: false,
-        statusCode: StatusCodes.NOT_FOUND,
-        message: 'Nenhuma anotação encontrada.',
-      });
-    }
 
     if (allNotes.length > 1) {
       const page: number = Number(req.query.page) || 1;
@@ -583,6 +612,14 @@ class NoteController {
 
     const notes = await Note.find({ status: 'pending' });
 
+    if (notes.length === 0 || !notes) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhuma anotação encontrada.',
+      });
+    }
+
     console.log(notes);
 
     const allNotes = notes.map((note: any) => {
@@ -619,14 +656,6 @@ class NoteController {
             : null,
       };
     });
-
-    if (!notes) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        success: false,
-        statusCode: StatusCodes.NOT_FOUND,
-        message: 'Nenhuma anotação encontrada.',
-      });
-    }
 
     if (allNotes.length > 1) {
       const page: number = Number(req.query.page) || 1;
@@ -719,6 +748,14 @@ class NoteController {
       status: 'completed',
     });
 
+    if (notes.length === 0 || !notes) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'Nenhuma anotação encontrada.',
+      });
+    }
+
     const allNotes = notes.map((note: any) => {
       return {
         id: note?.id,
@@ -753,14 +790,6 @@ class NoteController {
             : null,
       };
     });
-
-    if (!notes) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        success: false,
-        statusCode: StatusCodes.NOT_FOUND,
-        message: 'Nenhuma anotação encontrada.',
-      });
-    }
 
     if (allNotes.length > 1) {
       const page: number = Number(req.query.page) || 1;
@@ -853,13 +882,14 @@ class NoteController {
       status: 'overdue',
     });
 
-    if (!notes) {
+    if (notes.length === 0 || !notes) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         statusCode: StatusCodes.NOT_FOUND,
         message: 'Nenhuma anotação encontrada.',
       });
     }
+
     const allNotes = notes.map((note: any) => {
       return {
         id: note?.id,
@@ -977,7 +1007,7 @@ class NoteController {
       assignee: id,
     });
 
-    if (!notes) {
+    if (notes.length === 0 || !notes) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         statusCode: StatusCodes.NOT_FOUND,
