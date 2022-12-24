@@ -889,9 +889,9 @@ class UserController {
 
   updateRole = async (req: Request, res: Response) => {
     const { role } = req.body;
-    const { id } = req.params;
+    const userId = req.params.id;
 
-    const user = await User.findById({ _id: id });
+    const user = await User.findById({ _id: userId });
 
     if (role === null || role === undefined || role === '') {
       logger.error('A [ role ] não pode ser nula.', {
@@ -914,7 +914,7 @@ class UserController {
         .toISOString() as unknown as Date;
 
       const updatedUser = await User.findByIdAndUpdate(
-        { _id: id },
+        { _id: userId },
         {
           $set: user,
         },
