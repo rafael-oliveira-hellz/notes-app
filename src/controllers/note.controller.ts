@@ -12,7 +12,9 @@ class NoteController {
   listAll = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(Note, req, res);
 
-    if (!response || response.data.length === 0) {
+    logger.info(response.data);
+
+    if (!response || response.data === undefined || response.data === null) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         statusCode: StatusCodes.NOT_FOUND,
