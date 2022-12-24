@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import User from 'models/User';
 import moment from 'moment-timezone';
 import logger from '../config/winston-logger';
 import { paginate } from '../middlewares/Pagination';
 import { getUserByToken, getUserToken } from '../middlewares/TokenControl';
 import { IUser } from '../models/interfaces/user';
 import Note from '../models/Note';
+import User from '../models/User';
 
 class NoteController {
   // [TO TEST] Get all notes (admin only)
