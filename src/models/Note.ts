@@ -32,7 +32,7 @@ const noteSchema = new Schema({
     default: 'pending',
   },
   assignee: {
-    type: String,
+    type: Object,
     ref: 'User',
     required: false,
   },

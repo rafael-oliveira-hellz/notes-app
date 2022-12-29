@@ -12,8 +12,6 @@ class NoteController {
   listAll = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(Note, req, res);
 
-    logger.info("response new: ", response);
-
     if (!response || response.data === undefined || response.data === null) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
@@ -56,12 +54,6 @@ class NoteController {
             : null,
       };
     });
-
-    logger.info("response", {
-      response,
-      data: response.data
-    })
-
 
     return res.status(StatusCodes.OK).json(response);
   };
@@ -1080,8 +1072,6 @@ class NoteController {
 
     if (start_date && due_date) {
       if (start_date > due_date) {
-        console.log('start_date', start_date);
-        console.log('due_date', due_date);
         return res.status(StatusCodes.BAD_REQUEST).json({
           success: false,
           statusCode: StatusCodes.BAD_REQUEST,
@@ -1095,7 +1085,11 @@ class NoteController {
         content,
         start_date,
         due_date,
-        assignee: user.id,
+        assignee: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
       });
 
       if (!note) {
