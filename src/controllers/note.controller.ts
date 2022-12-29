@@ -57,6 +57,12 @@ class NoteController {
       };
     });
 
+    logger.info("response", {
+      response,
+      data: response.data
+    })
+    
+
     return res.status(StatusCodes.OK).json(response);
   };
 
