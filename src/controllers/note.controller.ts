@@ -12,7 +12,7 @@ class NoteController {
   listAll = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(Note, req, res);
 
-    logger.info(response.data);
+    logger.info("response new: ", response);
 
     if (!response || response.data === undefined || response.data === null) {
       return res.status(StatusCodes.NOT_FOUND).json({
@@ -22,7 +22,7 @@ class NoteController {
       });
     }
 
-    response.data = response.data.map(async (note: any) => {
+    response.data = response.data.map((note: any) => {
       return {
         id: note?.id,
         title: note?.title,
@@ -61,7 +61,7 @@ class NoteController {
       response,
       data: response.data
     })
-    
+
 
     return res.status(StatusCodes.OK).json(response);
   };
