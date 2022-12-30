@@ -816,21 +816,23 @@ class UserController {
         if (req.file) {
           user.profile_picture = req.file.filename;
 
-          const uploadImage = (img: any) => {
-            const body = new FormData();
-            body.set('key', '269e094956836faccf676f73873b43c2');
-            body.append('image', img);
+          const payload = new FormData();
+          payload.append('image', req.file.filename);
 
-            return axios({
-              method: 'post',
-              url: 'https://api.imgbb.com/1/upload',
-              data: body,
+          axios
+            .post(
+              'https://api.imgbb.com/1/upload?expiration=600&key=269e094956836faccf676f73873b43c2',
+              payload
+            )
+            .then((response) => {
+              console.log('response', response);
+              console.log('response URL', response.data.data.image.url);
+              console.log('success');
+            })
+            .catch((error) => {
+              console.log('error', error);
+              alert('try agian');
             });
-          };
-
-          uploadImage(req.file).then((resp) => {
-            console.log(resp.data.data.url); // I'm aware it's data.data, that is how it returns stuff
-          });
         }
 
         user.updated_at = moment(new Date())
