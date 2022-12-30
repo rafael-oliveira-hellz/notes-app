@@ -825,9 +825,9 @@ class UserController {
               payload
             )
             .then((response) => {
-              console.log('response', response);
-              console.log('response URL', response.data.data.image.url);
-              console.log('success');
+              logger.info('response', response);
+              logger.info('response URL', response.data.data.image.url);
+              logger.info('success');
             })
             .catch((error) => {
               console.log('error', error);
