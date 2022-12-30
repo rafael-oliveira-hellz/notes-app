@@ -780,6 +780,97 @@ class UserController {
     }
   };
 
+  // [TO TEST] Update another user
+  updateUserById = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { name, email } = req.body;
+
+      const user = await User.findById(id);
+
+      if (!user) {
+        logger.debug('Usuário não encontrado!', {
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          label: 'UserController',
+          method: 'PUT',
+        });
+
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Usuário não encontrado!',
+        });
+      }
+
+      if (user) {
+        if (name) {
+          user.name = name;
+        }
+
+        if (email) {
+          user.email = email;
+        }
+
+        if (req.file) {
+          user.profile_picture = req.file.filename;
+        }
+
+        user.updated_at = moment(new Date())
+          .tz('America/Sao_Paulo')
+          .toISOString() as unknown as Date;
+
+        const updatedUser = await User.findByIdAndUpdate(
+          { _id: user.id },
+          {
+            $set: user,
+          },
+          { new: true }
+        );
+
+        if (updatedUser) {
+          logger.debug('Usuário atualizado com sucesso.', {
+            success: true,
+            statusCode: StatusCodes.OK,
+            label: 'UserController',
+            method: 'PUT',
+          });
+
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Usuário atualizado com sucesso.',
+            user: updatedUser,
+          });
+        }
+
+        logger.error('Falha ao atualizar o usuário.', {
+          success: false,
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+        });
+
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+          message: 'Falha ao atualizar o usuário.',
+        });
+      }
+    } catch (error) {
+      logger.error('Falha ao atualizar o usuário.', {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Falha ao atualizar o usuário.',
+      });
+    }
+  };
+
   // [TO TEST] Update user
   updateUser = async (req: Request, res: Response) => {
     try {
@@ -802,10 +893,10 @@ class UserController {
       }
 
       if (user) {
-        const { name, email, profile_picture } = req.body;
+        const { name, email } = req.body;
 
-        if (profile_picture) {
-          user.profile_picture = profile_picture;
+        if (req.file) {
+          user.profile_picture = req.file.filename;
         }
 
         if (name) {

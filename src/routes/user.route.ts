@@ -350,6 +350,60 @@ router.put(
   }*/
   }
 );
+
+router.put(
+  '/users/:id/edit',
+  verifyToken,
+  isAdmin,
+  imageUpload.single('profile_picture'),
+  UserController.updateUserById,
+  () => {
+    // #swagger.tags = ['User']
+    // #swagger.description = 'Endpoint para editar o perfil do usuário.'
+    /* #swagger.parameters['authorization'] = {
+      in: 'header',
+      description: 'Token de acesso.',
+      required: true,
+      type: 'string',
+      schema: { $ref: "#/definitions/VerifyUser" }
+    }*/
+    /*
+    #swagger.parameters['id'] = {
+      in: 'path',
+      description: 'Id do usuário.',
+      required: true,
+      type: 'string'
+    }
+    */
+    /* #swagger.parameters['UpdateUser'] = {
+      in: 'body',
+      description: 'Dados para atualização de usuário.',
+      required: false,
+      schema: { $ref: "#/definitions/UpdateUser" }
+    }*/
+    /* #swagger.responses[204] = {
+      description: 'Alterar role do usuário.',
+      schema: { $ref: "#/definitions/NoContent" }
+    }*/
+    /*#swagger.responses[400] = {
+      description: 'Requisição inválida.',
+      schema: { $ref: "#/definitions/BadRequest" }
+    }*/
+    /*#swagger.responses[401] = {
+      description: 'Acesso não autorizado.',
+      schema: { $ref: "#/definitions/Unauthorized" }
+    }*/
+    /*#swagger.responses[403] = {
+      description: 'Acesso negado.',
+      schema: { $ref: "#/definitions/Forbidden" }
+    }*/
+    /*#swagger.responses[500] = {
+    description: 'Erro interno do servidor.',
+    schema: { $ref: "#/definitions/InternalServerError" }
+  }*/
+  }
+);
+
 router.delete('/users/me', verifyToken, UserController.deleteProfile, () => {
   // #swagger.tags = ['User']
   // #swagger.description = 'Endpoint para deletar o perfil do usuário.'

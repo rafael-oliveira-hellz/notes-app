@@ -800,6 +800,74 @@
         }
       }
     },
+    "/users/{id}/edit": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para editar o perfil do usuário.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id do usuário."
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "description": "Token de acesso.",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/VerifyUser"
+            }
+          },
+          {
+            "name": "UpdateUser",
+            "in": "body",
+            "description": "Dados para atualização de usuário.",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/UpdateUser"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Alterar role do usuário.",
+            "schema": {
+              "$ref": "#/definitions/NoContent"
+            }
+          },
+          "400": {
+            "description": "Requisição inválida.",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "401": {
+            "description": "Acesso não autorizado.",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Acesso negado.",
+            "schema": {
+              "$ref": "#/definitions/Forbidden"
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "$ref": "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
     "/users/{id}": {
       "delete": {
         "tags": [
