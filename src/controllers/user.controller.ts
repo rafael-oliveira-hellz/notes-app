@@ -816,6 +816,13 @@ class UserController {
           user.profile_picture = profile_picture;
         }
 
+        logger.debug('new user name', user.name);
+        logger.debug('new user email', user.email);
+        logger.debug('new user pic', user.profile_picture);
+        logger.debug('old user name', name);
+        logger.debug('old user email', email);
+        logger.debug('old user pic', profile_picture);
+
         user.updated_at = moment(new Date())
           .tz('America/Sao_Paulo')
           .toISOString() as unknown as Date;
