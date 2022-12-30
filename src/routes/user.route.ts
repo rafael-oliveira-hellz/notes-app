@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import logger from '../config/winston-logger';
 import UserController from '../controllers/user.controller';
-import { imageUpload } from '../middlewares/Multer';
 import { isAdmin } from '../middlewares/PermissionControl';
 import { verifyToken } from '../middlewares/TokenControl';
 
@@ -310,7 +309,7 @@ router.patch(
 router.put(
   '/users/edit/profile',
   verifyToken,
-  imageUpload.single('profile_picture'),
+  // imageUpload.single('profile_picture'),
   UserController.updateUser,
   () => {
     // #swagger.tags = ['User']
@@ -355,7 +354,7 @@ router.put(
   '/users/:id/edit',
   verifyToken,
   isAdmin,
-  imageUpload.single('profile_picture'),
+  // imageUpload.single('profile_picture'),
   UserController.updateUserById,
   () => {
     // #swagger.tags = ['User']

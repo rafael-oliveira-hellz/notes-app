@@ -784,7 +784,7 @@ class UserController {
   updateUserById = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const { name, email } = req.body;
+      const { name, email, profile_picture } = req.body;
 
       const user = await User.findById(id);
 
@@ -812,8 +812,8 @@ class UserController {
           user.email = email;
         }
 
-        if (req.file) {
-          user.profile_picture = req.file.filename;
+        if (profile_picture) {
+          user.profile_picture = profile_picture;
         }
 
         user.updated_at = moment(new Date())
