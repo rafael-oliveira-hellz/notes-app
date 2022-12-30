@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Request, Response } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import moment from 'moment-timezone';
@@ -814,6 +815,22 @@ class UserController {
 
         if (req.file) {
           user.profile_picture = req.file.filename;
+
+          const uploadImage = (img: any) => {
+            const body = new FormData();
+            body.set('key', '269e094956836faccf676f73873b43c2');
+            body.append('image', img);
+
+            return axios({
+              method: 'post',
+              url: 'https://api.imgbb.com/1/upload',
+              data: body,
+            });
+          };
+
+          uploadImage(req.file).then((resp) => {
+            console.log(resp.data.data.url); // I'm aware it's data.data, that is how it returns stuff
+          });
         }
 
         user.updated_at = moment(new Date())
