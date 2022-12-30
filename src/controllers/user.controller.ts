@@ -821,7 +821,7 @@ class UserController {
 
           axios
             .post(
-              'https://api.imgbb.com/1/upload?expiration=600&key=269e094956836faccf676f73873b43c2',
+              'https://api.imgbb.com/1/upload?key=269e094956836faccf676f73873b43c2',
               payload
             )
             .then((response) => {
@@ -831,7 +831,6 @@ class UserController {
             })
             .catch((error) => {
               console.log('error', error);
-              alert('try agian');
             });
         }
 
