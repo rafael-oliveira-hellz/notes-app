@@ -786,6 +786,10 @@ class UserController {
       const { id } = req.params;
       const { name, email, profile_picture } = req.body;
 
+      logger.info(name);
+      logger.info(email);
+      logger.info(profile_picture);
+
       const user = await User.findById(id);
 
       if (!user) {
