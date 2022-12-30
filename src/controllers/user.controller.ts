@@ -791,7 +791,7 @@ class UserController {
           success: false,
           statusCode: StatusCodes.NOT_FOUND,
           label: 'UserController',
-          method: 'PATCH',
+          method: 'PUT',
         });
 
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -854,7 +854,8 @@ class UserController {
             success: true,
             statusCode: StatusCodes.NO_CONTENT,
             label: 'UserController',
-            method: 'PATCH',
+            method: 'PUT',
+            updatedUser,
           });
 
           return res.status(StatusCodes.NO_CONTENT).send();
