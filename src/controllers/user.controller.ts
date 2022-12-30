@@ -780,7 +780,7 @@ class UserController {
     }
   };
 
-  // [TO TEST] Update another user
+  // [TO TEST] Update user by id
   updateUserById = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -871,7 +871,7 @@ class UserController {
     }
   };
 
-  // [TO TEST] Update user
+  // [TO TEST] Update own user
   updateUser = async (req: Request, res: Response) => {
     try {
       const token = getUserToken(req) as string;
