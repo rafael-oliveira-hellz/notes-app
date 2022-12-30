@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Request, Response } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import moment from 'moment-timezone';
@@ -815,23 +814,6 @@ class UserController {
 
         if (req.file) {
           user.profile_picture = req.file.filename;
-
-          const payload = new FormData();
-          payload.append('image', req.file.filename);
-
-          axios
-            .post(
-              'https://api.imgbb.com/1/upload?key=269e094956836faccf676f73873b43c2',
-              payload
-            )
-            .then((response) => {
-              logger.info('response', response);
-              logger.info('response URL', response.data.data.image.url);
-              logger.info('success');
-            })
-            .catch((error) => {
-              console.log('error', error);
-            });
         }
 
         user.updated_at = moment(new Date())
