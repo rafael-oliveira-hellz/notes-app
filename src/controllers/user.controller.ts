@@ -810,22 +810,21 @@ class UserController {
       if (user) {
         if (name) {
           user.name = name;
+
+          logger.info(user.name);
         }
 
         if (email) {
           user.email = email;
+
+          logger.info(user.email);
         }
 
         if (profile_picture) {
           user.profile_picture = profile_picture;
-        }
 
-        logger.debug('new user name', user.name);
-        logger.debug('new user email', user.email);
-        logger.debug('new user pic', user.profile_picture);
-        logger.debug('old user name', name);
-        logger.debug('old user email', email);
-        logger.debug('old user pic', profile_picture);
+          logger.info(user.profile_picture);
+        }
 
         user.updated_at = moment(new Date())
           .tz('America/Sao_Paulo')
@@ -1185,6 +1184,200 @@ class UserController {
         success: false,
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
         message: 'Falha ao deletar o usuário.',
+      });
+    }
+  };
+
+  activateUser = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const user = await User.findById({
+        _id: id,
+      });
+
+      if (!user) {
+        logger.debug('Usuário não encontrado!', {
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          label: 'UserController',
+          method: 'PATCH',
+        });
+
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Usuário não encontrado!',
+        });
+      }
+
+      if (user) {
+        const activatedUser = await User.findByIdAndUpdate(
+          id,
+          { status: 'active' },
+          { new: true }
+        );
+
+        if (activatedUser) {
+          logger.debug('Usuário ativado com sucesso.', {
+            success: true,
+            statusCode: StatusCodes.OK,
+            label: 'UserController',
+            method: 'PATCH',
+          });
+
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Usuário ativado com sucesso.',
+            activatedUser: {
+              id: activatedUser.id,
+              name: activatedUser.name,
+              email: activatedUser.email,
+              role: activatedUser.role,
+              status: activatedUser.status,
+              profile_picture: activatedUser.profile_picture,
+              email_verified_at:
+                activatedUser.email_verified_at !== null
+                  ? moment(activatedUser.email_verified_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              lastLoginDate:
+                activatedUser.lastLoginDate !== null
+                  ? moment(activatedUser.lastLoginDate)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              currentLoginDate:
+                activatedUser.currentLoginDate !== null
+                  ? moment(activatedUser.currentLoginDate)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              created_at:
+                activatedUser.created_at !== null
+                  ? moment(activatedUser.created_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              updated_at:
+                activatedUser.updated_at !== null
+                  ? moment(activatedUser.updated_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+            },
+          });
+        }
+      }
+    } catch (error) {
+      logger.error('Falha ao ativar o usuário.', {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Falha ao ativar o usuário.',
+      });
+    }
+  };
+
+  deactivateUser = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const user = await User.findById({
+        _id: id,
+      });
+
+      if (!user) {
+        logger.debug('Usuário não encontrado!', {
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          label: 'UserController',
+          method: 'PATCH',
+        });
+
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Usuário não encontrado!',
+        });
+      }
+
+      if (user) {
+        const deactivatedUser = await User.findByIdAndUpdate(
+          id,
+          { status: 'inactive' },
+          { new: true }
+        );
+
+        if (deactivatedUser) {
+          logger.debug('Usuário ativado com sucesso.', {
+            success: true,
+            statusCode: StatusCodes.OK,
+            label: 'UserController',
+            method: 'PATCH',
+          });
+
+          return res.status(StatusCodes.OK).json({
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Usuário desativado com sucesso.',
+            deactivatedUser: {
+              id: deactivatedUser.id,
+              name: deactivatedUser.name,
+              email: deactivatedUser.email,
+              role: deactivatedUser.role,
+              status: deactivatedUser.status,
+              profile_picture: deactivatedUser.profile_picture,
+              email_verified_at:
+                deactivatedUser.email_verified_at !== null
+                  ? moment(deactivatedUser.email_verified_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              lastLoginDate:
+                deactivatedUser.lastLoginDate !== null
+                  ? moment(deactivatedUser.lastLoginDate)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              currentLoginDate:
+                deactivatedUser.currentLoginDate !== null
+                  ? moment(deactivatedUser.currentLoginDate)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              created_at:
+                deactivatedUser.created_at !== null
+                  ? moment(deactivatedUser.created_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+              updated_at:
+                deactivatedUser.updated_at !== null
+                  ? moment(deactivatedUser.updated_at)
+                      .tz('America/Sao_Paulo')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : null,
+            },
+          });
+        }
+      }
+    } catch (error) {
+      logger.error('Falha ao desativar o usuário.', {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      });
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Falha ao desativar o usuário.',
       });
     }
   };

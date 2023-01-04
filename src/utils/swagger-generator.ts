@@ -476,6 +476,18 @@ const doc = {
       statusCode: 200,
       message: 'Senha atualizada com sucesso!',
     },
+    ActivateUserResponse: {
+      success: true,
+      statusCode: 200,
+      message: 'Usuário ativado com sucesso!',
+    },
+
+    DeactivatedUserResponse: {
+      success: true,
+      statusCode: 200,
+      message: 'Usuário desativado com sucesso!',
+    },
+
     UpdateUser: {
       name: 'John Doe',
       email: 'john@doe.com',

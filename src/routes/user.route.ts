@@ -350,6 +350,96 @@ router.put(
   }
 );
 
+router.patch(
+  '/users/:id/activate',
+  verifyToken,
+  isAdmin,
+  UserController.activateUser,
+  () => {
+    // #swagger.tags = ['User']
+    // #swagger.description = 'Endpoint para ativar o usuário.'
+    /* #swagger.parameters['authorization'] = {
+    in: 'header',
+    description: 'Token de acesso.',
+    required: true,
+    type: 'string',
+    schema: { $ref: "#/definitions/VerifyUser" }
+    }*/
+    /* #swagger.parameters['id'] = {
+      in: 'path',
+      description: 'Id do usuário.',
+      required: true,
+      type: 'string'
+      }
+      */
+    /* #swagger.responses[200] = {
+        description: 'Usuário ativado.',
+        schema: { $ref: "#/definitions/ActivateUserResponse" }
+        }*/
+    /*#swagger.responses[400] = {
+          description: 'Requisição inválida.',
+          schema: { $ref: "#/definitions/BadRequest" }
+          }*/
+    /*#swagger.responses[401] = {
+            description: 'Acesso não autorizado.',
+            schema: { $ref: "#/definitions/Unauthorized" }
+            }*/
+    /*#swagger.responses[403] = {
+              description: 'Acesso negado.',
+              schema: { $ref: "#/definitions/Forbidden" }
+              }*/
+    /*#swagger.responses[500] = {
+                description: 'Erro interno do servidor.',
+                schema: { $ref: "#/definitions/InternalServerError" }
+                }*/
+  }
+);
+
+router.patch(
+  '/users/:id/deactivate',
+  verifyToken,
+  isAdmin,
+  UserController.deactivateUser,
+  () => {
+    // #swagger.tags = ['User']
+    // #swagger.description = 'Endpoint para desativar o usuário.'
+    /* #swagger.parameters['authorization'] = {
+    in: 'header',
+    description: 'Token de acesso.',
+    required: true,
+    type: 'string',
+    schema: { $ref: "#/definitions/VerifyUser" }
+    }*/
+    /* #swagger.parameters['id'] = {
+      in: 'path',
+      description: 'Id do usuário.',
+      required: true,
+      type: 'string'
+      }
+      */
+    /* #swagger.responses[200] = {
+        description: 'Usuário desativado.',
+        schema: { $ref: "#/definitions/DeactivatedUserResponse" }
+        }*/
+    /*#swagger.responses[400] = {
+          description: 'Requisição inválida.',
+          schema: { $ref: "#/definitions/BadRequest" }
+          }*/
+    /*#swagger.responses[401] = {
+            description: 'Acesso não autorizado.',
+            schema: { $ref: "#/definitions/Unauthorized" }
+            }*/
+    /*#swagger.responses[403] = {
+              description: 'Acesso negado.',
+              schema: { $ref: "#/definitions/Forbidden" }
+              }*/
+    /*#swagger.responses[500] = {
+                description: 'Erro interno do servidor.',
+                schema: { $ref: "#/definitions/InternalServerError" }
+                }*/
+  }
+);
+
 router.put(
   '/users/:id/edit',
   verifyToken,
