@@ -12,7 +12,7 @@ class UserController {
   getAllUsers = async (req: Request, res: Response): Promise<Response> => {
     const response = await paginate(User, req, res);
 
-    if (!response || response.data.length === 0) {
+    if (!response) {
       logger.debug('Nenhum usuário encontrado.', {
         success: false,
         statusCode: StatusCodes.NOT_FOUND,
@@ -191,12 +191,7 @@ class UserController {
     if (value === null || value === undefined || value === '') {
       const response = await paginate(User, req, res);
 
-      if (
-        !response ||
-        response === null ||
-        response === undefined ||
-        response.data.length === 0
-      ) {
+      if (!response) {
         logger.error('Não foi possível buscar usuário.', {
           success: false,
           statusCode: StatusCodes.NOT_FOUND,
