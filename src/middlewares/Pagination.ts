@@ -1,6 +1,9 @@
 import { Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import logger from '../config/winston-logger';
+import { INote } from './../models/interfaces/note';
+import { IPagination } from './../models/interfaces/pagination';
+import { IUser } from './../models/interfaces/user';
 
 const paginate = async (model: any, req: Request, res: any) => {
   const page: number = Number(req.query.page) || 1;
@@ -8,13 +11,22 @@ const paginate = async (model: any, req: Request, res: any) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
-  const result: any = {
+  const result: IPagination = {
     totalDocuments: 0,
     totalPages: 0,
-    previous: {},
-    current: {},
-    next: {},
-    data: {},
+    previous: {
+      page: 0,
+      limit: 0,
+    },
+    current: {
+      page: 0,
+      limit: 0,
+    },
+    next: {
+      page: 0,
+      limit: 0,
+    },
+    data: {} as IUser[] | INote[],
   };
 
   try {
@@ -52,6 +64,10 @@ const paginate = async (model: any, req: Request, res: any) => {
   }
 
   try {
+    if (limit === 0 || limit > result.data.length) {
+      result.data = await model.find().skip(startIndex).exec();
+    }
+
     result.data = await model.find().limit(limit).skip(startIndex).exec();
   } catch (error) {
     logger.error(error);
@@ -67,18 +83,6 @@ const paginate = async (model: any, req: Request, res: any) => {
   };
 
   res.paginatedResult = result;
-
-  if (result.data.length === 0) {
-    logger.error('Nenhum dado encontrado com os parâmetros fornecidos', {
-      success: false,
-      statusCode: StatusCodes.NOT_FOUND,
-      result,
-    });
-
-    return res.status(StatusCodes.NOT_FOUND).json({
-      message: 'Nenhum dado encontrado com os parâmetros fornecidos',
-    });
-  }
 
   logger.debug('Dados encontrados com sucesso.', {
     success: true,
